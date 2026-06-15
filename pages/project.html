@@ -494,9 +494,12 @@
         }
 
         /* ── Fetch & render with localStorage cache ── */
-        if (!slug || slug === 'projects') {
-            window.location.href = '/projects';
-        } else {
+        (async () => {
+            if (!slug || slug === 'projects' || slug === 'project.html') {
+                window.location.href = '/projects';
+                return;
+            }
+
             const CACHE_KEY = `gh_proj_${slug}`;
             const CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
 
@@ -509,23 +512,24 @@
                 }
             } catch (e) {}
 
-            fetch(`https://api.github.com/repos/${GH_USER}/${slug}`, {
-                headers: { Accept: 'application/vnd.github+json' }
-            })
-            .then(r => {
-                if (r.status === 403) throw new Error('GitHub API rate limited — please try again in a minute.');
-                if (r.status === 404) throw new Error('Repo not found.');
-                if (!r.ok) throw new Error(`GitHub error (${r.status})`);
-                return r.json();
-            })
-            .then(data => {
+            try {
+                const res = await fetch(`https://api.github.com/repos/${GH_USER}/${slug}`, {
+                    headers: { Accept: 'application/vnd.github+json' }
+                });
+                if (res.status === 403) throw new Error('GitHub API rate limited — please try again in a minute.');
+                if (res.status === 404) throw new Error('Repo not found.');
+                if (!res.ok) throw new Error(`GitHub error (${res.status})`);
+                const data = await res.json();
                 try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
                 render(data);
-            })
-            .catch(err => showError(err.message));
-        }
+            } catch (err) {
+                showError(err.message);
+            }
+        })();
+    </script>
 
-        /* ── Cursor ── */
+    <!-- Cursor — isolated so fetch errors can't block it -->
+    <script>
         (function () {
             const cur = document.getElementById('cursor');
             const ring = document.getElementById('cursorRing');
@@ -538,6 +542,10 @@
                 ring.style.transform = `translate(${rx - 18}px,${ry - 18}px)`;
                 requestAnimationFrame(tick);
             })();
+            document.querySelectorAll('a,button,.nav-gh-btn,.btn-primary,.btn-outline').forEach(el => {
+                el.addEventListener('mouseenter', () => { ring.style.width = '52px'; ring.style.height = '52px'; document.body.classList.add('cursor-hover'); });
+                el.addEventListener('mouseleave', () => { ring.style.width = '36px'; ring.style.height = '36px'; document.body.classList.remove('cursor-hover'); });
+            });
         })();
     </script>
     <script src="/js/visit-counter.js"></script>
