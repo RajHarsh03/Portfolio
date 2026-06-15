@@ -83,38 +83,6 @@
     }
 })();
 
-/* ── Expandable tabs nav ── */
-(function () {
-    const container = document.getElementById('expTabs');
-    if (!container) return;
-    const tabs = container.querySelectorAll('.exp-tab');
-
-    // Start with the active tab expanded
-    const activeTab = container.querySelector('.exp-tab.active');
-    if (activeTab) activeTab.classList.add('expanded');
-
-    function collapseAll() {
-        tabs.forEach(t => t.classList.remove('expanded'));
-    }
-
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function (e) {
-            const isExpanded = this.classList.contains('expanded');
-            collapseAll();
-            if (!isExpanded) this.classList.add('expanded');
-        });
-    });
-
-    // Click outside collapses all (but keep active expanded)
-    document.addEventListener('click', function (e) {
-        if (!e.target.closest('#expTabs')) {
-            collapseAll();
-            // Re-expand the active one
-            const active = container.querySelector('.exp-tab.active');
-            if (active) active.classList.add('expanded');
-        }
-    });
-})();
 
 /* ── Magnetic cursor dot effect on .btn-primary and .btn-cv ── */
 (function () {

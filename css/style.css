@@ -407,6 +407,10 @@ nav.scrolled {
     opacity: .7;
     transition: opacity .2s ease, color .2s ease;
     cursor: none;
+    background: none;
+    border: none;
+    padding: 0;
+    position: relative;
 }
 
 .nav-gh-btn:hover {
@@ -414,7 +418,33 @@ nav.scrolled {
     color: var(--accent);
 }
 
+/* Hover tooltip showing public repo count */
+.nav-gh-btn::after {
+    content: attr(data-repos);
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: .28rem .65rem;
+    border-radius: 6px;
+    font-size: .72rem;
+    font-family: 'DM Mono', monospace;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+    z-index: 200;
+}
+
+.nav-gh-btn:hover::after {
+    opacity: 1;
+}
+
 .nav-gh-count {
+
     font-family: 'DM Mono', monospace;
     font-size: .82rem;
     font-weight: 600;
@@ -1766,7 +1796,17 @@ section {
     animation: shimmer 1.4s infinite;
 }
 
-/* Light mode: tech icon and GitHub button borders */
+/* Black devicons — invert to white in dark mode */
+[data-theme="dark"] .proj-tech-icon[alt="express"],
+[data-theme="dark"] .proj-tech-icon[alt="expressjs"],
+[data-theme="dark"] .proj-tech-icon[alt="flask"],
+[data-theme="dark"] .pd-tech-icon[alt="express"],
+[data-theme="dark"] .pd-tech-icon[alt="expressjs"],
+[data-theme="dark"] .pd-tech-icon[alt="flask"] {
+    filter: brightness(0) invert(1);
+}
+
+/* Light mode — slightly visible chip for tech icons */
 [data-theme="light"] .proj-tech-icon {
     background: rgba(0,0,0,.05);
     border-color: rgba(0,0,0,.14);
@@ -2718,7 +2758,7 @@ footer {
    EXPANDABLE TABS NAV
    ================================ */
 .exp-tabs {
-    display: flex;
+    display: none;
     align-items: center;
     gap: .1rem;
     background: var(--surface);
@@ -2726,6 +2766,29 @@ footer {
     border-radius: 50px;
     padding: .3rem;
 }
+
+/* Desktop non-index: show only Home (no pill, no Projects/Contact) */
+@media (min-width: 481px) {
+    body:not(.page-home) .exp-tabs {
+        display: flex;
+        background: transparent;
+        border: none;
+        padding: 0;
+        gap: 0;
+    }
+
+    body:not(.page-home) .exp-tabs .exp-tab:nth-child(n+2) {
+        display: none;
+    }
+
+    /* Always show the "Home" label text — no .expanded class needed */
+    body:not(.page-home) .exp-tabs .exp-tab-label {
+        max-width: 100px;
+        opacity: 1;
+        margin-left: .45rem;
+    }
+}
+
 
 .exp-tab {
     display: inline-flex;
@@ -3441,14 +3504,16 @@ footer {
     }
 
     .hero-social {
-        padding: .3rem .5rem;
-        font-size: .6rem;
-        border-radius: 6px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--card);
+        padding: 0;
     }
 
     .hero-social svg {
-        width: 12px;
-        height: 12px;
+        width: 18px;
+        height: 18px;
     }
 
     /* About */
@@ -3537,7 +3602,7 @@ footer {
     }
 
     .project-body {
-        padding: 1.8rem 1rem 1rem;
+        padding: 1rem;
     }
 
     .project-footer {
