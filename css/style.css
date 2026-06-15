@@ -287,6 +287,11 @@ nav.scrolled {
     gap: .8rem;
 }
 
+/* Mobile-only home icon — hidden on desktop */
+.nav-home-mobile {
+    display: none;
+}
+
 .nav-links {
     display: flex;
     gap: 2rem;
@@ -3317,110 +3322,54 @@ footer {
     }
 
     .nav-right {
-        gap: .6rem;
+        gap: .5rem;
     }
 
-    .nav-icon-link,
-    .nav-gh-btn,
+    /* Hide all tabs and dividers on mobile */
+    .exp-tabs,
     .nav-divider {
         display: none;
     }
 
-    /* Show Home icon on all pages except index */
-    .nav-icon-link[title="Home"] {
+    /* Hide GitHub by default — home page only */
+    .nav-gh-btn {
+        display: none;
+    }
+
+    /* index.html mobile — hide home icon + GitHub, keep toggle only */
+    .page-home .nav-home-mobile,
+    .page-home .nav-gh-btn {
+        display: none;
+    }
+
+    /* Mobile home icon button */
+    .nav-home-mobile {
         display: flex;
+        align-items: center;
+        justify-content: center;
         width: 36px;
         height: 36px;
+        border-radius: 10px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text);
+        text-decoration: none;
+        transition: border-color .2s, color .2s;
+        flex-shrink: 0;
     }
 
-    .nav-icon-link[title="Home"] .hgi-stroke {
-        font-size: 20px;
-    }
-
-    /* Hide it on index page */
-    .page-home .nav-icon-link[title="Home"],
-    .page-home .nav-divider {
-        display: none;
-    }
-
-    /* Show divider between home & theme on other pages */
-    .nav-divider {
-        display: block;
-    }
-
-    .nav-icon-link .hgi-stroke {
-        font-size: 13px;
-    }
-
-    .nav-icon-link svg {
-        width: 13px;
-        height: 13px;
-    }
-
-    .nav-gh-btn svg {
-        width: 14px;
-        height: 14px;
-    }
-
-    .nav-gh-btn {
-        gap: .3rem;
-    }
-
-    .nav-gh-count {
-        font-size: .65rem;
-    }
-
-    .nav-divider {
-        height: 14px;
+    .nav-home-mobile:hover,
+    .nav-home-mobile:active {
+        border-color: var(--accent);
+        color: var(--accent);
     }
 
     .theme-btn {
-        width: 26px;
-        height: 26px;
-        border-radius: 6px;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
     }
 
-    /* Index page only — extra compact nav (more items) */
-    .page-home .nav-right {
-        gap: .25rem;
-    }
-
-    .page-home .nav-icon-link {
-        width: 24px;
-        height: 24px;
-    }
-
-    .page-home .nav-icon-link .hgi-stroke {
-        font-size: 13px;
-    }
-
-    .page-home .nav-icon-link svg {
-        width: 13px;
-        height: 13px;
-    }
-
-    .page-home .nav-gh-btn {
-        gap: .3rem;
-    }
-
-    .page-home .nav-gh-btn svg {
-        width: 14px;
-        height: 14px;
-    }
-
-    .page-home .nav-gh-count {
-        font-size: .65rem;
-    }
-
-    .page-home .nav-divider {
-        height: 14px;
-        margin: 0 .05rem;
-    }
-
-    .page-home .theme-btn {
-        width: 26px;
-        height: 26px;
-    }
     section {
         padding: 2.5rem 1rem;
     }

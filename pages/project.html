@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 
 <head>
@@ -58,12 +58,8 @@
             display: block;
         }
 
-        /* Status badge on image */
+        /* Status badge — in title row, NOT overlapping the image */
         .pd-status {
-            position: absolute;
-            top: 14px;
-            left: 14px;
-            z-index: 3;
             display: inline-flex;
             align-items: center;
             gap: .35rem;
@@ -77,10 +73,7 @@
             color: #f87171;
             letter-spacing: .04em;
             text-transform: uppercase;
-            transform: rotate(-3deg);
-            transform-origin: top left;
-            box-shadow: 2px 4px 10px rgba(0,0,0,.35);
-            backdrop-filter: blur(4px);
+            flex-shrink: 0;
         }
         .pd-status::before {
             content: '';
@@ -93,7 +86,7 @@
             background: rgba(20, 184, 166, .12);
             border-color: rgba(20, 184, 166, .3);
             color: #14b8a6;
-            box-shadow: 2px 4px 10px rgba(0,0,0,.3), 0 0 8px rgba(20,184,166,.12);
+            box-shadow: 0 0 8px rgba(20,184,166,.12);
         }
         .pd-status.completed::before {
             background: #14b8a6;
@@ -266,6 +259,7 @@
     <nav>
         <a href="/" class="nav-logo" style="text-decoration:none;color:inherit;">harshx<span>.</span>in</a>
         <div class="nav-right">
+                <a href="/" class="nav-home-mobile" aria-label="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg></a>
             <div class="exp-tabs" id="expTabs">
                 <a href="/" class="exp-tab" aria-label="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg><span class="exp-tab-label">Home</span></a>
                 <a href="/projects" class="exp-tab active" aria-label="Projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="exp-tab-label">Projects</span></a>
@@ -425,11 +419,11 @@
 
                 <div class="pd-img-wrap">
                     <img src="${imgUrl}" alt="${name} preview" />
-                    <div class="${statusCls}">${statusTxt}</div>
                 </div>
 
                 <div class="pd-title-row">
                     <h1 class="pd-title">${name}</h1>
+                    <div class="${statusCls}">${statusTxt}</div>
                     ${typePill}
                 </div>
 
