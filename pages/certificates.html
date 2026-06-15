@@ -1,85 +1,66 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="My Journey" />
+    <meta name="description"
+        content="Certificates & Achievements — Credentials earned by Harsh Raj, Full Stack Engineer." />
     <meta name="author" content="Harsh Raj" />
-    <title>My Journey</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1MCIgZmlsbD0iI2ZmZmZmZiIvPjx0ZXh0IHg9IjUwIiB5PSI2MiIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzYiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiMwZjE3MmEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGxldHRlci1zcGFjaW5nPSItMSI+SFI8L3RleHQ+PC9zdmc+" />
+    <title>Certificates & Achievements</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
-    <link rel="stylesheet" href="style.css" />
-    <script src="skeleton-loader.js"></script>
-    <script src="protect.js" defer></script>
+    <link rel="stylesheet" href="/css/style.css" />   
+    <script src="/js/skeleton-loader.js"></script>
+    <script src="/js/protect.js" defer></script>
     <style>
         /* Page-specific overrides */
         body {
             padding-top: 5rem;
         }
 
-        .journey-page-header {
+        .certs-page-header {
             max-width: 760px;
             margin: 0 auto 1.5rem;
             padding: 0 24px;
         }
 
-        .journey-page-header h1 {
+        .certs-page-header h1 {
             font-size: 1.8rem;
             font-weight: 800;
             margin-bottom: .35rem;
         }
 
-        .journey-page-header p {
+        .certs-page-header p {
             color: var(--muted);
             font-size: .88rem;
         }
 
-        .journey-content {
+        #allCerts {
             max-width: 760px;
             margin: 0 auto;
             padding: 0 24px 4rem;
         }
 
-        .journey-section-label {
-            font-family: 'DM Mono', monospace;
-            font-size: .85rem;
-            color: var(--accent);
-            margin-bottom: .5rem;
-            letter-spacing: .5px;
-        }
-
-        .journey-section-title {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-        }
-
-        .journey-block {
-            margin-bottom: 4rem;
-        }
-
-        .journey-block:last-child {
-            margin-bottom: 0;
+        #allCerts .certs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
         }
 
         @media (max-width: 760px) {
             body { padding-top: 4.5rem; }
-            .journey-page-header { padding: 0 16px; }
-            .journey-content { padding: 0 16px 3rem; }
-            .journey-block { margin-bottom: 3rem; }
+            .certs-page-header { padding: 0 16px; }
+            #allCerts { padding: 0 16px 3rem; }
+            #allCerts .certs-grid { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 480px) {
             body { padding-top: 4rem; }
-            .journey-page-header h1 { font-size: 1.4rem; }
-            .journey-section-label { font-size: .75rem; }
-            .journey-section-title { font-size: 1.2rem; margin-bottom: 1.5rem; }
-            .journey-block { margin-bottom: 2.5rem; }
+            .certs-page-header h1 { font-size: 1.4rem; }
             .footer-bottom { padding-bottom: 4rem; }
         }
     </style>
@@ -100,7 +81,8 @@
             <div class="exp-tabs" id="expTabs">
                 <a href="/" class="exp-tab" aria-label="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg><span class="exp-tab-label">Home</span></a>
                 <a href="/projects" class="exp-tab" aria-label="Projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="exp-tab-label">Projects</span></a>
-                <a href="/journey" class="exp-tab active" aria-label="Journey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg><span class="exp-tab-label">Journey</span></a>
+                <a href="/journey" class="exp-tab" aria-label="Journey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg><span class="exp-tab-label">Journey</span></a>
+                <a href="/certificates" class="exp-tab active" aria-label="Certs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M8 12l-2 8 6-2 6 2-2-8"/></svg><span class="exp-tab-label">Certs</span></a>
                 <a href="/contact" class="exp-tab" aria-label="Contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="exp-tab-label">Contact</span></a>
             </div>
             <div class="nav-divider"></div>
@@ -109,58 +91,75 @@
     </nav>
 
     <!-- HEADER -->
-    <div class="journey-page-header">
-        <h1>My Journey</h1>
-        <p>A timeline of my career - experiences, roles, and the internships that shaped me.</p>
+    <div class="certs-page-header">
+        <h1>Certificates &amp; Achievements</h1>
+        <p>A curated list of professional certifications and achievements I've earned.</p>
     </div>
 
-    <!-- JOURNEY CONTENT -->
-    <div class="journey-content" id="journeyContent">
+    <!-- CERTIFICATES SECTION -->
+    <section id="allCerts">
+        <div class="certs-grid">
+            <!-- Oct 2025 -->
+            <div class="cert-card tilt-card reveal">
+                <div class="cert-icon">🤖</div>
+                <div class="cert-info">
+                    <div class="cert-title">Data Science and Machine Learning Intern</div>
+                    <div class="cert-issuer">My Job Grow</div>
+                    <div class="cert-date">Issued Oct 2025</div>
+                    <div class="cert-skills">Skills: Machine Learning</div>
+                    <a href="https://drive.google.com/file/d/1jtflGRm11wVpS8HQh1MksdX7NLrVd0w2/view?usp=drive_link" class="cert-link" target="_blank" rel="noopener">View credential ↗</a>
+                </div>
+            </div>
 
-        <!-- EXPERIENCE -->
-        <div class="journey-block">
-            <div class="journey-section-label reveal">// where i've worked</div>
-            <div class="journey-section-title reveal">Experience</div>
-            <div class="timeline">
-                <div class="timeline-item reveal">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-date">2025</div>
-                    <div class="timeline-role">Cyber &amp; Technology Simulation</div>
-                    <div class="timeline-company">@ Deloitte AU</div>
-                    <div class="timeline-tags">
-                        <span class="tl-tag">Cybersecurity</span>
-                        <span class="tl-tag">Risk Assessment</span>
-                    </div>
-                    <div class="timeline-desc">
-                        Analyzed enterprise cyber threat scenarios and security workflows. Identified vulnerabilities and proposed mitigation strategies aligned with industry best practices.
-                    </div>
+            <!-- Jun 2025 -->
+            <div class="cert-card tilt-card reveal">
+                <div class="cert-icon">💼</div>
+                <div class="cert-info">
+                    <div class="cert-title">Deloitte Australia - Technology Job Simulation</div>
+                    <div class="cert-issuer">Forage</div>
+                    <div class="cert-date">Issued Jun 2025</div>
+                    <a href="https://drive.google.com/file/d/1JKd1dBXABvNB0Lr6v8ILYqIsE9hQwkRY/view?usp=drive_link" class="cert-link" target="_blank" rel="noopener">View credential ↗</a>
+                </div>
+            </div>
+
+            <!-- Jun 2025 -->
+            <div class="cert-card tilt-card reveal">
+                <div class="cert-icon">🛡️</div>
+                <div class="cert-info">
+                    <div class="cert-title">Deloitte Australia - Cyber Job Simulation</div>
+                    <div class="cert-issuer">Forage</div>
+                    <div class="cert-date">Issued Jun 2025</div>
+                    <div class="cert-skills">Skills: Cybersecurity</div>
+                    <a href="https://drive.google.com/file/d/1m32-NzDPEgRp9GbxAc04d5K4uF-HPxuw/view?usp=drive_link" class="cert-link" target="_blank" rel="noopener">View credential ↗</a>
+                </div>
+            </div>
+
+            <!-- 2025 -->
+            <div class="cert-card tilt-card reveal">
+                <div class="cert-icon">🚀</div>
+                <div class="cert-info">
+                    <div class="cert-title">Bharatiya Antariksh Hackathon 2025</div>
+                    <div class="cert-issuer">ISRO / H2S</div>
+                    <div class="cert-date">2025</div>
+                    <div class="cert-skills">Skills: Full Stack Web Dev</div>
+                    <a href="https://drive.google.com/file/d/1sc-iWnc2tp9h3wmv6x4O_vBnQLVG9TcJ/view?usp=drive_link" class="cert-link" target="_blank" rel="noopener">View credential ↗</a>
+                </div>
+            </div>
+
+            <!-- Oct 2022 -->
+            <div class="cert-card tilt-card reveal">
+                <div class="cert-icon">🔐</div>
+                <div class="cert-info">
+                    <div class="cert-title">Introduction to Cybersecurity</div>
+                    <div class="cert-issuer">Cisco Networking Academy</div>
+                    <div class="cert-date">Issued Oct 2022</div>
+                    <div class="cert-skills">Skills: Cybersecurity</div>
+                    <a href="https://drive.google.com/file/d/14swwNh_ID-CTKdSmiU3OdLIj6stnC-sH/view?usp=drive_link" class="cert-link" target="_blank" rel="noopener">View credential ↗</a>
                 </div>
             </div>
         </div>
 
-        <!-- INTERNSHIPS -->
-        <div class="journey-block">
-            <div class="journey-section-label reveal">// where it started</div>
-            <div class="journey-section-title reveal">Internships</div>
-            <div class="timeline">
-                <div class="timeline-item reveal">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-date">Jun 2025 — Aug 2025</div>
-                    <div class="timeline-role">Data Science &amp; Machine Learning Intern</div>
-                    <div class="timeline-company">@ MyJobGrow</div>
-                    <div class="timeline-tags">
-                        <span class="tl-tag">Data Science</span>
-                        <span class="tl-tag">Machine Learning</span>
-                    </div>
-                    <div class="timeline-desc">
-                        Completed a 2-month internship focused on Data Science and Machine Learning concepts. Worked on data analysis, model building, and machine learning workflows.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-    </div>
+    </section>
 
         <!-- FOOTER -->
     <footer>
@@ -183,7 +182,6 @@
                     <a href="https://blog.harshx.in/" target="_blank" rel="noopener" class="footer-icon-btn" aria-label="Blog">
                         <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M22.351 8.019l-6.37-6.37a5.63 5.63 0 00-7.962 0l-6.37 6.37a5.63 5.63 0 000 7.962l6.37 6.37a5.63 5.63 0 007.962 0l6.37-6.37a5.63 5.63 0 000-7.962zM12 15.953a3.953 3.953 0 110-7.906 3.953 3.953 0 010 7.906z"/></svg>
                     </a>
-
                 </div>
             </div>
             <div class="footer-new-bottom">
@@ -217,7 +215,7 @@
                 ring.style.transform = `translate(${rx - 18}px,${ry - 18}px)`;
                 requestAnimationFrame(tick);
             })();
-            document.querySelectorAll('a,button,.theme-btn,.timeline-item').forEach(el => {
+            document.querySelectorAll('a,button,.theme-btn,.cert-card').forEach(el => {
                 el.addEventListener('mouseenter', () => { ring.style.width = '52px'; ring.style.height = '52px'; });
                 el.addEventListener('mouseleave', () => { ring.style.width = '36px'; ring.style.height = '36px'; });
             });
@@ -235,8 +233,8 @@
 
         
     </script>
-    <script src="theme-toggle.js"></script>
-    <script src="visit-counter.js"></script>
+    <script src="/js/theme-toggle.js"></script>
+    <script src="/js/visit-counter.js"></script>
 </body>
 
 </html>

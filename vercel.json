@@ -6,31 +6,31 @@
         },
         {
             "source": "/contact",
-            "destination": "/contact.html"
+            "destination": "/pages/contact.html"
         },
         {
             "source": "/projects",
-            "destination": "/projects.html"
+            "destination": "/pages/projects.html"
         },
         {
             "source": "/projects/:slug",
-            "destination": "/project.html"
+            "destination": "/pages/project.html"
         },
         {
             "source": "/blogs",
-            "destination": "/blogs.html"
+            "destination": "/pages/blogs.html"
         },
         {
             "source": "/bookmarks",
-            "destination": "/bookmarks.html"
+            "destination": "/pages/bookmarks.html"
         },
         {
             "source": "/journey",
-            "destination": "/journey.html"
+            "destination": "/pages/journey.html"
         },
         {
             "source": "/certificates",
-            "destination": "/certificates.html"
+            "destination": "/pages/certificates.html"
         }
     ]
 }
