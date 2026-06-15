@@ -493,18 +493,35 @@
                 </div>`;
         }
 
-        /* ── Fetch & render ── */
+        /* ── Fetch & render with localStorage cache ── */
         if (!slug || slug === 'projects') {
             window.location.href = '/projects';
         } else {
+            const CACHE_KEY = `gh_proj_${slug}`;
+            const CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
+
+            /* Try cache first */
+            try {
+                const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
+                if (cached && Date.now() - cached.ts < CACHE_TTL) {
+                    render(cached.data);
+                    return; /* skip fetch */
+                }
+            } catch (e) {}
+
             fetch(`https://api.github.com/repos/${GH_USER}/${slug}`, {
                 headers: { Accept: 'application/vnd.github+json' }
             })
             .then(r => {
-                if (!r.ok) throw new Error(`Repo not found (${r.status})`);
+                if (r.status === 403) throw new Error('GitHub API rate limited — please try again in a minute.');
+                if (r.status === 404) throw new Error('Repo not found.');
+                if (!r.ok) throw new Error(`GitHub error (${r.status})`);
                 return r.json();
             })
-            .then(render)
+            .then(data => {
+                try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch (e) {}
+                render(data);
+            })
             .catch(err => showError(err.message));
         }
 

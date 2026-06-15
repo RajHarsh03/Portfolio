@@ -1796,14 +1796,14 @@ section {
     animation: shimmer 1.4s infinite;
 }
 
-/* Black devicons — invert to white in dark mode */
+/* Black-on-white devicons — invert in dark mode so bg goes black, icon goes white */
 [data-theme="dark"] .proj-tech-icon[alt="express"],
 [data-theme="dark"] .proj-tech-icon[alt="expressjs"],
 [data-theme="dark"] .proj-tech-icon[alt="flask"],
 [data-theme="dark"] .pd-tech-icon[alt="express"],
 [data-theme="dark"] .pd-tech-icon[alt="expressjs"],
 [data-theme="dark"] .pd-tech-icon[alt="flask"] {
-    filter: brightness(0) invert(1);
+    filter: invert(1);
 }
 
 /* Light mode — slightly visible chip for tech icons */
@@ -3405,25 +3405,24 @@ footer {
         display: none;
     }
 
-    /* Mobile home icon button */
+    /* Mobile home icon button — bare icon, no box */
     .nav-home-mobile {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-        background: var(--card);
-        border: 1px solid var(--border);
+        background: none;
+        border: none;
         color: var(--text);
         text-decoration: none;
-        transition: border-color .2s, color .2s;
+        opacity: .7;
+        transition: opacity .2s, color .2s;
         flex-shrink: 0;
+        padding: 4px;
     }
 
     .nav-home-mobile:hover,
     .nav-home-mobile:active {
-        border-color: var(--accent);
+        opacity: 1;
         color: var(--accent);
     }
 
