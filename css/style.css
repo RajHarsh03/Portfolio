@@ -555,7 +555,10 @@ section {
    HERO LAYOUT
    =========== */
 .hero-inner {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 3rem;
     width: 100%;
     max-width: 760px;
     margin: 0 auto;
@@ -565,6 +568,58 @@ section {
     z-index: 2;
 }
 
+.hero-content {
+    flex: 1;
+    min-width: 0;
+    max-width: 460px;
+}
+
+/* ── Avatar ── */
+.hero-avatar-wrap {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -3rem;
+}
+
+.hero-avatar-ring {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 50%, var(--accent3) 100%);
+    animation: avatar-spin-glow 6s ease-in-out infinite;
+    box-shadow: none;
+}
+
+/* Glow only in dark mode */
+[data-theme="dark"] .hero-avatar-ring {
+    box-shadow: 0 0 60px rgba(59,130,246,.3), 0 0 120px rgba(20,184,166,.15);
+}
+
+@keyframes avatar-spin-glow {
+    0%, 100% { box-shadow: none; }
+    50%       { box-shadow: none; }
+}
+
+[data-theme="dark"] .hero-avatar-ring {
+    animation: avatar-spin-glow-dark 6s ease-in-out infinite;
+}
+
+@keyframes avatar-spin-glow-dark {
+    0%, 100% { box-shadow: 0 0 40px rgba(59,130,246,.3), 0 0 80px rgba(20,184,166,.1); }
+    50%       { box-shadow: 0 0 70px rgba(59,130,246,.55), 0 0 120px rgba(20,184,166,.25); }
+}
+
+.hero-avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+}
 
 
 #hero {
@@ -3282,6 +3337,10 @@ footer {
 
     .hero-inner {
         max-width: 100%;
+    }
+
+    .hero-avatar-wrap {
+        display: none;
     }
 
     .hero-name {
