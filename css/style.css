@@ -3565,27 +3565,42 @@ footer {
 
     .projects-grid {
         grid-template-columns: 1fr;
-        gap: 1.2rem;
+        gap: 1rem;
+        padding: 0 16px;
     }
 
     .project-card {
         border-radius: 12px;
     }
 
+    /* Fill card fully — crop from right so repo name text (left) stays visible */
+    .project-img-wrap {
+        height: 130px;
+    }
+
+    .project-img-wrap img {
+        object-fit: cover;
+        object-position: left top;
+    }
+
+    [data-theme="light"] .project-img-wrap {
+        background: #f6f8fa;
+    }
+
     .project-body {
-        padding: 2.3rem 1.2rem 1.2rem;
+        padding: 1.8rem 1rem 1rem;
     }
 
     .project-footer {
-        padding: .75rem 1.2rem;
+        padding: .65rem 1rem;
     }
 
     .project-title {
-        font-size: 1rem;
+        font-size: .9rem;
     }
 
     .project-desc {
-        font-size: .78rem;
+        font-size: .76rem;
     }
 
     .project-stack {
