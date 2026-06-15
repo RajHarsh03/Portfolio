@@ -209,7 +209,7 @@ async function fetchPortfolioProjects() {
  * @returns {string}
  */
 function buildProjectCard(p) {
-    const ghImgUrl = `https://opengraph.github.com/repo/${GH_USER}/${p.repoName}`;
+    const ghImgUrl = `https://opengraph.githubassets.com/1/${GH_USER}/${p.repoName}`;
 
     // Build tech icons from raw stack topics
     const techIconsHtml = p.rawTopics
@@ -242,7 +242,7 @@ function buildProjectCard(p) {
       <div class="project-card-glow"></div>
       <div class="${statusClass}">${statusText}</div>
       <div class="project-img-wrap">
-        <img src="${ghImgUrl}" alt="${p.name} preview" loading="lazy">
+        <img src="${ghImgUrl}" alt="${p.name} preview" loading="lazy" onerror="this.closest('.project-img-wrap').style.display='none'">
         <div class="project-img-overlay">
           <a class="project-img-arrow" href="${detailUrl}" aria-label="View project details">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
