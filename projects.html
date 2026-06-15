@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="All projects by Harsh Raj — Full Stack Engineer." />
+    <meta name="author" content="Harsh Raj" />
+    <title>All Projects</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1MCIgZmlsbD0iI2ZmZmZmZiIvPjx0ZXh0IHg9IjUwIiB5PSI2MiIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzYiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiMwZjE3MmEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGxldHRlci1zcGFjaW5nPSItMSI+SFI8L3RleHQ+PC9zdmc+" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+    <link rel="stylesheet" href="style.css" />   
+    <script src="skeleton-loader.js"></script>
+    <script src="protect.js" defer></script>
+    <style>
+        /* Page-specific overrides */
+        body {
+            padding-top: 5rem;
+        }
+
+        .projects-page-header {
+            max-width: 760px;
+            margin: 0 auto 1.5rem;
+            padding: 0 24px;
+        }
+
+        .projects-page-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: .35rem;
+        }
+
+        .projects-page-header p {
+            color: var(--muted);
+            font-size: .85rem;
+            line-height: 1.6;
+        }
+
+        #allProjects {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 0 24px 6rem;
+        }
+
+        /* Toolbar row */
+        .toolbar-row {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        /* Search input */
+        .toolbar-search {
+            position: relative;
+            flex: 1;
+            min-width: 160px;
+        }
+        .toolbar-search svg {
+            position: absolute;
+            left: .75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            color: var(--muted);
+            pointer-events: none;
+        }
+        .toolbar-search input {
+            width: 100%;
+            padding: .5rem .8rem .5rem 2.2rem;
+            font-family: 'DM Mono', monospace;
+            font-size: .76rem;
+            color: var(--text);
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            cursor: none;
+            transition: border-color .25s;
+        }
+        .toolbar-search input::placeholder { color: var(--muted); }
+        .toolbar-search input:focus { border-color: var(--accent); }
+
+        /* Sort dropdown */
+        .sort-wrap { position: relative; }
+        .sort-toggle {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .5rem .9rem;
+            font-family: 'DM Mono', monospace;
+            font-size: .76rem;
+            font-weight: 600;
+            color: var(--muted);
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: none;
+            transition: all .25s ease;
+            white-space: nowrap;
+        }
+        .sort-toggle:hover, .sort-toggle.open {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .sort-toggle svg { width: 14px; height: 14px; }
+        .sort-dropdown {
+            position: absolute;
+            top: calc(100% + .5rem);
+            right: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: .5rem;
+            min-width: 160px;
+            box-shadow: 0 12px 40px rgba(0,0,0,.25);
+            opacity: 0;
+            transform: translateY(-8px) scale(.96);
+            pointer-events: none;
+            transition: opacity .25s ease, transform .25s ease;
+            z-index: 20;
+        }
+        .sort-dropdown.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        .sort-option {
+            display: block;
+            width: 100%;
+            padding: .5rem .85rem;
+            font-family: 'DM Mono', monospace;
+            font-size: .74rem;
+            font-weight: 600;
+            color: var(--muted);
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: none;
+            text-align: left;
+            transition: all .2s ease;
+        }
+        .sort-option:hover {
+            background: rgba(59,130,246,.08);
+            color: var(--accent);
+        }
+        .sort-option.active {
+            background: var(--gradient-btn);
+            color: #fff;
+        }
+        [data-theme="light"] .sort-dropdown {
+            box-shadow: 0 12px 40px rgba(0,0,0,.1);
+        }
+
+        /* Count row */
+        .count-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+        }
+        .projects-count {
+            font-family: 'DM Mono', monospace;
+            font-size: .72rem;
+            color: var(--muted);
+        }
+        .projects-count strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        #allProjects .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        /* Slightly tighter body/footer padding in 3-col layout */
+        #allProjects .project-body   { padding: 1.4rem 1.4rem 1rem; }
+        #allProjects .project-footer { padding: .75rem 1.4rem; }
+
+        /* All cards visible on this page — no hidden-card behavior */
+        #allProjects .project-card.hidden-card {
+            display: flex !important;
+        }
+
+        /* No-results state */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--muted);
+            font-family: 'DM Mono', monospace;
+            font-size: .85rem;
+            line-height: 1.7;
+            border: 1px dashed var(--border);
+            border-radius: 1rem;
+            background: var(--surface);
+        }
+        .no-results .nr-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: .5rem;
+        }
+        .no-results .nr-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+            display: block;
+            margin-bottom: .3rem;
+        }
+
+        @media (max-width: 760px) {
+            body { padding-top: 4.5rem; }
+            .projects-page-header { padding: 0 16px; }
+            #allProjects { padding: 0 16px 5rem; }
+            #allProjects .projects-grid { grid-template-columns: 1fr; gap: 1rem; }
+        }
+
+        @media (max-width: 480px) {
+            body { padding-top: 4rem; }
+            .projects-page-header h1 { font-size: 1.4rem; }
+            .footer-bottom { padding-bottom: 4rem; }
+
+            /* ── Single-row toolbar ── */
+            .toolbar-row { flex-wrap: nowrap; gap: .4rem; }
+            .toolbar-search { min-width: 0; }
+            .sort-toggle { font-size: .62rem; padding: .38rem .5rem; white-space: nowrap; }
+            .sort-option { font-size: .65rem; padding: .38rem .65rem; }
+            .sort-dropdown { min-width: 130px; right: 0; left: auto; }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+        </div>
+    </div>
+
+
+    <!-- NAV -->
+    <nav>
+        <a href="/" class="nav-logo" style="text-decoration:none;color:inherit;">harshx<span>.</span>in</a>
+                                <div class="nav-right">
+            <div class="exp-tabs" id="expTabs">
+                <a href="/" class="exp-tab" aria-label="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg><span class="exp-tab-label">Home</span></a>
+                <a href="/projects" class="exp-tab active" aria-label="Projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="exp-tab-label">Projects</span></a>
+                <a href="/contact" class="exp-tab" aria-label="Contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="exp-tab-label">Contact</span></a>
+            </div>
+            <div class="nav-divider"></div>
+            <button class="theme-btn" id="themeToggle" aria-label="Toggle theme"><div class="theme-icon-wrap"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div></button>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <div class="projects-page-header">
+        <h1>All Projects</h1>
+        <p>A complete collection of everything I've built — filtered by category.</p>
+    </div>
+
+    <!-- PROJECTS SECTION -->
+    <section id="allProjects">
+        <!-- Toolbar: search + sort + filter -->
+        <div class="toolbar-row">
+            <div class="toolbar-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="projectSearch" placeholder="Search projects..." autocomplete="off" />
+            </div>
+            <div class="sort-wrap" id="sortWrap">
+                <button class="sort-toggle" id="sortToggle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 5h10M11 9h7M11 13h4M3 17l4 4 4-4M7 3v18"/>
+                    </svg>
+                    Sort
+                </button>
+                <div class="sort-dropdown" id="sortDropdown">
+                    <button class="sort-option active" data-sort="newest">Newest First</button>
+                    <button class="sort-option" data-sort="oldest">Oldest First</button>
+                    <button class="sort-option" data-sort="a-z">A → Z</button>
+                    <button class="sort-option" data-sort="z-a">Z → A</button>
+                </div>
+            </div>
+            <div class="filter-wrap">
+                <button class="filter-toggle" id="filterToggle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                    </svg>
+                    Filter
+                </button>
+                <div class="filter-dropdown" id="filterDropdown">
+                    <button class="filter-option active" data-filter="all">All</button>
+                    <button class="filter-option" data-filter="frontend">Frontend</button>
+                    <button class="filter-option" data-filter="fullstack">Full Stack</button>
+                    <button class="filter-option" data-filter="ai">AI / ML</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="count-row">
+            <span class="projects-count" id="projectsCount">Showing <strong>4</strong> projects</span>
+        </div>
+
+        <div class="projects-grid" id="allProjectsGrid">
+            <!-- Projects loaded dynamically from GitHub API -->
+        </div>
+        <div class="show-more-wrap">
+            <button class="show-more-btn" id="projectsShowMore">Load More ↓</button>
+        </div>
+    </section>
+
+        <!-- FOOTER -->
+    <footer>
+        <div class="footer-new">
+            <div class="footer-new-top">
+                <div class="footer-new-brand">
+                    <span class="footer-logo">harshx<span>.</span>in</span>
+                    <p>Full Stack Engineer building things that matter.<br class="footer-br">Deep-dive experimenter at heart.</p>
+                </div>
+                <div class="footer-new-socials">
+                    <a href="https://github.com/RajHarsh03" target="_blank" rel="noopener" class="footer-icon-btn" aria-label="GitHub">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                    </a>
+                    <a href="https://www.linkedin.com/in/rajharsh03" target="_blank" rel="noopener" class="footer-icon-btn" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    </a>
+                    <a href="https://x.com/RajHarsh03" target="_blank" rel="noopener" class="footer-icon-btn" aria-label="X / Twitter">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <a href="https://blog.harshx.in/" target="_blank" rel="noopener" class="footer-icon-btn" aria-label="Blog">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M22.351 8.019l-6.37-6.37a5.63 5.63 0 00-7.962 0l-6.37 6.37a5.63 5.63 0 000 7.962l6.37 6.37a5.63 5.63 0 007.962 0l6.37-6.37a5.63 5.63 0 000-7.962zM12 15.953a3.953 3.953 0 110-7.906 3.953 3.953 0 010 7.906z"/></svg>
+                    </a>
+                
+                </div>
+            </div>
+            <div class="footer-new-bottom">
+                <span class="footer-copy">&#169; <script>document.write(new Date().getFullYear())</script> &middot; harshx.in &middot; All rights reserved.</span>
+                <div class="footer-new-right">
+                    <span class="footer-visits" id="footerVisits" hidden>
+                        <span class="visit-dot" aria-hidden="true"></span>
+                        <span id="visitCount">&#8212;</span> Visits
+                    </span>
+                    <span class="footer-made-by">MADE BY: <a>HARSH</a></span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="github-projects.js"></script>
+    <script src="theme-toggle.js"></script>
+    <script>
+        
+
+        /* THEME TOGGLE — handled by theme-toggle.js */
+
+        /* CUSTOM CURSOR */
+        (function () {
+            const cur = document.getElementById('cursor');
+            const ring = document.getElementById('cursorRing');
+            if (!cur || !ring) return;
+            let mx = 0, my = 0, rx = 0, ry = 0;
+            document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+            (function tick() {
+                cur.style.transform = `translate(${mx - 6}px,${my - 6}px)`;
+                rx += (mx - rx) * .12; ry += (my - ry) * .12;
+                ring.style.transform = `translate(${rx - 18}px,${ry - 18}px)`;
+                requestAnimationFrame(tick);
+            })();
+            document.querySelectorAll('a,button,.project-card,.theme-btn,.filter-toggle,.filter-option,.sort-toggle,.sort-option,input').forEach(el => {
+                el.addEventListener('mouseenter', () => { ring.style.width = '52px'; ring.style.height = '52px'; });
+                el.addEventListener('mouseleave', () => { ring.style.width = '36px'; ring.style.height = '36px'; });
+            });
+        })();
+
+        /* REVEAL ON SCROLL */
+        function attachReveal() {
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+                });
+            }, { threshold: .15 });
+            document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+        }
+        attachReveal();
+
+        /* ===== SEARCH + SORT + FILTER — initialised after dynamic cards load ===== */
+        let _uiAbort = null; // AbortController for clean listener teardown on refresh
+
+        function initProjectsUI(allCards) {
+            /* Abort previous listeners so they don't pile up on refresh */
+            if (_uiAbort) _uiAbort.abort();
+            _uiAbort = new AbortController();
+            const sig = { signal: _uiAbort.signal };
+
+            const grid = document.getElementById('allProjectsGrid');
+            const originalOrder = [...allCards];
+            let activeFilter = 'all';
+            let activeSort = 'newest';
+            let searchQuery = '';
+
+            /* Restore active filter/sort from DOM (in case of refresh) */
+            const activeFilterOpt = document.querySelector('.filter-option.active');
+            if (activeFilterOpt) activeFilter = activeFilterOpt.dataset.filter;
+            const activeSortOpt = document.querySelector('.sort-option.active');
+            if (activeSortOpt) activeSort = activeSortOpt.dataset.sort;
+            const searchInput = document.getElementById('projectSearch');
+            if (searchInput.value.trim()) searchQuery = searchInput.value.trim().toLowerCase();
+
+            /* --- Filter --- */
+            const filterToggle = document.getElementById('filterToggle');
+            const filterDD = document.getElementById('filterDropdown');
+            const filterOpts = filterDD.querySelectorAll('.filter-option');
+
+            filterToggle.addEventListener('click', () => {
+                const isOpening = !filterDD.classList.contains('show');
+                filterDD.classList.toggle('show');
+                filterToggle.classList.toggle('open');
+                sortDD.classList.remove('show');
+                sortToggle.classList.remove('open');
+
+                if (isOpening) {
+                    const toggleRect = filterToggle.getBoundingClientRect();
+                    const ddWidth = Math.max(filterDD.offsetWidth, 160);
+                    if (toggleRect.left + ddWidth > window.innerWidth - 8) {
+                        filterDD.style.left = 'auto';
+                        filterDD.style.right = '0';
+                    } else {
+                        filterDD.style.left = '0';
+                        filterDD.style.right = 'auto';
+                    }
+                }
+            }, sig);
+
+            filterOpts.forEach(opt => {
+                opt.addEventListener('click', () => {
+                    filterOpts.forEach(o => o.classList.remove('active'));
+                    opt.classList.add('active');
+                    activeFilter = opt.dataset.filter;
+                    filterDD.classList.remove('show');
+                    filterToggle.classList.remove('open');
+                    applyAll();
+                }, sig);
+            });
+
+            /* --- Sort --- */
+            const sortToggle = document.getElementById('sortToggle');
+            const sortDD = document.getElementById('sortDropdown');
+            const sortOpts = sortDD.querySelectorAll('.sort-option');
+
+            sortToggle.addEventListener('click', () => {
+                sortDD.classList.toggle('show');
+                sortToggle.classList.toggle('open');
+                filterDD.classList.remove('show');
+                filterToggle.classList.remove('open');
+            }, sig);
+
+            sortOpts.forEach(opt => {
+                opt.addEventListener('click', () => {
+                    sortOpts.forEach(o => o.classList.remove('active'));
+                    opt.classList.add('active');
+                    activeSort = opt.dataset.sort;
+                    sortDD.classList.remove('show');
+                    sortToggle.classList.remove('open');
+                    applyAll();
+                }, sig);
+            });
+
+            /* --- Close dropdowns on outside click --- */
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.filter-wrap')) {
+                    filterDD.classList.remove('show');
+                    filterToggle.classList.remove('open');
+                }
+                if (!e.target.closest('.sort-wrap')) {
+                    sortDD.classList.remove('show');
+                    sortToggle.classList.remove('open');
+                }
+            }, sig);
+
+            /* --- Search --- */
+            let debounceTimer;
+            searchInput.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    searchQuery = searchInput.value.trim().toLowerCase();
+                    applyAll();
+                }, 200);
+            }, sig);
+
+            /* --- Apply filter + sort + search --- */
+            function applyAll() {
+                let visible = [...originalOrder];
+
+                if (activeFilter !== 'all') {
+                    visible = visible.filter(c => c.dataset.category === activeFilter);
+                }
+
+                if (searchQuery) {
+                    visible = visible.filter(c => {
+                        const title = (c.querySelector('.project-title')?.textContent || '').toLowerCase();
+                        const desc = (c.querySelector('.project-desc')?.textContent || '').toLowerCase();
+                        const stack = (c.querySelector('.project-stack')?.textContent || '').toLowerCase();
+                        return title.includes(searchQuery) || desc.includes(searchQuery) || stack.includes(searchQuery);
+                    });
+                }
+
+                // 4. Sort
+                if (activeSort === 'newest') {
+                    visible.sort((a, b) => {
+                        const ra = parseFloat(a.dataset.rank);
+                        const rb = parseFloat(b.dataset.rank);
+                        const rankA = Number.isFinite(ra) ? ra : 9999;
+                        const rankB = Number.isFinite(rb) ? rb : 9999;
+                        if (rankA !== rankB) return rankA - rankB;
+                        return new Date(b.dataset.updated) - new Date(a.dataset.updated);
+                    });
+                } else if (activeSort === 'oldest') {
+                    visible.sort((a, b) => {
+                        return new Date(a.dataset.updated) - new Date(b.dataset.updated);
+                    });
+                } else if (activeSort === 'a-z') {
+                    visible.sort((a, b) => {
+                        const ta = a.querySelector('.project-title')?.textContent || '';
+                        const tb = b.querySelector('.project-title')?.textContent || '';
+                        return ta.localeCompare(tb);
+                    });
+                } else if (activeSort === 'z-a') {
+                    visible.sort((a, b) => {
+                        const ta = a.querySelector('.project-title')?.textContent || '';
+                        const tb = b.querySelector('.project-title')?.textContent || '';
+                        return tb.localeCompare(ta);
+                    });
+                }
+
+                const hasActiveQuery = searchQuery || activeFilter !== 'all';
+                grid.classList.toggle('searching', hasActiveQuery);
+
+                const hiddenSet = new Set(allCards);
+                visible.forEach(c => hiddenSet.delete(c));
+                hiddenSet.forEach(c => { c.style.display = 'none'; });
+
+                const oldNR = grid.querySelector('.no-results');
+                if (oldNR) oldNR.remove();
+
+                if (!visible.length) {
+                    const nr = document.createElement('div');
+                    nr.className = 'no-results';
+                    nr.innerHTML = `<span class="nr-icon">🔍</span><span class="nr-title">No projects found</span>Try a different search term or filter.`;
+                    grid.appendChild(nr);
+                } else {
+                    visible.forEach((c, i) => {
+                        c.style.display = '';
+                        c.style.opacity = '0';
+                        c.style.transform = 'translateY(20px)';
+                        grid.appendChild(c);
+                        requestAnimationFrame(() => {
+                            c.style.transition = `opacity .4s ease ${i * .06}s, transform .4s ease ${i * .06}s`;
+                            c.style.opacity = '1';
+                            c.style.transform = 'translateY(0)';
+                        });
+                    });
+                }
+
+                applyPagination(visible, hasActiveQuery);
+            }
+
+            /* ── Show More / Show Less (4-card limit) ── */
+            const SHOW_LIMIT = 4;
+            let isExpanded = false;
+            let _lastVisible = [];
+            const showMoreBtn = document.getElementById('projectsShowMore');
+
+            function applyPagination(visibleCards, hasActive) {
+                _lastVisible = visibleCards;
+                const countEl = document.getElementById('projectsCount');
+
+                if (hasActive) {
+                    /* Active search/filter — show all results, hide button */
+                    visibleCards.forEach(c => { if (c.style.display === 'none') c.style.display = ''; });
+                    if (showMoreBtn) showMoreBtn.style.display = 'none';
+                    if (countEl) countEl.innerHTML = `Showing <strong>${visibleCards.length}</strong> project${visibleCards.length !== 1 ? 's' : ''}`;
+                    return;
+                }
+
+                const showAll = isExpanded || visibleCards.length <= SHOW_LIMIT;
+                visibleCards.forEach((c, i) => { c.style.display = showAll || i < SHOW_LIMIT ? '' : 'none'; });
+
+                if (showMoreBtn) {
+                    if (visibleCards.length <= SHOW_LIMIT) {
+                        showMoreBtn.style.display = 'none';
+                    } else if (isExpanded) {
+                        showMoreBtn.style.display = '';
+                        showMoreBtn.innerHTML = 'Show Less ↑';
+                    } else {
+                        showMoreBtn.style.display = '';
+                        showMoreBtn.innerHTML = `Show More <span style="opacity:.55;font-size:.82em">(${visibleCards.length - SHOW_LIMIT} more)</span> ↓`;
+                    }
+                }
+
+                const shown = showAll ? visibleCards.length : SHOW_LIMIT;
+                if (countEl) countEl.innerHTML = shown < visibleCards.length
+                    ? `Showing <strong>${shown}</strong> of <strong>${visibleCards.length}</strong> project${visibleCards.length !== 1 ? 's' : ''}`
+                    : `Showing <strong>${visibleCards.length}</strong> project${visibleCards.length !== 1 ? 's' : ''}`;
+            }
+
+            if (showMoreBtn) {
+                showMoreBtn.addEventListener('click', () => {
+                    isExpanded = !isExpanded;
+                    const hasActive = searchQuery || activeFilter !== 'all';
+                    applyPagination(_lastVisible, hasActive);
+                    if (!isExpanded) {
+                        document.getElementById('allProjects').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, sig);
+            }
+
+            /* Apply immediately to respect current filter/sort/search state */
+            applyAll();
+        } // end initProjectsUI
+
+        
+
+        /* ===== GITHUB: Load all portfolio projects + AUTO-REFRESH ===== */
+        (function () {
+            const grid = document.getElementById('allProjectsGrid');
+            if (!grid) return;
+
+            let lastHash = '';  // fingerprint to detect changes
+
+            /* Build a simple hash from project data to detect changes */
+            function projectsHash(projects) {
+                return projects.map(p => `${p.name}|${p.rank}|${p.category}|${p.completed}|${p.stack.join(',')}`).join(';;');
+            }
+
+            /* Render projects into the grid and init UI */
+            function renderProjects(projects) {
+                if (!projects.length) {
+                    grid.innerHTML = `<div class="no-results"><span class="nr-icon">📭</span><span class="nr-title">No projects found</span>Tag your GitHub repos with <code>portfolio</code> to show them here.</div>`;
+                    document.getElementById('projectsCount').innerHTML = 'Showing <strong>0</strong> projects';
+                    return;
+                }
+
+                grid.innerHTML = projects.map(p => buildProjectCard(p)).join('');
+                attachReveal();
+
+                /* Attach cursor hover */
+                grid.querySelectorAll('a, .project-card').forEach(el => {
+                    el.addEventListener('mouseenter', () => { const r = document.getElementById('cursorRing'); if (r) { r.style.width = '52px'; r.style.height = '52px'; } });
+                    el.addEventListener('mouseleave', () => { const r = document.getElementById('cursorRing'); if (r) { r.style.width = '36px'; r.style.height = '36px'; } });
+                });
+
+                const allCards = Array.from(grid.querySelectorAll('.project-card'));
+                document.getElementById('projectsCount').innerHTML =
+                    `Showing <strong>${allCards.length}</strong> project${allCards.length !== 1 ? 's' : ''}`;
+                initProjectsUI(allCards);
+            }
+
+            /* Fetch, sort, and render (or refresh) */
+            async function loadProjects(showSkeletons) {
+                if (showSkeletons) {
+                    grid.innerHTML = buildSkeletons(6);
+                    document.getElementById('projectsCount').innerHTML = 'Loading projects...';
+                }
+
+                try {
+                    const projects = await fetchPortfolioProjects();
+                    projects.sort((a, b) => a.rank - b.rank || new Date(b.updatedAt) - new Date(a.updatedAt));
+
+                    const hash = projectsHash(projects);
+                    if (hash === lastHash) return; // nothing changed
+                    lastHash = hash;
+
+                    renderProjects(projects);
+                } catch (err) {
+                    if (showSkeletons) {
+                        console.warn('GitHub fetch failed:', err);
+                        grid.innerHTML = `<div class="no-results"><span class="nr-icon">⚠️</span><span class="nr-title">Could not load projects</span>${err.message}</div>`;
+                        document.getElementById('projectsCount').innerHTML = 'Showing <strong>0</strong> projects';
+                    }
+                }
+            }
+
+            /* Initial load with skeletons */
+            loadProjects(true);
+
+            /* Auto-refresh: re-fetch when user returns to the tab */
+            let refreshCooldown = false;
+            function autoRefresh() {
+                if (refreshCooldown) return;
+                refreshCooldown = true;
+                /* Small delay so GitHub API has time to propagate changes */
+                setTimeout(() => {
+                    console.log('[Projects] Auto-refreshing...');
+                    loadProjects(false).then(() => {
+                        refreshCooldown = false;
+                    });
+                }, 1500);
+            }
+
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) autoRefresh();
+            });
+            window.addEventListener('focus', autoRefresh);
+
+            /* Background poll every 2 minutes */
+            setInterval(() => loadProjects(false), 2 * 60 * 1000);
+
+
+        })();
+    </script>
+    <script src="visit-counter.js"></script>
+</body>
+
+</html>
+
+
+

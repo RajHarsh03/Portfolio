@@ -1,0 +1,36 @@
+{
+    "rewrites": [
+        {
+            "source": "/",
+            "destination": "/index.html"
+        },
+        {
+            "source": "/contact",
+            "destination": "/contact.html"
+        },
+        {
+            "source": "/projects",
+            "destination": "/projects.html"
+        },
+        {
+            "source": "/projects/:slug",
+            "destination": "/project.html"
+        },
+        {
+            "source": "/blogs",
+            "destination": "/blogs.html"
+        },
+        {
+            "source": "/bookmarks",
+            "destination": "/bookmarks.html"
+        },
+        {
+            "source": "/journey",
+            "destination": "/journey.html"
+        },
+        {
+            "source": "/certificates",
+            "destination": "/certificates.html"
+        }
+    ]
+}
