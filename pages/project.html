@@ -180,20 +180,20 @@
             width: 36px;
             height: 36px;
             border-radius: 9px;
-            background: var(--surface);
-            border: 1px solid var(--border);
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.12);
             padding: 6px;
             object-fit: contain;
             transition: transform .2s, border-color .2s;
         }
         .pd-tech-icon:hover { transform: scale(1.15); border-color: var(--accent); }
-        [data-theme="light"] .pd-tech-icon { background: rgba(0,0,0,.03); border-color: rgba(0,0,0,.12); }
-        /* Express/Flask icon is black — force white in dark mode */
+        [data-theme="light"] .pd-tech-icon { background: rgba(0,0,0,.04); border-color: rgba(0,0,0,.12); }
+        /* Express/Flask: black SVG — invert to white in dark mode */
         [data-theme="dark"] .pd-tech-icon[src*="express"],
         [data-theme="dark"] .pd-tech-icon[alt="express"],
         [data-theme="dark"] .pd-tech-icon[alt="expressjs"],
         [data-theme="dark"] .pd-tech-icon[src*="flask"],
-        [data-theme="dark"] .pd-tech-icon[alt="flask"] { filter: brightness(0) invert(1); }
+        [data-theme="dark"] .pd-tech-icon[alt="flask"] { filter: invert(1); }
 
         /* Stack tags (topics without icons) */
         .pd-tags {
@@ -399,7 +399,8 @@
         /* ── Render ── */
         function render(r) {
             const topics = r.topics || [];
-            const imgUrl = `https://opengraph.github.com/repo/${GH_USER}/${r.name}`;
+            const imgPrimary  = `https://raw.githubusercontent.com/${GH_USER}/${r.name}/HEAD/preview.png`;
+            const imgFallback = `https://opengraph.githubassets.com/1/${GH_USER}/${r.name}`;
             const completed = topics.includes('completed') || topics.includes('live');
             const live = r.homepage && r.homepage.trim() ? r.homepage.trim() : null;
             const name = r.name.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
@@ -439,7 +440,8 @@
                 </a>
 
                 <div class="pd-img-wrap">
-                    <img src="${imgUrl}" alt="${name} preview" />
+                    <img src="${imgPrimary}" alt="${name} preview"
+                         onerror="if(this.src!=='${imgFallback}'){this.src='${imgFallback}';}else{this.closest('.pd-img-wrap').style.display='none';}" />
                 </div>
 
                 <div class="pd-title-row">
