@@ -101,6 +101,13 @@
             gap: .7rem;
             margin-bottom: .6rem;
         }
+        .pd-title-row .pd-badges {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            flex-wrap: wrap;
+        }
         .pd-title {
             font-family: 'Syne', sans-serif;
             font-size: 1.75rem;
@@ -446,8 +453,10 @@
 
                 <div class="pd-title-row">
                     <h1 class="pd-title">${name}</h1>
-                    <div class="${statusCls}">${statusTxt}</div>
-                    ${typePill}
+                    <div class="pd-badges">
+                        <div class="${statusCls}">${statusTxt}</div>
+                        ${typePill}
+                    </div>
                 </div>
 
                 <div class="pd-meta">
