@@ -188,8 +188,12 @@
         }
         .pd-tech-icon:hover { transform: scale(1.15); border-color: var(--accent); }
         [data-theme="light"] .pd-tech-icon { background: rgba(0,0,0,.03); border-color: rgba(0,0,0,.12); }
-        /* Express icon is black — invert in dark mode so it's visible */
-        [data-theme="dark"] .pd-tech-icon[src*="express"] { filter: invert(1); }
+        /* Express/Flask icon is black — force white in dark mode */
+        [data-theme="dark"] .pd-tech-icon[src*="express"],
+        [data-theme="dark"] .pd-tech-icon[alt="express"],
+        [data-theme="dark"] .pd-tech-icon[alt="expressjs"],
+        [data-theme="dark"] .pd-tech-icon[src*="flask"],
+        [data-theme="dark"] .pd-tech-icon[alt="flask"] { filter: brightness(0) invert(1); }
 
         /* Stack tags (topics without icons) */
         .pd-tags {

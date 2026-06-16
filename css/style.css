@@ -1541,10 +1541,10 @@ section {
 .project-img-wrap {
     position: relative;
     width: 100%;
-    height: 155px;
+    aspect-ratio: 16 / 9;
     overflow: hidden;
     border-radius: 10px 10px 0 0;
-    background: var(--surface, #0d1117);
+    background: #0d1117;
     flex-shrink: 0;
 }
 
@@ -1851,14 +1851,18 @@ section {
     animation: shimmer 1.4s infinite;
 }
 
-/* Black-on-white devicons — invert in dark mode so bg goes black, icon goes white */
+/* Black-on-transparent devicons (Express, Flask) — force white in dark mode */
 [data-theme="dark"] .proj-tech-icon[alt="express"],
 [data-theme="dark"] .proj-tech-icon[alt="expressjs"],
 [data-theme="dark"] .proj-tech-icon[alt="flask"],
+[data-theme="dark"] .proj-tech-icon[src*="express"],
+[data-theme="dark"] .proj-tech-icon[src*="flask"],
 [data-theme="dark"] .pd-tech-icon[alt="express"],
 [data-theme="dark"] .pd-tech-icon[alt="expressjs"],
-[data-theme="dark"] .pd-tech-icon[alt="flask"] {
-    filter: invert(1);
+[data-theme="dark"] .pd-tech-icon[alt="flask"],
+[data-theme="dark"] .pd-tech-icon[src*="express"],
+[data-theme="dark"] .pd-tech-icon[src*="flask"] {
+    filter: brightness(0) invert(1);
 }
 
 /* Light mode — slightly visible chip for tech icons */
@@ -3645,14 +3649,15 @@ footer {
         border-radius: 12px;
     }
 
-    /* Fill card fully — crop from right so repo name text (left) stays visible */
+    /* Full image always visible — no cropping */
     .project-img-wrap {
-        height: 130px;
+        aspect-ratio: 16 / 9;
+        height: auto;
     }
 
     .project-img-wrap img {
         object-fit: cover;
-        object-position: left top;
+        object-position: top center;
     }
 
     [data-theme="light"] .project-img-wrap {
