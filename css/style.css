@@ -1288,40 +1288,66 @@ section {
 .journey-cards {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin-top: 1.2rem;
+    gap: 10px;
+    margin-top: 1.4rem;
 }
 
 .journey-card {
     display: flex;
     align-items: center;
-    gap: .9rem;
+    gap: .85rem;
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: .9rem 1.2rem;
+    border-radius: 12px;
+    padding: .88rem 1.15rem;
     text-decoration: none;
     color: var(--text);
-    transition: border-color .3s, box-shadow .3s, transform .3s;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .3s, box-shadow .3s, transform .25s;
     cursor: pointer;
 }
 
+/* Gradient border glow on hover via pseudo-element */
+.journey-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    padding: 1px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2, #14b8a6));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity .35s;
+}
+
+.journey-card:hover::before { opacity: 1; }
+
 .journey-card:hover {
-    border-color: var(--accent);
-    box-shadow: 0 0 32px rgba(59, 130, 246, .12);
-    transform: translateY(-2px);
+    box-shadow: 0 4px 32px rgba(59, 130, 246, .15), 0 1px 8px rgba(0,0,0,.2);
+    transform: translateY(-3px);
 }
 
 .journey-card-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
-    border-radius: 8px;
-    background: rgba(59, 130, 246, .1);
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(59,130,246,.15), rgba(20,184,166,.1));
+    border: 1px solid rgba(59,130,246,.18);
     color: var(--accent);
+    transition: box-shadow .3s, transform .3s;
+}
+
+.journey-card:hover .journey-card-icon {
+    box-shadow: 0 0 18px rgba(59,130,246,.35);
+    transform: scale(1.08);
 }
 
 .journey-card-text {
@@ -1330,25 +1356,27 @@ section {
 
 .journey-card-title {
     font-weight: 700;
-    font-size: .95rem;
+    font-size: .93rem;
     margin-bottom: .15rem;
+    letter-spacing: -.01em;
 }
 
 .journey-card-desc {
-    font-size: .9rem;
+    font-size: .81rem;
     color: var(--muted);
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 .journey-card-arrow {
     color: var(--muted);
     opacity: 0;
-    transition: opacity .3s, transform .3s;
+    transition: opacity .3s, transform .3s, color .3s;
+    flex-shrink: 0;
 }
 
 .journey-card:hover .journey-card-arrow {
     opacity: 1;
-    transform: translateX(4px);
+    transform: translateX(5px);
     color: var(--accent);
 }
 
