@@ -693,12 +693,13 @@ section {
 
 /* Hero name */
 .hero-greeting {
-    font-size: 1.15rem;
-    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 300;
     color: var(--text);
-    letter-spacing: .01em;
+    letter-spacing: .03em;
     margin-bottom: .2rem;
-    opacity: .75;
+    opacity: .85;
     animation: fadeUp .6s .05s ease both;
 }
 
@@ -2895,10 +2896,12 @@ footer {
     .hero-cta .btn-cv {
         flex: 0 1 auto;
         text-align: center;
+        justify-content: center;
         padding: .5rem 1rem;
         font-size: .72rem;
         gap: .3rem;
         border-radius: 8px;
+        white-space: nowrap;
     }
 
     .hero-cta .btn-primary svg,
@@ -3695,12 +3698,185 @@ footer {
 .journey-block { margin-bottom: 4rem; }
 .journey-block:last-child { margin-bottom: 0; }
 
+/* ── Experience Cards ── */
+.exp-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.exp-card {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 1.4rem 1.5rem 1.5rem;
+  background: var(--card);
+  background-image:
+    linear-gradient(rgba(59,130,246,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,130,246,.03) 1px, transparent 1px);
+  background-size: 28px 28px;
+  transition: border-color .25s, transform .25s, box-shadow .25s;
+}
+
+.exp-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(59,130,246,.1);
+}
+
+/* Top row: label + badge */
+.exp-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.exp-card-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .7rem;
+  letter-spacing: .1em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.exp-card-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .25rem .6rem;
+  border-radius: 0;
+}
+
+.badge-purple {
+  background: rgba(139,92,246,.15);
+  color: #a78bfa;
+  border: 1px dashed rgba(139,92,246,.7);
+}
+[data-theme="light"] .badge-purple {
+  background: rgba(139,92,246,.1);
+  color: #7c3aed;
+  border-color: rgba(139,92,246,.6);
+}
+
+.badge-blue {
+  background: rgba(59,130,246,.12);
+  color: var(--accent);
+  border: 1px dashed rgba(59,130,246,.7);
+}
+[data-theme="light"] .badge-blue {
+  background: rgba(59,130,246,.08);
+  color: #1d4ed8;
+  border-color: rgba(59,130,246,.6);
+}
+
+.badge-teal {
+  background: rgba(20,184,166,.12);
+  color: var(--accent2);
+  border: 1px dashed rgba(20,184,166,.7);
+}
+[data-theme="light"] .badge-teal {
+  background: rgba(20,184,166,.08);
+  color: #0f766e;
+  border-color: rgba(20,184,166,.6);
+}
+
+/* Company row */
+.exp-card-company {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: .35rem;
+}
+
+.exp-card-icon {
+  display: flex;
+  align-items: center;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* Role + date */
+.exp-card-role {
+  font-family: 'DM Mono', monospace;
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 1rem;
+}
+
+/* Bullet list */
+.exp-card-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.exp-card-bullets li {
+  font-size: .85rem;
+  color: var(--muted);
+  line-height: 1.6;
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.exp-card-bullets li::before {
+  content: '▪';
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+  font-size: .6rem;
+  top: .25rem;
+}
+
 /* --- Certificates page --- */
 .certs-page-header { max-width: 760px; margin: 0 auto 1.5rem; padding: 0 24px; }
 .certs-page-header h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: .35rem; }
 .certs-page-header p { color: var(--muted); font-size: .88rem; }
 #allCerts { max-width: 760px; margin: 0 auto; padding: 0 24px 4rem; }
-#allCerts .certs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+
+/* Cert card description */
+.exp-card-desc-text {
+  font-size: .85rem;
+  color: var(--muted);
+  line-height: 1.65;
+  margin: 0 0 1rem;
+}
+
+/* External link row */
+.cert-link-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cert-ext-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  transition: border-color .2s, color .2s, background .2s;
+  text-decoration: none;
+}
+
+.cert-ext-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(59,130,246,.06);
+}
 
 /* --- Contact page --- */
 .contact-page-header { max-width: 760px; margin: 0 auto 1.5rem; padding: 0 24px; }
@@ -3911,6 +4087,7 @@ footer {
 .project-card,
 .cert-card,
 .journey-card,
+.exp-card,
 .gh-activity-card,
 .bottom-nav,
 .sort-toggle,
@@ -3932,6 +4109,7 @@ footer {
 [data-theme="dark"] .project-card,
 [data-theme="dark"] .cert-card,
 [data-theme="dark"] .journey-card,
+[data-theme="dark"] .exp-card,
 [data-theme="dark"] .gh-activity-card,
 [data-theme="dark"] .bottom-nav,
 [data-theme="dark"] .sort-toggle,
@@ -3952,6 +4130,7 @@ footer {
 [data-theme="light"] .project-card,
 [data-theme="light"] .cert-card,
 [data-theme="light"] .journey-card,
+[data-theme="light"] .exp-card,
 [data-theme="light"] .gh-activity-card,
 [data-theme="light"] .bottom-nav,
 [data-theme="light"] .sort-toggle,
@@ -3995,13 +4174,6 @@ footer {
   border-radius: 0 !important;
 }
 
-/* Get in touch — dashed border to match Resume/CV */
-.btn-primary {
-  border: 1px dashed rgba(255, 255, 255, 0.4) !important;
-}
-[data-theme="light"] .btn-primary {
-  border: 1px dashed rgba(37, 99, 235, 0.5) !important;
-}
 
 /* Timeline tags — dashed border */
 .tl-tag {
@@ -4029,10 +4201,14 @@ footer {
   border-style: dashed !important;
 }
 
-/* Send Message + Get in touch — dashed white border on colored buttons */
+/* Send Message + Get in touch — dashed border on colored buttons */
 .form-btn,
 .btn-primary {
   border: 1px dashed rgba(255, 255, 255, 0.6) !important;
+}
+[data-theme="light"] .form-btn,
+[data-theme="light"] .btn-primary {
+  border: 1px dashed rgba(0, 0, 0, 0.65) !important;
 }
 
 /* Hero tag — dashed blue border */
@@ -4043,4 +4219,29 @@ footer {
 /* GitHub profile link — dashed blue border */
 .gh-profile-link {
   border: 1px dashed var(--accent) !important;
+}
+
+/* ── 330px — keep hero buttons on one line ── */
+@media (max-width: 330px) {
+  .hero-cta {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: .3rem;
+  }
+
+  .hero-cta .btn-primary,
+  .hero-cta .btn-cv {
+    flex: 0 1 auto !important;
+    padding: .4rem .5rem !important;
+    font-size: .64rem !important;
+    gap: .2rem !important;
+    white-space: nowrap !important;
+  }
+
+  .hero-cta .btn-primary svg,
+  .hero-cta .btn-cv svg {
+    width: 10px !important;
+    height: 10px !important;
+    flex-shrink: 0;
+  }
 }
