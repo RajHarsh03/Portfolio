@@ -14,17 +14,7 @@ import {
 /** Minimal loading fallback shown while a lazy page chunk loads */
 function RouteLoader() {
   return (
-    <div style={{
-      minHeight: '70vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontFamily: 'DM Mono, monospace',
-      fontSize: '.85rem',
-      color: 'var(--muted)',
-    }}>
-      Loading…
-    </div>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)' }} />
   );
 }
 
