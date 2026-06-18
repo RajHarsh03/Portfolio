@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+import crypto from 'crypto';
 
 function getRedisConfig() {
     const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
@@ -53,7 +53,7 @@ async function recordVisit(config, req) {
     return getTotalVisits(config);
 }
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -75,4 +75,4 @@ module.exports = async function handler(req, res) {
         console.error('Visit counter error:', error);
         return res.status(500).json({ configured: true, total: null, error: 'Failed' });
     }
-};
+}
