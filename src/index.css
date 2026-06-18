@@ -311,9 +311,7 @@ nav.floating {
 }
 
 /* Mobile-only home icon — hidden on desktop */
-.nav-home-mobile {
-    display: none;
-}
+/* Mobile-only home icon — removed */
 
 /* ========================
    THEME TOGGLE — Icon Button
@@ -1946,10 +1944,8 @@ section {
 }
 
 [data-theme="light"] .gh-activity-card {
-    background-color: rgba(250, 249, 247, 0.95);
-    background-image:
-        linear-gradient(rgba(37, 99, 235, .08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(37, 99, 235, .08) 1px, transparent 1px);
+    background-color: var(--bg);
+    background-image: none;
 }
 
 .gh-activity-card:hover {
@@ -2342,86 +2338,6 @@ footer {
 /* ================================
    EXPANDABLE TABS NAV
    ================================ */
-.exp-tabs {
-    display: none;
-    align-items: center;
-    gap: .1rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 50px;
-    padding: .3rem;
-}
-
-.exp-tab {
-    display: inline-flex;
-    align-items: center;
-    padding: .42rem .55rem;
-    border-radius: 50px;
-    font-family: 'Syne', sans-serif;
-    font-size: .8rem;
-    font-weight: 700;
-    color: var(--muted);
-    text-decoration: none;
-    cursor: none;
-    white-space: nowrap;
-    border: none;
-    background: transparent;
-    transition: color .2s ease, background .2s ease;
-    position: relative;
-}
-
-.exp-tab:hover {
-    color: var(--text);
-}
-
-/* Expanded state — filled pill */
-.exp-tab.expanded {
-    background: #0f172a;
-    color: #fff;
-}
-
-[data-theme="light"] .exp-tab.expanded {
-    background: rgba(0, 0, 0, 0.07);
-    color: #0f172a;
-}
-
-[data-theme="light"] .exp-tab.expanded .exp-tab-label {
-    color: var(--accent);
-}
-
-.exp-tab svg {
-    flex-shrink: 0;
-    width: 17px;
-    height: 17px;
-}
-
-/* Label slides in */
-.exp-tab-label {
-    display: inline-block;
-    max-width: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition:
-        max-width .45s cubic-bezier(.34,1.2,.64,1),
-        opacity .2s ease,
-        margin-left .45s cubic-bezier(.34,1.2,.64,1);
-    margin-left: 0;
-}
-
-.exp-tab.expanded .exp-tab-label {
-    max-width: 100px;
-    opacity: 1;
-    margin-left: .45rem;
-}
-
-.exp-tab-sep {
-    width: 1px;
-    height: 20px;
-    background: var(--border);
-    flex-shrink: 0;
-    margin: 0 .2rem;
-}
-
 /* Animated nav link gradient hover */
 /* ============
    CARD TILT
@@ -2912,33 +2828,6 @@ footer {
     /* Hide GitHub by default — home page only */
     .nav-gh-btn {
         display: none;
-    }
-
-    /* index.html mobile — hide home icon + GitHub, keep toggle only */
-    .page-home .nav-home-mobile,
-    .page-home .nav-gh-btn {
-        display: none;
-    }
-
-    /* Mobile home icon button — bare icon, no box */
-    .nav-home-mobile {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: none;
-        border: none;
-        color: var(--text);
-        text-decoration: none;
-        opacity: .7;
-        transition: opacity .2s, color .2s;
-        flex-shrink: 0;
-        padding: 4px;
-    }
-
-    .nav-home-mobile:hover,
-    .nav-home-mobile:active {
-        opacity: 1;
-        color: var(--accent);
     }
 
     .theme-btn {
@@ -4016,7 +3905,6 @@ footer {
 .cert-card,
 .journey-card,
 .gh-activity-card,
-.exp-tabs,
 .bottom-nav,
 .sort-toggle,
 .sort-dropdown,
@@ -4038,7 +3926,6 @@ footer {
 [data-theme="dark"] .cert-card,
 [data-theme="dark"] .journey-card,
 [data-theme="dark"] .gh-activity-card,
-[data-theme="dark"] .exp-tabs,
 [data-theme="dark"] .bottom-nav,
 [data-theme="dark"] .sort-toggle,
 [data-theme="dark"] .sort-dropdown,
@@ -4059,7 +3946,6 @@ footer {
 [data-theme="light"] .cert-card,
 [data-theme="light"] .journey-card,
 [data-theme="light"] .gh-activity-card,
-[data-theme="light"] .exp-tabs,
 [data-theme="light"] .bottom-nav,
 [data-theme="light"] .sort-toggle,
 [data-theme="light"] .sort-dropdown,
