@@ -2721,6 +2721,26 @@ footer {
         padding: 4rem 0;
     }
 
+    .gh-activity-section,
+    .hero-inner,
+    .about-grid,
+    .container {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .projects-grid,
+    .projects-view-all {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    #skills > .section-label,
+    #skills > h2.section-title {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
     #hero {
         padding: 7rem 0 4rem;
         min-height: auto;
@@ -2848,6 +2868,26 @@ footer {
         padding: 2.5rem 0;
     }
 
+    .gh-activity-section,
+    .hero-inner,
+    .about-grid,
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .projects-grid,
+    .projects-view-all {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    #skills > .section-label,
+    #skills > h2.section-title {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
     #hero {
         padding: 5rem 0 2.5rem;
         min-height: auto;
@@ -2930,7 +2970,7 @@ footer {
 
     /* About */
     #about {
-        padding: 2.5rem 1rem;
+        padding: 2.5rem 0;
     }
 
     .about-grid {
