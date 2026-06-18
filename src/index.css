@@ -2,10 +2,10 @@
    DESIGN SYSTEM: COLORS
    ===================== */
 [data-theme="dark"] {
-    --bg: #070b14;
-    --bg-primary: #070b14;
-    --bg-secondary: #0d1220;
-    --surface: #0d1220;
+    --bg: #0c0c0c;
+    --bg-primary: #0c0c0c;
+    --bg-secondary: #131313;
+    --surface: #131313;
     --border: rgba(255, 255, 255, 0.08);
     --accent: #3b82f6;
     --accent-hover: #2563eb;
@@ -16,10 +16,10 @@
     --text-primary: #e2e8f0;
     --text-secondary: #64748b;
     --muted: #64748b;
-    --card: rgba(59, 130, 246, 0.04);
+    --card: rgba(255, 255, 255, 0.03);
     --input-bg: rgba(255, 255, 255, 0.05);
-    --footer-bg: #050810;
-    --nav-bg: rgba(7, 11, 20, 0.55);
+    --footer-bg: #080808;
+    --nav-bg: rgba(12, 12, 12, 0.55);
     --glow1: rgba(59, 130, 246, .12);
     --glow2: rgba(20, 184, 166, .08);
     --glow3: rgba(245, 158, 11, .06);
@@ -31,10 +31,10 @@
 }
 
 [data-theme="light"] {
-    --bg: #f5f3ef;
-    --bg-primary: #f5f3ef;
-    --bg-secondary: #faf9f7;
-    --surface: #faf9f7;
+    --bg: #fdf2eb;
+    --bg-primary: #fdf2eb;
+    --bg-secondary: #fef6f1;
+    --surface: #fef6f1;
     --border: rgba(0, 0, 0, 0.08);
     --accent: #2563eb;
     --accent-hover: #1d4ed8;
@@ -47,8 +47,8 @@
     --muted: #64748b;
     --card: rgba(37, 99, 235, 0.03);
     --input-bg: rgba(0, 0, 0, 0.04);
-    --footer-bg: #e8e5e0;
-    --nav-bg: rgba(245, 243, 239, 0.55);
+    --footer-bg: #f5e8de;
+    --nav-bg: rgba(253, 242, 235, 0.55);
     --glow1: rgba(37, 99, 235, .1);
     --glow2: rgba(13, 148, 136, .08);
     --glow3: rgba(217, 119, 6, .06);
@@ -62,10 +62,10 @@
    DESIGN SYSTEM: COLORS
    ===================== */
 [data-theme="dark"] {
-    --bg: #070b14;
-    --bg-primary: #070b14;
-    --bg-secondary: #0d1220;
-    --surface: #0d1220;
+    --bg: #0c0c0c;
+    --bg-primary: #0c0c0c;
+    --bg-secondary: #131313;
+    --surface: #131313;
     --border: rgba(255, 255, 255, 0.08);
     --accent: #3b82f6;
     --accent-hover: #2563eb;
@@ -76,10 +76,10 @@
     --text-primary: #e2e8f0;
     --text-secondary: #64748b;
     --muted: #64748b;
-    --card: rgba(59, 130, 246, 0.04);
+    --card: rgba(255, 255, 255, 0.03);
     --input-bg: rgba(255, 255, 255, 0.05);
-    --footer-bg: #050810;
-    --nav-bg: rgba(7, 11, 20, 0.55);
+    --footer-bg: #080808;
+    --nav-bg: rgba(12, 12, 12, 0.55);
     --glow1: rgba(59, 130, 246, .12);
     --glow2: rgba(20, 184, 166, .08);
     --glow3: rgba(245, 158, 11, .06);
@@ -91,10 +91,10 @@
 }
 
 [data-theme="light"] {
-    --bg: #f5f3ef;
-    --bg-primary: #f5f3ef;
-    --bg-secondary: #faf9f7;
-    --surface: #faf9f7;
+    --bg: #fdf2eb;
+    --bg-primary: #fdf2eb;
+    --bg-secondary: #fef6f1;
+    --surface: #fef6f1;
     --border: rgba(0, 0, 0, 0.08);
     --accent: #2563eb;
     --accent-hover: #1d4ed8;
@@ -107,8 +107,8 @@
     --muted: #64748b;
     --card: rgba(37, 99, 235, 0.03);
     --input-bg: rgba(0, 0, 0, 0.04);
-    --footer-bg: #e8e5e0;
-    --nav-bg: rgba(245, 243, 239, 0.55);
+    --footer-bg: #f5e8de;
+    --nav-bg: rgba(253, 242, 235, 0.55);
     --glow1: rgba(37, 99, 235, .1);
     --glow2: rgba(13, 148, 136, .08);
     --glow3: rgba(217, 119, 6, .06);
@@ -155,15 +155,31 @@ body::before {
     z-index: 0;
     pointer-events: none;
     background-image:
-        linear-gradient(rgba(59, 130, 246, .045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(59, 130, 246, .045) 1px, transparent 1px);
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
     background-size: 60px 60px;
 }
 
 [data-theme="light"] body::before {
     background-image:
-        linear-gradient(rgba(37, 99, 235, .055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(37, 99, 235, .055) 1px, transparent 1px);
+        linear-gradient(rgba(0,0,0,.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,.07) 1px, transparent 1px);
+    background-size: 60px 60px;
+}
+
+/* Dot grid overlay on top of line grid */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9997;
+    pointer-events: none;
+    background-image: radial-gradient(circle, rgba(255,255,255,.12) 1px, transparent 1px);
+    background-size: 28px 28px;
+}
+
+[data-theme="light"] body::after {
+    background-image: radial-gradient(circle, rgba(0,0,0,.12) 1px, transparent 1px);
 }
 
 /* SKIP TO CONTENT */
@@ -250,7 +266,7 @@ nav {
     top: 1rem;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 100;
+    z-index: 9998;
     padding: .6rem 1.25rem;
     display: flex;
     justify-content: space-between;
@@ -1025,10 +1041,11 @@ section {
     transition: opacity .35s;
 }
 
-.journey-card:hover::before { opacity: 1; }
+.journey-card:hover::before { opacity: 0; }
 
 .journey-card:hover {
-    box-shadow: 0 4px 32px rgba(59, 130, 246, .15), 0 1px 8px rgba(0,0,0,.2);
+    border-color: var(--accent) !important;
+    box-shadow: none;
     transform: translateY(-3px);
 }
 
@@ -1919,7 +1936,7 @@ section {
 }
 
 .gh-activity-card {
-    background: rgba(7, 11, 23, 0.92);
+    background: #0d1117;
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 1.2rem 1.5rem;
@@ -3990,4 +4007,147 @@ footer {
 [data-theme="dark"] .pd-tech-icon[alt="expressjs"],
 [data-theme="dark"] .pd-tech-icon[alt="flask"] {
   filter: brightness(0) invert(1);
+}
+
+/* ================================
+   DASHED BORDER — global card style
+   ================================ */
+.project-card,
+.cert-card,
+.journey-card,
+.gh-activity-card,
+.exp-tabs,
+.bottom-nav,
+.sort-toggle,
+.sort-dropdown,
+.filter-toggle,
+.filter-dropdown,
+.toolbar-search input,
+.projects-view-all-btn,
+.social-link,
+.pd-btn,
+.pd-img-wrap,
+.show-more-btn,
+.skill-box,
+.btn-cv,
+.btn-primary {
+  border-style: dashed !important;
+}
+
+[data-theme="dark"] .project-card,
+[data-theme="dark"] .cert-card,
+[data-theme="dark"] .journey-card,
+[data-theme="dark"] .gh-activity-card,
+[data-theme="dark"] .exp-tabs,
+[data-theme="dark"] .bottom-nav,
+[data-theme="dark"] .sort-toggle,
+[data-theme="dark"] .sort-dropdown,
+[data-theme="dark"] .filter-toggle,
+[data-theme="dark"] .filter-dropdown,
+[data-theme="dark"] .toolbar-search input,
+[data-theme="dark"] .projects-view-all-btn,
+[data-theme="dark"] .social-link,
+[data-theme="dark"] .pd-btn,
+[data-theme="dark"] .pd-img-wrap,
+[data-theme="dark"] .show-more-btn,
+[data-theme="dark"] .skill-box,
+[data-theme="dark"] .btn-cv {
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+[data-theme="light"] .project-card,
+[data-theme="light"] .cert-card,
+[data-theme="light"] .journey-card,
+[data-theme="light"] .gh-activity-card,
+[data-theme="light"] .exp-tabs,
+[data-theme="light"] .bottom-nav,
+[data-theme="light"] .sort-toggle,
+[data-theme="light"] .sort-dropdown,
+[data-theme="light"] .filter-toggle,
+[data-theme="light"] .filter-dropdown,
+[data-theme="light"] .toolbar-search input,
+[data-theme="light"] .projects-view-all-btn,
+[data-theme="light"] .social-link,
+[data-theme="light"] .pd-btn,
+[data-theme="light"] .pd-img-wrap,
+[data-theme="light"] .show-more-btn,
+[data-theme="light"] .skill-box,
+[data-theme="light"] .btn-cv {
+  border-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ================================
+   REMOVE BORDER RADIUS — everywhere
+   except cursor, nav pill, avatar, circular elements
+   ================================ */
+.project-card, .cert-card, .journey-card, .gh-activity-card,
+.skill-box, .skill-tag, .tl-tag, .pd-tag,
+.btn-primary, .btn-cv, .btn-outline,
+.proj-btn, .proj-btn-gh, .proj-btn-live,
+.pd-btn, .pd-btn-gh, .pd-btn-live,
+.form-btn, .social-link, .projects-view-all-btn,
+.sort-toggle, .sort-dropdown, .filter-toggle, .filter-dropdown,
+.sort-option, .filter-option,
+.toolbar-search input, .fg input, .fg textarea,
+.project-type-pill, .pd-type-pill,
+.project-status, .pd-status,
+.hero-tag, .view-all-btn,
+.gh-activity-card, .gh-profile-link,
+.footer-new,
+.contact-form, .fg input, .fg textarea,
+.cert-link, .no-results,
+.pd-img-wrap,
+.show-more-btn,
+.theme-btn {
+  border-radius: 0 !important;
+}
+
+/* Get in touch — dashed border to match Resume/CV */
+.btn-primary {
+  border: 1px dashed rgba(255, 255, 255, 0.4) !important;
+}
+[data-theme="light"] .btn-primary {
+  border: 1px dashed rgba(37, 99, 235, 0.5) !important;
+}
+
+/* Timeline tags — dashed border */
+.tl-tag {
+  border-style: dashed !important;
+}
+
+/* Project card image — remove radius so image fills full card width */
+.project-img-wrap {
+  border-radius: 0 !important;
+}
+.project-img-wrap img {
+  border-radius: 0 !important;
+}
+
+/* Project type pill + action buttons — dashed border */
+.project-type-pill,
+.proj-btn-live,
+.proj-btn-gh {
+  border-style: dashed !important;
+}
+
+/* Contact form inputs — dashed border */
+.fg input,
+.fg textarea {
+  border-style: dashed !important;
+}
+
+/* Send Message + Get in touch — dashed white border on colored buttons */
+.form-btn,
+.btn-primary {
+  border: 1px dashed rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Hero tag — dashed blue border */
+.hero-tag {
+  border: 1px dashed var(--accent) !important;
+}
+
+/* GitHub profile link — dashed blue border */
+.gh-profile-link {
+  border: 1px dashed var(--accent) !important;
 }

@@ -5,7 +5,7 @@ const GH_USER = 'RajHarsh03';
 export default function Hero() {
   return (
     <section id="hero">
-      <div className="hero-grid-bg" aria-hidden="true" />
+      {/* hero-grid-bg removed — global dot grid from body::before shows through */}
 
       <div className="hero-inner">
         <div className="hero-content">

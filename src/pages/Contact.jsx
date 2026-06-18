@@ -72,7 +72,7 @@ export default function Contact() {
         message,
         to_name:    'Harsh Raj',
       });
-      setToast({ msg: "✓ Message sent! I'll get back to you within 24 hours.", type: 'toast-ok' });
+      setToast({ msg: "Message sent! I'll get back to you within 24 hours.", type: 'toast-ok' });
       setForm({ name: '', email: '', subject: '', message: '' });
     } catch (err) {
       console.error('EmailJS error:', err);
@@ -160,7 +160,7 @@ export default function Contact() {
                   />
                 </div>
                 <button className="form-btn" disabled={sending} onClick={submitForm}>
-                  {sending ? 'Sending… ⏳' : (
+                  {sending ? 'Sending…' : (
                     <>
                       Send Message{' '}
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

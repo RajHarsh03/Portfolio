@@ -90,8 +90,6 @@ export default function Navbar() {
           {/* count lives in the ::after tooltip via data-repos — not shown inline */}
         </button>
 
-        {!isHome && <div className="nav-divider" />}
-
         {/* Theme toggle */}
         <button
           ref={btnRef}
