@@ -4,7 +4,7 @@
     const countEl = document.getElementById('visitCount');
     if (!wrap || !countEl) return;
 
-    fetch('/api/visits', { method: 'POST' })
+    fetch('/visitors/visits', { method: 'POST' })
         .then(res => res.ok ? res.json() : null)
         .then(data => {
             if (!data || data.total == null) return;
