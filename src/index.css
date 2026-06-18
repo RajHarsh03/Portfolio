@@ -2718,16 +2718,16 @@ footer {
     }
 
     section {
-        padding: 4rem 1.5rem;
+        padding: 4rem 0;
     }
 
     #hero {
-        padding: 7rem 1.5rem 4rem;
+        padding: 7rem 0 4rem;
         min-height: auto;
     }
 
     #journey {
-        padding: 4rem 1.5rem;
+        padding: 4rem 0;
     }
 
     .hero-inner {
@@ -2845,16 +2845,16 @@ footer {
     }
 
     section {
-        padding: 2.5rem 1rem;
+        padding: 2.5rem 0;
     }
 
     #hero {
-        padding: 5rem 1rem 2.5rem;
+        padding: 5rem 0 2.5rem;
         min-height: auto;
     }
 
     #journey {
-        padding: 3rem 1rem;
+        padding: 3rem 0;
     }
 
     .hero-inner {
@@ -3947,14 +3947,14 @@ footer {
 
 /* --- Responsive overrides --- */
 @media (max-width: 760px) {
-  .projects-page-header, .journey-page-header, .certs-page-header, .contact-page-header { padding: 0 16px; }
-  #allProjects { padding: 0 16px 5rem; }
+  .projects-page-header, .journey-page-header, .certs-page-header, .contact-page-header { padding: 0 24px; }
+  #allProjects { padding: 0 24px 5rem; }
   #allProjects .projects-grid { grid-template-columns: 1fr; gap: 1rem; }
-  .journey-content { padding: 0 16px 3rem; }
+  .journey-content { padding: 0 24px 3rem; }
   .journey-block { margin-bottom: 3rem; }
-  #allCerts { padding: 0 16px 3rem; }
+  #allCerts { padding: 0 24px 3rem; }
   #allCerts .certs-grid { grid-template-columns: 1fr; }
-  #contactSection { padding: 0 16px 3rem; }
+  #contactSection { padding: 0 24px 3rem; }
 }
 @media (max-width: 480px) {
   .projects-page-header h1, .journey-page-header h1, .certs-page-header h1, .contact-page-header h1 { font-size: 1.4rem; }
@@ -4245,3 +4245,91 @@ footer {
     flex-shrink: 0;
   }
 }
+
+/* ── exp-card responsive — 480px ── */
+@media (max-width: 480px) {
+  .exp-cards-list {
+    gap: .9rem;
+  }
+
+  .exp-card {
+    padding: 1rem 1.1rem 1.1rem;
+  }
+
+  .exp-card-label {
+    font-size: .62rem;
+  }
+
+  .exp-card-badge {
+    font-size: .58rem;
+    padding: .2rem .5rem;
+  }
+
+  .exp-card-company {
+    font-size: .9rem;
+  }
+
+  .exp-card-icon svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .exp-card-role {
+    font-size: .7rem;
+  }
+
+  .exp-card-bullets li,
+  .exp-card-desc-text {
+    font-size: .8rem;
+  }
+}
+
+/* ── exp-card responsive — 325px ── */
+@media (max-width: 330px) {
+  .exp-card {
+    padding: .85rem .9rem 1rem;
+  }
+
+  .exp-card-top {
+    margin-bottom: .7rem;
+  }
+
+  .exp-card-label {
+    font-size: .58rem;
+  }
+
+  .exp-card-badge {
+    font-size: .52rem;
+    padding: .17rem .4rem;
+  }
+
+  .exp-card-company {
+    font-size: .82rem;
+  }
+
+  .exp-card-icon svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .exp-card-role {
+    font-size: .63rem;
+    margin-bottom: .7rem;
+  }
+
+  .exp-card-bullets li,
+  .exp-card-desc-text {
+    font-size: .75rem;
+  }
+
+  .journey-content,
+  #allCerts {
+    padding: 0 20px 3rem;
+  }
+
+  .journey-page-header,
+  .certs-page-header {
+    padding: 0 20px;
+  }
+}
+
