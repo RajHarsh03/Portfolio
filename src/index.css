@@ -445,6 +445,13 @@ nav.floating {
     padding: 0 24px;
 }
 
+/* Outer wrapper for inner pages — padding-top replaces inline style */
+.page-wrap {
+    padding-top: 5rem;
+    overflow-x: hidden;
+    width: 100%;
+}
+
 /* ===============
    SECTION SPACING
    =============== */
@@ -994,10 +1001,6 @@ section {
    =============== */
 #journey {
     padding: 40px 0;
-    max-width: 760px;
-    margin: 0 auto;
-    padding-left: 24px;
-    padding-right: 24px;
 }
 
 .journey-cards {
@@ -2692,7 +2695,7 @@ footer {
     }
 
     #journey {
-        padding: 80px 6rem;
+        padding: 80px 0;
     }
 }
 
@@ -2811,6 +2814,10 @@ footer {
     RESPONSIVE — Mobile (480px)
    ============================ */
 @media (max-width: 480px) {
+    nav {
+        width: calc(100% - 2rem);
+    }
+
     .nav-logo {
         font-size: 1rem;
     }
