@@ -85,6 +85,7 @@ export default function Hero() {
               alt="Harsh Raj"
               className="hero-avatar-img"
               loading="eager"
+              fetchPriority="high"
             />
           </div>
         </div>
