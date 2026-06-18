@@ -1,36 +1,8 @@
 {
-    "rewrites": [
-        {
-            "source": "/",
-            "destination": "/index.html"
-        },
-        {
-            "source": "/contact",
-            "destination": "/pages/contact.html"
-        },
-        {
-            "source": "/projects",
-            "destination": "/pages/projects.html"
-        },
-        {
-            "source": "/projects/:slug",
-            "destination": "/pages/project.html"
-        },
-        {
-            "source": "/blogs",
-            "destination": "/pages/blogs.html"
-        },
-        {
-            "source": "/bookmarks",
-            "destination": "/pages/bookmarks.html"
-        },
-        {
-            "source": "/journey",
-            "destination": "/pages/journey.html"
-        },
-        {
-            "source": "/certificates",
-            "destination": "/pages/certificates.html"
-        }
-    ]
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
 }
