@@ -108,12 +108,14 @@ Portfolio/
     │
     ├── hooks/
     │   ├── 📡 useProjects.js      # GitHub projects fetch + cache + auto-refresh
+    │   ├── 🗂️  useGistContent.js  # Gist CMS hook - experiences, internships, certs
     │   ├── 👁️  useReveal.js       # IntersectionObserver scroll reveal
     │   └── 🌗 useTheme.js         # Re-export of useTheme from context
     │
     ├── services/
-    │   ├── 🐙 githubProjects.js   # Fetch + normalise portfolio repos
-    │   └── 🔥 githubContributions.js  # Fetch contribution heatmap data
+    │   ├── 🐙 githubProjects.js        # Fetch + normalise portfolio repos
+    │   ├── 🔥 githubContributions.js   # Fetch contribution heatmap data
+    │   └── 📝 gistContent.js           # Gist CMS - fetch + fallback for content
     │
     ├── components/
     │   ├── layout/
@@ -135,10 +137,11 @@ Portfolio/
         ├── 🏠 Home.jsx
         ├── 🗂️  Projects.jsx        # Full grid - search, filter, sort, pagination
         ├── 📬 Contact.jsx         # EmailJS form + toast
-        ├── 🗺️  Journey.jsx         # Static timeline
-        ├── 🏆 Certificates.jsx    # Certificate cards
+        ├── 🗺️  Journey.jsx         # Timeline - data from Gist CMS
+        ├── 🏆 Certificates.jsx    # Certificate cards - data from Gist CMS
         └── 🔍 NotFound.jsx        # 404
 ```
+
 
 ---
 
@@ -234,6 +237,67 @@ To show a repo on the portfolio, add these **topics** to it on GitHub:
 </div>
 
 Tech icon topics (auto-mapped to devicons): `react`, `nodejs`, `python`, `typescript`, `mongodb`, `tailwindcss`, and more.
+
+---
+
+## 🗂️ Gist CMS - Experiences, Internships & Certificates
+
+Content for the **Journey** and **Certificates** pages is managed via a **GitHub Gist** — no code push needed to add or edit cards.
+
+### How it works
+
+The app fetches a single JSON file from a private Gist at runtime. If the Gist is unreachable, it automatically falls back to hardcoded data so the site never breaks.
+
+```
+Gist URL → fetched on every page visit (cached 5 min)
+         ↓ fails?
+Fallback data in gistContent.js (always shown instantly)
+```
+
+### Adding or editing a card
+
+1. Go to your Gist: [gist.github.com/RajHarsh03/c654e844cf7de53873dd45b3d9a00b05](https://gist.github.com/RajHarsh03/c654e844cf7de53873dd45b3d9a00b05)
+2. Click **Edit**
+3. Add/modify an entry in the relevant array (`experiences`, `internships`, or `certificates`)
+4. Click **Update secret gist** - changes are live within **5 minutes**, no deploy needed
+
+### JSON structure
+
+**Experience / Internship card:**
+```json
+{
+  "label": "INTERNSHIP",
+  "type": "INTERNSHIP",
+  "typeColor": "badge-purple",
+  "company": "Company Name",
+  "role": "Your Role Title",
+  "date": "JAN 2025 - PRESENT",
+  "bullets": [
+    "First bullet point about what you did.",
+    "Second bullet point with an achievement."
+  ]
+}
+```
+
+**Certificate card:**
+```json
+{
+  "label": "COURSE",
+  "type": "CERTIFICATE",
+  "typeColor": "badge-teal",
+  "title": "Certificate Title",
+  "issuer": "ISSUING BODY",
+  "date": "JAN 2025",
+  "desc": "Short description of what this certificate covers.",
+  "link": "https://drive.google.com/..."
+}
+```
+
+**`typeColor` options:** `badge-blue` | `badge-purple` | `badge-teal`
+
+### Permanent updates
+
+To update the fallback (shown before Gist loads), also edit `FALLBACK_DATA` in [`src/services/gistContent.js`](./src/services/gistContent.js) and push.
 
 ---
 

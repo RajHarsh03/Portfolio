@@ -7,3 +7,7 @@ dist-ssr/
 
 # Vercel local dev
 .vercel/
+
+#JSON Reference
+/src/services/portfolio-content.json
+
