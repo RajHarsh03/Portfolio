@@ -95,11 +95,6 @@ export default function Contact() {
       <Toast message={toast.msg} type={toast.type} onHide={() => setToast({ msg: '', type: '' })} />
 
       <div style={{ paddingTop: '5rem' }} ref={ref}>
-        <div className="contact-page-header">
-          <h1>Let's collaborate!</h1>
-          <p>I'm always open to new opportunities, collaborations, or just a good tech chat.</p>
-        </div>
-
         <section id="contactSection">
           <div className="contact-grid">
             {/* Left — intro + socials */}

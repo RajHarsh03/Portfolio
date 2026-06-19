@@ -276,8 +276,8 @@ nav {
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border);
     border-radius: 16px;
-    width: calc(100% - 3rem);
-    max-width: 820px;
+    width: calc(100% - 4rem);
+    max-width: 740px;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
     transition: background .35s, box-shadow .35s, border-color .35s;
 }
@@ -310,9 +310,6 @@ nav.floating {
     gap: .8rem;
 }
 
-/* Mobile-only home icon — hidden on desktop */
-/* Mobile-only home icon — removed */
-
 /* ========================
    THEME TOGGLE — Icon Button
    ======================== */
@@ -334,12 +331,27 @@ nav.floating {
 }
 
 .theme-btn:hover {
-    background: rgba(59, 130, 246, .07);
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
     transform: scale(1.08);
+}
+
+.theme-btn:focus,
+.theme-btn:focus-visible {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
 }
 
 .theme-btn:active {
     transform: scale(0.93);
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
 }
 
 /* Icon container — handles the flip */
@@ -2607,16 +2619,19 @@ footer {
     display: flex;
     align-items: center;
     gap: .4rem;
-    padding: .45rem .9rem;
+    height: 34px;
+    padding: .5rem .9rem;
     font-family: 'DM Mono', monospace;
-    font-size: .78rem;
+    font-size: .76rem;
     font-weight: 600;
     color: var(--muted);
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: none;
     transition: all .25s ease;
+    box-sizing: border-box;
+    white-space: nowrap;
 }
 
 .filter-toggle:hover,
@@ -2725,20 +2740,20 @@ footer {
     .hero-inner,
     .about-grid,
     .container {
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
+        padding-left: 24px;
+        padding-right: 24px;
     }
 
     .projects-grid,
     .projects-view-all {
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
+        padding-left: 24px;
+        padding-right: 24px;
     }
 
     #skills > .section-label,
     #skills > h2.section-title {
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
+        padding-left: 24px;
+        padding-right: 24px;
     }
 
     #hero {
@@ -2862,7 +2877,13 @@ footer {
         width: 36px;
         height: 36px;
         border-radius: 8px;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        -webkit-tap-highlight-color: transparent !important;
     }
+
 
     section {
         padding: 2.5rem 0;
@@ -2872,20 +2893,20 @@ footer {
     .hero-inner,
     .about-grid,
     .container {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: 24px;
+        padding-right: 24px;
     }
 
     .projects-grid,
     .projects-view-all {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: 24px;
+        padding-right: 24px;
     }
 
     #skills > .section-label,
     #skills > h2.section-title {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: 24px;
+        padding-right: 24px;
     }
 
     #hero {
@@ -3020,7 +3041,12 @@ footer {
     .projects-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
-        padding: 0 16px;
+        padding: 0 24px;
+    }
+
+    /* #allProjects already has 24px container padding — no extra grid padding */
+    #allProjects .projects-grid {
+        padding: 0;
     }
 
     .project-card {
@@ -3627,11 +3653,6 @@ footer {
   filter: brightness(0) invert(1);
 }
 
-/* =============================================
-   PAGE-LEVEL LAYOUT (ported from inline styles)
-   ============================================= */
-
-/* Shared page top padding handled via inline style paddingTop:5rem on each page root */
 
 /* --- Projects page --- */
 .projects-page-header {
@@ -3669,6 +3690,7 @@ footer {
 }
 .toolbar-search input {
   width: 100%;
+  height: 34px;
   padding: .5rem .8rem .5rem 2.2rem;
   font-family: 'DM Mono', monospace;
   font-size: .76rem;
@@ -3678,6 +3700,7 @@ footer {
   border-radius: 10px;
   outline: none;
   transition: border-color .25s;
+  box-sizing: border-box;
 }
 .toolbar-search input::placeholder { color: var(--muted); }
 .toolbar-search input:focus { border-color: var(--accent); }
@@ -3685,11 +3708,13 @@ footer {
 .sort-wrap { position: relative; }
 .sort-toggle {
   display: flex; align-items: center; gap: .4rem;
+  height: 34px;
   padding: .5rem .9rem;
   font-family: 'DM Mono', monospace; font-size: .76rem; font-weight: 600;
   color: var(--muted); background: var(--card);
   border: 1px solid var(--border); border-radius: 10px;
   cursor: pointer; transition: all .25s; white-space: nowrap;
+  box-sizing: border-box;
 }
 .sort-toggle:hover, .sort-toggle.open { border-color: var(--accent); color: var(--accent); }
 .sort-toggle svg { width: 14px; height: 14px; }
@@ -3715,7 +3740,7 @@ footer {
 .projects-count { font-family: 'DM Mono', monospace; font-size: .72rem; color: var(--muted); }
 .projects-count strong { color: var(--text); font-weight: 700; }
 
-#allProjects .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+#allProjects .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; padding: 0; }
 
 .no-results {
   grid-column: 1 / -1; text-align: center; padding: 4rem 2rem;
@@ -3997,6 +4022,15 @@ footer {
   #contactSection { padding: 0 24px 3rem; }
 }
 @media (max-width: 480px) {
+  .projects-page-header, .journey-page-header, .certs-page-header, .contact-page-header { padding: 0 24px; }
+  #allProjects { padding: 0 24px 4rem; }
+  #allProjects .projects-grid { grid-template-columns: 1fr; gap: .85rem; }
+  .journey-content { padding: 0 24px 3rem; }
+  #allCerts { padding: 0 24px 3rem; }
+  #contactSection { padding: 0 24px 3rem; }
+  #projects > .section-label,
+  #projects > h2.section-title,
+  #projects > .projects-view-all { padding-left: 24px; padding-right: 24px; }
   .projects-page-header h1, .journey-page-header h1, .certs-page-header h1, .contact-page-header h1 { font-size: 1.4rem; }
   .toolbar-row { flex-wrap: nowrap; gap: .4rem; }
   .toolbar-search { min-width: 0; }
@@ -4363,13 +4397,53 @@ footer {
   }
 
   .journey-content,
-  #allCerts {
-    padding: 0 20px 3rem;
+  #allCerts,
+  #allProjects {
+    padding: 0 24px 3rem;
   }
 
   .journey-page-header,
-  .certs-page-header {
-    padding: 0 20px;
+  .certs-page-header,
+  .projects-page-header,
+  .contact-page-header {
+    padding: 0 24px;
   }
+
+  #contactSection { padding: 0 24px 3rem; }
+
+  .gh-activity-section,
+  .hero-inner,
+  .about-grid,
+  .container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .projects-grid,
+  .projects-view-all {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  #skills > .section-label,
+  #skills > h2.section-title,
+  #projects > .section-label,
+  #projects > h2.section-title,
+  #projects > .projects-view-all {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+.theme-btn,
+.theme-btn:hover,
+.theme-btn:focus,
+.theme-btn:focus-visible,
+.theme-btn:active {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  -webkit-tap-highlight-color: transparent !important;
 }
 
