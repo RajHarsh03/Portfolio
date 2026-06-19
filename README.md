@@ -1,121 +1,155 @@
-# harshx.in — Personal Portfolio
+<div align="center">
 
-Personal portfolio of **Harsh Raj**, built as a React SPA using Vite, React Router, and the existing design system.
+<img src="https://capsule-render.vercel.app/api?type=waving&color=3b82f6&height=200&section=header&text=harshx.in&fontSize=70&fontColor=ffffff&fontAlignY=35&desc=Personal%20Portfolio%20%E2%80%93%20%20React%20%2B%20Vite&descAlignY=55&descSize=20&animation=fadeIn" width="100%" />
 
-Live: [harshx.in](https://harshx.in)
+<br/>
+
+[![Live](https://img.shields.io/badge/Live%20Demo-harshx.in-3b82f6?style=for-the-badge&logo=vercel&logoColor=white)](https://harshx.in)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-6-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev)
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com)
+[![License](https://img.shields.io/badge/License-MIT-14b8a6?style=for-the-badge)](./LICENSE)
+
+<br/>
+
+> **Personal portfolio of Harsh Raj** - a fast, fully-featured React SPA with dark/light theme, live GitHub data, animated custom cursor, and a canvas contribution heatmap.
+
+</div>
 
 ---
 
-## Tech Stack
+## ✨ Features
+
+<table>
+<tr>
+<td width="50%">
+
+🚀 **SPA Navigation** - zero full-page reloads\
+🎨 **Dark / Light Theme** - circular wipe via View Transition API\
+📡 **Live GitHub Projects** - fetched, filtered & sorted by topics\
+🔥 **GitHub Heatmap** - canvas-rendered contribution graph\
+📬 **Contact Form** - EmailJS + toast feedback + `Ctrl+Enter`
+
+</td>
+<td width="50%">
+
+👁️ **Scroll Reveal** - IntersectionObserver fade-up animations\
+🖱️ **Custom Cursor** - dual-ring, hover-expand (desktop only)\
+📊 **Visit Counter** - Upstash Redis via Vercel serverless\
+🧭 **Persistent Layout** - Nav, Footer, Cursor mount once\
+📱 **Fully Responsive** - mobile-first, all breakpoints covered
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🛠️ Tech Stack
+
+<div align="center">
 
 | Layer | Choice |
-|-------|--------|
-| Build tool | Vite 6 |
-| UI | React 19 |
-| Routing | React Router v7 |
-| Meta / SEO | react-helmet-async |
-| Styling | Single global CSS (`src/index.css`) |
-| Data | GitHub REST API + EmailJS |
-| Visit counter | Upstash Redis via Vercel serverless |
-| Deployment | Vercel |
+|:------|:-------|
+| ⚡ Build Tool | **Vite 6** |
+| ⚛️ UI Framework | **React 19** |
+| 🔀 Routing | **React Router v7** |
+| 🪖 Meta / SEO | **react-helmet-async** |
+| 🎨 Styling | Single global CSS (`src/index.css`) |
+| 📡 Data | **GitHub REST API** + **EmailJS** |
+| 📊 Visit Counter | **Upstash Redis** via Vercel serverless |
+| 🚀 Deployment | **Vercel** |
+
+</div>
 
 ---
 
-## Features
+## 📄 Routes
 
-- **SPA navigation** — zero full-page reloads between routes
-- **Persistent layout** — Navbar, Footer, custom cursor, and scroll progress bar mount once and never remount
-- **Theme toggle** — dark / light with View Transition API circular wipe, persisted in `localStorage`
-- **GitHub projects** — fetched live from GitHub API, filtered by `portfolio` topic, sorted by `rank-N` topic
-- **GitHub heatmap** — canvas-rendered contribution graph (last 12 months)
-- **Contact form** — EmailJS integration with toast feedback and Ctrl+Enter shortcut
-- **Visit counter** — Upstash Redis serverless function, counts unique daily visitors
-- **Scroll reveal** — IntersectionObserver-based fade-up animations
-- **Custom cursor** — dual-ring cursor with hover expand (hidden on touch devices)
-
----
-
-## Routes
+<div align="center">
 
 | URL | Page |
-|-----|------|
-| `/` | Home — hero, about, journey preview, skills ticker, featured projects, GitHub heatmap |
-| `/projects` | All projects — search, filter (frontend / fullstack / AI), sort |
-| `/contact` | Contact — EmailJS form + social links |
-| `/journey` | Journey — experience & internship timeline |
-| `/certificates` | Certificates & achievements |
-| `*` | 404 Not Found |
+|:----|:-----|
+| `/` | 🏠 Home - hero, about, journey preview, skills ticker, featured projects, GitHub heatmap |
+| `/projects` | 🗂️ All Projects - search, filter (frontend / fullstack / AI), sort |
+| `/contact` | 📬 Contact - EmailJS form + social links |
+| `/journey` | 🗺️ Journey - experience & internship timeline |
+| `/certificates` | 🏆 Certificates & Achievements |
+| `*` | 🔍 404 Not Found |
+
+</div>
 
 ---
 
-## File Structure
+## 📁 File Structure
 
 ```
 Portfolio/
-├── index.html                  # SPA shell — single HTML entry point
-├── vite.config.js
-├── vercel.json                 # SPA rewrites + /api route
-├── package.json
-├── Resume.pdf                  # served from /Resume.pdf
+├── 📄 index.html                  # SPA shell - single HTML entry point
+├── ⚙️  vite.config.js
+├── 🚀 vercel.json                 # SPA rewrites + /api route
+├── 📦 package.json
+├── 📋 Resume.pdf                  # Served from /Resume.pdf
+│
 └── src/
-    ├── main.jsx                # BrowserRouter + HelmetProvider + ThemeProvider
-    ├── App.jsx                 # Route definitions + AppShell wrapper
-    ├── index.css               # Full design system + all component styles
+    ├── 🚀 main.jsx                # BrowserRouter + HelmetProvider + ThemeProvider
+    ├── 🗺️  App.jsx                # Route definitions + AppShell wrapper
+    ├── 🎨 index.css               # Full design system + all component styles
     │
     ├── layouts/
-    │   └── AppShell.jsx        # Persistent shell — Nav, Footer, Cursor, Glows
+    │   └── 🏗️  AppShell.jsx       # Persistent shell - Nav, Footer, Cursor, Glows
     │
     ├── router/
-    │   ├── routes.jsx          # Lazy imports for all pages
-    │   └── ScrollToTop.jsx     # Scrolls to top on every route change
+    │   ├── 🔀 routes.jsx          # Lazy imports for all pages
+    │   └── ⬆️  ScrollToTop.jsx    # Scrolls to top on every route change
     │
     ├── context/
-    │   └── ThemeContext.jsx    # Theme state + View Transition toggle
+    │   └── 🌗 ThemeContext.jsx    # Theme state + View Transition toggle
     │
     ├── hooks/
-    │   ├── useProjects.js      # GitHub projects fetch + cache + auto-refresh
-    │   ├── useReveal.js        # IntersectionObserver scroll reveal
-    │   └── useTheme.js         # Re-export of useTheme from context
+    │   ├── 📡 useProjects.js      # GitHub projects fetch + cache + auto-refresh
+    │   ├── 👁️  useReveal.js       # IntersectionObserver scroll reveal
+    │   └── 🌗 useTheme.js         # Re-export of useTheme from context
     │
     ├── services/
-    │   ├── githubProjects.js   # Fetch + normalise portfolio repos from GitHub
-    │   └── githubContributions.js  # Fetch contribution heatmap data
+    │   ├── 🐙 githubProjects.js   # Fetch + normalise portfolio repos
+    │   └── 🔥 githubContributions.js  # Fetch contribution heatmap data
     │
     ├── components/
     │   ├── layout/
-    │   │   ├── Navbar.jsx          # Pill nav — tabs, GitHub icon, theme toggle
-    │   │   ├── Footer.jsx          # Footer + visit counter
-    │   │   ├── CustomCursor.jsx    # Dual-ring cursor (desktop only)
-    │   │   └── ScrollProgress.jsx  # Top gradient progress bar
+    │   │   ├── 🧭 Navbar.jsx          # Pill nav - tabs, GitHub icon, theme toggle
+    │   │   ├── 🦶 Footer.jsx          # Footer + visit counter
+    │   │   ├── 🖱️  CustomCursor.jsx   # Dual-ring cursor (desktop only)
+    │   │   └── 📊 ScrollProgress.jsx  # Top gradient progress bar
     │   │
     │   └── home/
-    │       ├── Hero.jsx            # Hero section
-    │       ├── About.jsx           # About section
-    │       ├── JourneyPreview.jsx  # Journey + Certificates card links
-    │       ├── Skills.jsx          # Ticker marquee tech stack
-    │       ├── FeaturedProjects.jsx # Top 2 projects from GitHub
-    │       ├── GitHubHeatmap.jsx   # Canvas contribution heatmap
-    │       └── BottomNav.jsx       # Floating pill nav (home page only)
+    │       ├── 🦸 Hero.jsx            # Hero section
+    │       ├── 👤 About.jsx           # About section
+    │       ├── 🗺️  JourneyPreview.jsx # Journey + Certificates card links
+    │       ├── 🛠️  Skills.jsx         # Ticker marquee tech stack
+    │       ├── 🗂️  FeaturedProjects.jsx # Top 2 projects from GitHub
+    │       ├── 🔥 GitHubHeatmap.jsx   # Canvas contribution heatmap
+    │       └── 📱 BottomNav.jsx       # Floating pill nav (home page only)
     │
     └── pages/
-        ├── Home.jsx
-        ├── Projects.jsx        # Full grid — search, filter, sort, pagination
-        ├── Contact.jsx         # EmailJS form + toast
-        ├── Journey.jsx         # Static timeline
-        ├── Certificates.jsx    # Certificate cards
-        └── NotFound.jsx        # 404
+        ├── 🏠 Home.jsx
+        ├── 🗂️  Projects.jsx        # Full grid - search, filter, sort, pagination
+        ├── 📬 Contact.jsx         # EmailJS form + toast
+        ├── 🗺️  Journey.jsx         # Static timeline
+        ├── 🏆 Certificates.jsx    # Certificate cards
+        └── 🔍 NotFound.jsx        # 404
 ```
 
 ---
 
-## Installation
+## ⚡ Quick Start
 
 **Requirements:** Node.js 18+
 
 ```bash
-# Clone
-git clone https://github.com/RajHarsh03/portfolio.git
-cd portfolio
+# Clone the repository
+git clone https://github.com/RajHarsh03/Portfolio
+cd Portfolio
 
 # Install dependencies
 npm install
@@ -124,73 +158,111 @@ npm install
 npm run dev
 ```
 
-Dev server runs at `http://localhost:5173`.
+> Dev server runs at **`http://localhost:5173`**
 
 ---
 
-## Environment Variables
+## 🔐 Environment Variables
 
-No `.env` file is needed to run or deploy this project.
+> **No `.env` file is needed** to run or deploy this project.
 
-- **EmailJS keys** are hardcoded in `src/pages/Contact.jsx` — this is intentional. They are public client-side keys (exposed in the browser bundle regardless). Security is handled via **domain whitelisting** in the EmailJS dashboard — make sure only `harshx.in` is listed under Account → Security.
+<table>
+<tr>
+<th>Variable</th>
+<th>Where</th>
+<th>Notes</th>
+</tr>
+<tr>
+<td><code>KV_REST_API_URL</code></td>
+<td>Vercel Dashboard → Storage</td>
+<td>Auto-injected by Vercel when Upstash Redis is connected</td>
+</tr>
+<tr>
+<td><code>KV_REST_API_TOKEN</code></td>
+<td>Vercel Dashboard → Storage</td>
+<td>Auto-injected by Vercel when Upstash Redis is connected</td>
+</tr>
+</table>
 
-- **Redis / Visit counter** — connect Upstash Redis via the Vercel dashboard (Storage tab). Vercel injects `KV_REST_API_URL` and `KV_REST_API_TOKEN` automatically. Nothing to add manually.
+> 📌 **EmailJS keys** are public client-side keys (hardcoded intentionally). Security is handled via **domain whitelisting** in the EmailJS dashboard. Ensure only `harshx.in` is listed under **Account → Security**.
 
 ---
 
-## Build
+## 📦 Build & Preview
 
 ```bash
-npm run build      # outputs to dist/
-npm run preview    # preview the production build locally
+npm run build      # → outputs production bundle to dist/
+npm run preview    # → preview the production build locally
 ```
 
 ---
 
-## Deployment (Vercel)
+## 🚀 Deployment (Vercel)
 
 1. Push to GitHub
-2. Import the repo in [vercel.com](https://vercel.com)
-3. **Framework Preset:** Vite
-4. **Root Directory:** `/` (root of repo)
-5. **Build Command:** `npm run build`
-6. **Output Directory:** `dist`
-7. Add environment variables in Vercel dashboard:
-   - `KV_REST_API_URL`
-   - `KV_REST_API_TOKEN`
-8. Deploy
+2. Import the repo on [vercel.com](https://vercel.com)
+3. Set the following options:
 
-The `vercel.json` handles SPA routing — all URLs serve `index.html` and React Router takes over client-side.
+| Setting | Value |
+|:--------|:------|
+| Framework Preset | **Vite** |
+| Root Directory | `/` |
+| Build Command | `npm run build` |
+| Output Directory | `dist` |
+
+4. Connect **Upstash Redis** from Vercel Dashboard → Storage (auto-injects env vars)
+5. **Deploy** 🎉
+
+> The `vercel.json` handles SPA routing - all URLs serve `index.html` and React Router takes over client-side.
 
 ---
 
-## GitHub Projects Setup
+## 🐙 GitHub Projects Setup
 
 To show a repo on the portfolio, add these **topics** to it on GitHub:
 
-| Topic | Effect |
-|-------|--------|
-| `portfolio` | Required — makes it show up |
-| `rank-1`, `rank-2`, … | Controls display order |
-| `completed` | Shows green "Completed" badge |
-| `frontend` / `fullstack` / `ai` | Sets the filter category |
-| `personal` / `client` / `open-source` / `hackathon` | Sets the type pill |
+<div align="center">
 
-Tech icon topics (auto-mapped to devicons): `react`, `nodejs`, `python`, `typescript`, `mongodb`, `tailwindcss`, etc.
+| Topic | Effect |
+|:------|:-------|
+| `portfolio` | ✅ **Required** - makes it appear on the portfolio |
+| `rank-1`, `rank-2`, … | 📊 Controls display order (lower = higher priority) |
+| `completed` | 🟢 Shows green "Completed" badge |
+| `frontend` / `fullstack` / `ai` | 🔍 Sets the filter category |
+| `personal` / `client` / `open-source` / `hackathon` | 🏷️ Sets the type pill label |
+
+</div>
+
+Tech icon topics (auto-mapped to devicons): `react`, `nodejs`, `python`, `typescript`, `mongodb`, `tailwindcss`, and more.
 
 ---
 
-## Visit Counter
+## 📊 Visit Counter
 
 Uses a Vercel serverless function at `/api/visits`:
 
-- `POST /api/visits` — records a unique daily visit (hashed by IP + user-agent + date), returns total
-- `GET /api/visits` — returns total without incrementing
+```
+POST /api/visits  →  Records unique daily visit (hashed IP + UA + date), returns total
+GET  /api/visits  →  Returns total count without incrementing
+```
 
-Backed by Upstash Redis (Vercel KV). In local dev it reads from the live production endpoint so the counter is always visible.
+Backed by **Upstash Redis** (Vercel KV). In local dev it reads from the live production endpoint so the counter is always visible.
 
 ---
 
-## License
+## 📜 License
 
-MIT — feel free to use as a reference or template. A credit link back to [harshx.in](https://harshx.in) is appreciated but not required.
+```
+MIT License - feel free to use as a reference or template.
+A credit link back to harshx.in is appreciated but not required.
+```
+
+---
+
+<div align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=3b82f6&height=120&section=footer&animation=fadeIn" width="100%" />
+
+Made by **[Harsh Raj](https://harshx.in)**
+
+</div>
