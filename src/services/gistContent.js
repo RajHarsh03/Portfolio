@@ -90,10 +90,11 @@ export async function fetchGistContent() {
       certificates: data.certificates ?? FALLBACK_DATA.certificates,
     };
     _cacheTime = Date.now();
+    console.log('[gistContent] Loaded from Gist.');
     return _cache;
 
   } catch (err) {
-    console.warn('[gistContent] Fetch failed, using fallback data.', err.message);
+    console.warn('[gistContent] Fetch failed — using fallback data.', err.message);
     return FALLBACK_DATA;
   }
 }
