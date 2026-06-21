@@ -12,7 +12,7 @@ const GIST_RAW_URL =
 export const FALLBACK_DATA = {
   experiences: [
     {
-      label: 'CURRENT ROLE',
+      label: 'PREVIOUS ROLE',
       type: 'SIMULATION',
       typeColor: 'badge-blue',
       company: 'Deloitte AU',
