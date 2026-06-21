@@ -256,10 +256,14 @@ Fallback data in gistContent.js (always shown instantly)
 
 ### Adding or editing a card
 
-1. Go to your Gist: [gist.github.com/RajHarsh03/c654e844cf7de53873dd45b3d9a00b05](https://gist.github.com/RajHarsh03/c654e844cf7de53873dd45b3d9a00b05)
-2. Click **Edit**
-3. Add/modify an entry in the relevant array (`experiences`, `internships`, or `certificates`)
-4. Click **Update secret gist** - changes are live within **5 minutes**, no deploy needed
+1. Go to your Gist: [https://gist.github.com/](https://gist.github.com/)
+2. Click **Add Gist**
+3. Add the JSON structure for (`experiences`, `internships`, or `certificates`)
+4. Click **Create secret gist** 
+5. Click **Raw** after creating the gist
+6. Copy the raw url after clicking **Raw**
+7. Replace the copied url in the src/services/gistContent.js with the **Replace with your URL** - changes are live within **5 minutes**, no deploy needed
+9. For any changes just addd/modify the present gist, dont create a new one
 
 ### JSON structure
 
