@@ -155,15 +155,15 @@ body::before {
     z-index: 0;
     pointer-events: none;
     background-image:
-        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+        linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
     background-size: 60px 60px;
 }
 
 [data-theme="light"] body::before {
     background-image:
-        linear-gradient(rgba(0,0,0,.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,0,0,.07) 1px, transparent 1px);
+        linear-gradient(rgba(0,0,0,.11) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,.11) 1px, transparent 1px);
     background-size: 60px 60px;
 }
 
@@ -174,12 +174,12 @@ body::after {
     inset: 0;
     z-index: 9997;
     pointer-events: none;
-    background-image: radial-gradient(circle, rgba(255,255,255,.12) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(255,255,255,.18) 1px, transparent 1px);
     background-size: 28px 28px;
 }
 
 [data-theme="light"] body::after {
-    background-image: radial-gradient(circle, rgba(0,0,0,.12) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(0,0,0,.18) 1px, transparent 1px);
 }
 
 /* SKIP TO CONTENT */
@@ -583,16 +583,16 @@ section {
     position: absolute;
     inset: 0;
     background-image:
-        linear-gradient(rgba(59, 130, 246, .05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(59, 130, 246, .05) 1px, transparent 1px);
+        linear-gradient(rgba(59, 130, 246, .09) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, .09) 1px, transparent 1px);
     background-size: 60px 60px;
     mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
 }
 
 [data-theme="light"] .hero-grid-bg {
     background-image:
-        linear-gradient(rgba(37, 99, 235, .06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(37, 99, 235, .06) 1px, transparent 1px);
+        linear-gradient(rgba(37, 99, 235, .10) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37, 99, 235, .10) 1px, transparent 1px);
 }
 
 /* Glow orbs — fixed so they cover the whole page */
