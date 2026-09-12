@@ -5,7 +5,7 @@ import { useReveal } from '../../hooks/useReveal.js';
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 const COLORS_DARK  = ['#2d333b','#0e4429','#006d32','#26a641','#39d353'];
-const COLORS_LIGHT = ['#ebedf0','#9be9a8','#40c463','#30a14e','#216e39'];
+const COLORS_LIGHT = ['#c8d0d8','#9be9a8','#40c463','#30a14e','#216e39'];
 
 function pickColor(count, colors) {
   if (count === 0) return colors[0];
@@ -78,13 +78,13 @@ export default function GitHubHeatmap() {
     const weeks   = buildWeeks(contributions);
     const cols    = weeks.length;
     const padding = 4;
-    const cellSize = Math.max(10, Math.floor((avail - 2 * padding) / (cols * 1.28)));
-    const gap      = Math.max(2, Math.round(cellSize * 0.28));
+    const cellSize = Math.max(9, Math.floor((avail - 2 * padding) / (cols * 1.22)));
+    const gap      = Math.max(2, Math.round(cellSize * 0.22));
     const step     = cellSize + gap;
     const radius   = Math.max(2, Math.round(cellSize * 0.2));
-    const labelTop = 18;
+    const labelTop = 16;
     const gridW    = cols * step - gap;
-    const width    = Math.max(avail, gridW + 2 * padding);
+    const width    = avail;
     const height   = labelTop + 7 * step;
 
     canvas.width  = width * dpr;

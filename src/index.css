@@ -2202,11 +2202,14 @@ section {
 /* Canvas wrap */
 .gh-canvas-wrap {
     width: 100%;
-    padding: .3rem 1.2rem .5rem;
+    padding: .2rem 1rem .3rem;
     overflow-x: auto;
     overflow-y: hidden;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .gh-canvas-wrap::-webkit-scrollbar { display: none; }
