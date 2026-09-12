@@ -8,6 +8,13 @@ dist-ssr/
 # Vercel local dev
 .vercel/
 
+# Secrets
+.env
+.env.local
+.env*.local
+
 #JSON Reference
 /src/services/portfolio-content.json
 
+.vercel
+.env*

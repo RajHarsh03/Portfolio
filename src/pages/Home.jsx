@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import Hero            from '../components/home/Hero.jsx';
-import About           from '../components/home/About.jsx';
+import InfoStrip       from '../components/home/InfoStrip.jsx';
 import JourneyPreview  from '../components/home/JourneyPreview.jsx';
 import Skills          from '../components/home/Skills.jsx';
 import FeaturedProjects from '../components/home/FeaturedProjects.jsx';
@@ -15,7 +15,7 @@ export default function Home() {
       </Helmet>
 
       <Hero />
-      <About />
+      <InfoStrip />
       <JourneyPreview />
       <Skills />
       <FeaturedProjects />
