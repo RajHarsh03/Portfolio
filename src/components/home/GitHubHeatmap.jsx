@@ -3,7 +3,6 @@ import { fetchContributions, GH_USER } from '../../services/githubContributions.
 import { useReveal } from '../../hooks/useReveal.js';
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
 const COLORS_DARK  = ['#2d333b','#0e4429','#006d32','#26a641','#39d353'];
 const COLORS_LIGHT = ['#c8d0d8','#9be9a8','#40c463','#30a14e','#216e39'];
 
@@ -18,17 +17,13 @@ function pickColor(count, colors) {
 function buildWeeks(contributions) {
   const map = {};
   contributions.forEach(c => { map[c.date] = c.count; });
-
   const today      = new Date();
   const oneYearAgo = new Date(today);
   oneYearAgo.setFullYear(today.getFullYear() - 1);
   oneYearAgo.setDate(oneYearAgo.getDate() + 1);
-
   const weeks = [];
   let week = [];
-  const startDay = oneYearAgo.getDay();
-  for (let i = 0; i < startDay; i++) week.push(null);
-
+  for (let i = 0; i < oneYearAgo.getDay(); i++) week.push(null);
   const d = new Date(oneYearAgo);
   while (d <= today) {
     const key = d.toISOString().slice(0, 10);
@@ -46,26 +41,39 @@ function formatDate(dateStr) {
 }
 
 export default function GitHubHeatmap() {
-  const canvasRef  = useRef(null);
-  const wrapRef    = useRef(null);
-  const layoutRef  = useRef({});
-  const ref        = useReveal();
+  const canvasRef = useRef(null);
+  const wrapRef   = useRef(null);
+  const layoutRef = useRef({});
+  const ref       = useReveal();
 
   const [contribData,  setContribData]  = useState(null);
   const [contribTotal, setContribTotal] = useState(null);
   const [failed,       setFailed]       = useState(false);
-  const [tooltip,      setTooltip]      = useState(null); // {text, x, y}
+  const [tooltip,      setTooltip]      = useState(null);
 
   useEffect(() => {
     fetchContributions()
       .then(({ contributions, total }) => { setContribData(contributions); setContribTotal(total); })
       .catch(() => setFailed(true));
+
+    // Fetch top repos by push events
+    fetch(`https://api.github.com/users/${GH_USER}/repos?sort=pushed&per_page=5`)
+      .then(r => r.json())
+      .then(repos => {
+        if (!Array.isArray(repos)) return;
+        const sorted = repos
+          .filter(r => !r.fork)
+          .sort((a, b) => b.size - a.size)
+          .slice(0, 3)
+          .map((r, i) => ({ name: r.name, commits: r.size, color: REPO_COLORS[i] }));
+        setTopRepos(sorted);
+      })
+      .catch(() => {});
   }, []);
 
   const draw = useCallback((contributions) => {
     const canvas = canvasRef.current;
     if (!canvas || !contributions?.length) return;
-
     const ctx       = canvas.getContext('2d');
     const dpr       = window.devicePixelRatio || 1;
     const container = canvas.parentElement;
@@ -74,18 +82,17 @@ export default function GitHubHeatmap() {
     const isLight   = theme === 'light';
     const colors    = isLight ? COLORS_LIGHT : COLORS_DARK;
     const textColor = isLight ? '#57606a' : '#8b949e';
-
-    const weeks   = buildWeeks(contributions);
-    const cols    = weeks.length;
-    const padding = 4;
-    const cellSize = Math.max(9, Math.floor((avail - 2 * padding) / (cols * 1.22)));
-    const gap      = Math.max(2, Math.round(cellSize * 0.22));
-    const step     = cellSize + gap;
-    const radius   = Math.max(2, Math.round(cellSize * 0.2));
-    const labelTop = 16;
-    const gridW    = cols * step - gap;
-    const width    = avail;
-    const height   = labelTop + 7 * step;
+    const weeks     = buildWeeks(contributions);
+    const cols      = weeks.length;
+    const padding   = 4;
+    const cellSize  = Math.max(9, Math.floor((avail - 2 * padding) / (cols * 1.22)));
+    const gap       = Math.max(2, Math.round(cellSize * 0.22));
+    const step      = cellSize + gap;
+    const radius    = Math.max(2, Math.round(cellSize * 0.2));
+    const labelTop  = 16;
+    const gridW     = cols * step - gap;
+    const width     = avail;
+    const height    = labelTop + 7 * step;
 
     canvas.width  = width * dpr;
     canvas.height = height * dpr;
@@ -95,17 +102,13 @@ export default function GitHubHeatmap() {
     ctx.clearRect(0, 0, width, height);
 
     const offsetX = Math.floor((width - gridW) / 2);
+    layoutRef.current = { weeks, offsetX, step, cellSize, labelTop };
 
-    // Store layout for tooltip hit-testing
-    layoutRef.current = { weeks, offsetX, step, cellSize, labelTop, cols };
-
-    // Month labels
     const fontSize = 11;
     ctx.font = `${fontSize}px "DM Mono", monospace`;
     ctx.fillStyle = textColor;
     ctx.textBaseline = 'top';
-    let lastMonth = -1;
-    let lastLabelX = -100;
+    let lastMonth = -1, lastLabelX = -100;
     weeks.forEach((week, wi) => {
       const first = week.find(c => c);
       if (first && first.month !== lastMonth) {
@@ -118,7 +121,6 @@ export default function GitHubHeatmap() {
       }
     });
 
-    // Cells
     weeks.forEach((week, wi) => {
       week.forEach((cell, di) => {
         if (!cell) return;
@@ -135,17 +137,13 @@ export default function GitHubHeatmap() {
   useEffect(() => {
     if (!contribData?.length) return;
     draw(contribData);
-
     const mo = new MutationObserver(() => draw(contribData));
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-
     const ro = new ResizeObserver(() => draw(contribData));
     if (wrapRef.current) ro.observe(wrapRef.current);
-
     return () => { mo.disconnect(); ro.disconnect(); };
   }, [contribData, draw]);
 
-  // Tooltip on mouse move
   function handleMouseMove(e) {
     const canvas = canvasRef.current;
     if (!canvas || !layoutRef.current.weeks) return;
@@ -153,7 +151,6 @@ export default function GitHubHeatmap() {
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
     const { weeks, offsetX, step, cellSize, labelTop } = layoutRef.current;
-
     let found = null;
     outer: for (let wi = 0; wi < weeks.length; wi++) {
       for (let di = 0; di < weeks[wi].length; di++) {
@@ -167,7 +164,6 @@ export default function GitHubHeatmap() {
         }
       }
     }
-
     if (found) {
       const { cell, cx, cy } = found;
       const text = cell.count === 0
@@ -191,7 +187,7 @@ export default function GitHubHeatmap() {
       <h2 className="section-title reveal">GitHub Activity</h2>
 
       <div className="gh-heatmap-card">
-        {/* Top: contribution count + year */}
+        {/* Top */}
         <div className="gh-heatmap-top">
           {contribTotal != null
             ? <span className="gh-contrib-count">{Number(contribTotal).toLocaleString()} contributions in {year}</span>
@@ -205,8 +201,6 @@ export default function GitHubHeatmap() {
           onMouseLeave={() => setTooltip(null)}
         >
           {!failed && <canvas ref={canvasRef} />}
-
-          {/* Tooltip */}
           {tooltip && (
             <div className="gh-tooltip" style={{ left: tooltip.x, top: tooltip.y }}>
               {tooltip.text}
@@ -214,16 +208,8 @@ export default function GitHubHeatmap() {
           )}
         </div>
 
-        {/* Footer: username left, Less/More legend right */}
+        {/* Footer: Less/More legend only */}
         <div className="gh-heatmap-footer">
-          <a
-            href={`https://github.com/${GH_USER}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="gh-username-link"
-          >
-            @{GH_USER}
-          </a>
           <div className="gh-legend">
             <span>Less</span>
             <div className="gh-legend-squares">

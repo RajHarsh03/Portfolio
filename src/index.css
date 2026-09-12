@@ -2250,11 +2250,113 @@ section {
 .gh-heatmap-footer {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: .55rem 1.2rem;
+    justify-content: flex-end;
+    padding: .45rem 1.2rem;
     border-top: 1px solid var(--border);
     font-family: 'DM Mono', monospace;
     font-size: .68rem;
+    color: var(--muted);
+}
+
+/* Top repos — sits inline in footer, left side */
+.gh-top-repos {
+    flex: 1;
+    min-width: 0;
+}
+
+.gh-top-repos-header {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: none;
+    font-family: 'DM Mono', monospace;
+    font-size: .68rem;
+    color: var(--muted);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.gh-top-repos-header:hover {
+    color: var(--text);
+}
+
+.gh-repo-avatars {
+    display: flex;
+    gap: -4px;
+}
+
+.gh-repo-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+    margin-left: -4px;
+    border: 2px solid var(--bg);
+}
+
+.gh-repo-avatars .gh-repo-avatar:first-child {
+    margin-left: 0;
+}
+
+.gh-chevron {
+    transition: transform .25s;
+    flex-shrink: 0;
+    color: var(--muted);
+}
+
+.gh-chevron.open {
+    transform: rotate(180deg);
+}
+
+.gh-repo-list {
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 1.2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .4rem .5rem;
+    display: flex;
+    flex-direction: column;
+    gap: .1rem;
+    min-width: 200px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.15);
+    z-index: 10;
+}
+
+.gh-repo-row {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .45rem .5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    transition: background .2s;
+    cursor: none;
+}
+
+.gh-repo-row:hover {
+    background: rgba(255,255,255,.05);
+}
+
+[data-theme="light"] .gh-repo-row:hover {
+    background: rgba(0,0,0,.04);
+}
+
+.gh-repo-name {
+    flex: 1;
+    font-family: 'DM Mono', monospace;
+    font-size: .78rem;
+}
+
+.gh-repo-count {
+    font-family: 'DM Mono', monospace;
+    font-size: .75rem;
     color: var(--muted);
 }
 
