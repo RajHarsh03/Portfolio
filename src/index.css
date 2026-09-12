@@ -1065,16 +1065,16 @@ section {
 }
 
 .info-strip-player {
-    width: 230px;
+    width: 170px;
     flex-shrink: 0;
     display: flex;
-    align-items: center;
-    gap: .7rem;
-    padding: .7rem .75rem;
+    flex-direction: column;
     text-decoration: none;
     color: inherit;
     cursor: none;
     transition: border-color .2s, transform .2s;
+    overflow: hidden;
+    border-radius: 18px;
 }
 
 .info-strip-player:hover {
@@ -1082,10 +1082,10 @@ section {
     transform: translateY(-1px);
 }
 
+/* Album art — full width */
 .np-art {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
     overflow: hidden;
     flex-shrink: 0;
     background: var(--surface);
@@ -1093,6 +1093,7 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 0;
 }
 
 .np-art img {
@@ -1102,21 +1103,33 @@ section {
     display: block;
 }
 
+.np-art-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    color: #1db954;
+}
+
+/* Info below art */
 .np-meta {
+    padding: .65rem .75rem .75rem;
     min-width: 0;
-    flex: 1;
+    background: var(--card);
 }
 
 .np-label {
     display: flex;
     align-items: center;
-    gap: .35rem;
-    font-size: .62rem;
-    letter-spacing: .04em;
+    gap: .3rem;
+    font-size: .58rem;
+    letter-spacing: .06em;
     text-transform: uppercase;
     color: var(--muted);
     font-family: 'DM Mono', monospace;
-    margin-bottom: .18rem;
+    margin-bottom: .3rem;
 }
 
 .np-source {
@@ -1134,15 +1147,15 @@ section {
 
 .np-title {
     font-size: .82rem;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.25;
     color: var(--text);
 }
 
 .np-artist {
-    font-size: .72rem;
+    font-size: .7rem;
     color: var(--muted);
-    margin-top: .12rem;
+    margin-top: .15rem;
 }
 
 .np-bars {
