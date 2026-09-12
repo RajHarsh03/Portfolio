@@ -11,6 +11,10 @@ export default function Hero() {
         <div className="hero-banner">
           {/* Replace src with your banner image later */}
           <div className="hero-banner-placeholder" aria-hidden="true" />
+          {/* Centered availability text */}
+          <div className="hero-banner-center-text">
+            Open for full-time<br />&amp; freelance work
+          </div>
           <div className="hero-banner-time" aria-label="Local time and temperature">
             <LiveClock />
             <span className="hero-banner-time-label">·</span>
@@ -21,7 +25,7 @@ export default function Hero() {
         {/* ── Profile row: avatar + body ── */}
         <div className="hero-profile-body">
 
-          {/* Avatar overlapping banner + tag in the blank space to the right */}
+          {/* Avatar overlapping banner */}
           <div className="hero-avatar-wrap">
             <div className="hero-avatar-ring">
               <img
@@ -31,10 +35,6 @@ export default function Hero() {
                 loading="eager"
                 fetchPriority="high"
               />
-            </div>
-            <div className="hero-tag">
-              <span className="tag-desktop">Available for Freelance &amp; Full-time Roles</span>
-              <span className="tag-mobile">Open to Work</span>
             </div>
           </div>
 

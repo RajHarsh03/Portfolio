@@ -57,7 +57,7 @@ function SpotifyNowPlaying() {
 
   return (
     <div
-      className="info-strip-player"
+      className={`info-strip-player${isPlaying ? ' is-playing' : ''}`}
       aria-label={track ? `${isPlaying ? 'Now playing' : 'Last played'}: ${track.title} by ${track.artist}` : 'Spotify'}
     >
       {/* Small square art on the left */}
@@ -85,7 +85,7 @@ function SpotifyNowPlaying() {
         <div className="np-artist">{track?.artist || ''}</div>
         <div className="np-progress">
           <div className="np-progress-bar">
-            <div className="np-progress-fill" style={{ width: isPlaying ? '38%' : '0%' }} />
+            <div className="np-progress-fill" style={{ width: isPlaying ? '38%' : '100%' }} />
             {isPlaying && <div className="np-progress-dot" style={{ left: '38%' }} />}
           </div>
         </div>

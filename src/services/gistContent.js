@@ -12,20 +12,6 @@ const GIST_RAW_URL =
 export const FALLBACK_DATA = {
   experiences: [
     {
-      label: 'PREVIOUS ROLE',
-      type: 'SIMULATION',
-      typeColor: 'badge-blue',
-      company: 'Deloitte AU',
-      role: 'Cyber & Technology Simulation',
-      date: '2025',
-      bullets: [
-        'Analyzed enterprise cyber threat scenarios and security workflows.',
-        'Identified vulnerabilities and proposed mitigation strategies aligned with industry best practices.',
-      ],
-    },
-  ],
-  internships: [
-    {
       label: 'INTERNSHIP',
       type: 'INTERNSHIP',
       typeColor: 'badge-purple',
@@ -86,7 +72,6 @@ export async function fetchGistContent() {
 
     _cache = {
       experiences:  data.experiences  ?? FALLBACK_DATA.experiences,
-      internships:  data.internships  ?? FALLBACK_DATA.internships,
       certificates: data.certificates ?? FALLBACK_DATA.certificates,
     };
     _cacheTime = Date.now();

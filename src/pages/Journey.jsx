@@ -30,7 +30,7 @@ function ExperienceCard({ item }) {
 export default function Journey() {
   const ref = useReveal();
   const { data } = useGistContent();
-  const { experiences, internships } = data;
+  const { experiences } = data;
 
   return (
     <>
@@ -53,15 +53,6 @@ export default function Journey() {
             <div className="journey-section-title reveal">Experience</div>
             <div className="exp-cards-list">
               {experiences.map((item, i) => <ExperienceCard key={i} item={item} />)}
-            </div>
-          </div>
-
-          {/* INTERNSHIPS */}
-          <div className="journey-block">
-            <div className="journey-section-label reveal">// where it started</div>
-            <div className="journey-section-title reveal">Internships</div>
-            <div className="exp-cards-list">
-              {internships.map((item, i) => <ExperienceCard key={i} item={item} />)}
             </div>
           </div>
 
