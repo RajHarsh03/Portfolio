@@ -1065,35 +1065,35 @@ section {
 }
 
 .info-strip-player {
-    width: 170px;
+    width: 260px;
     flex-shrink: 0;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
+    gap: .75rem;
+    padding: .7rem .85rem;
     text-decoration: none;
     color: inherit;
-    cursor: none;
-    transition: border-color .2s, transform .2s;
     overflow: hidden;
-    border-radius: 18px;
+    transition: border-color .2s, transform .2s;
 }
 
 .info-strip-player:hover {
-    border-color: var(--accent);
+    border-color: #1db954;
     transform: translateY(-1px);
 }
 
-/* Album art — full width */
+/* Small square art */
 .np-art {
-    width: 100%;
-    aspect-ratio: 1 / 1;
+    width: 58px;
+    height: 58px;
+    border-radius: 8px;
     overflow: hidden;
     flex-shrink: 0;
     background: var(--surface);
-    color: #1db954;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 0;
 }
 
 .np-art img {
@@ -1109,15 +1109,17 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    background: #121212;
     color: #1db954;
 }
 
-/* Info below art */
+/* Right column */
 .np-meta {
-    padding: .65rem .75rem .75rem;
     min-width: 0;
-    background: var(--card);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: .08rem;
 }
 
 .np-label {
@@ -1129,7 +1131,7 @@ section {
     text-transform: uppercase;
     color: var(--muted);
     font-family: 'DM Mono', monospace;
-    margin-bottom: .3rem;
+    margin-bottom: .15rem;
 }
 
 .np-source {
@@ -1146,16 +1148,46 @@ section {
 }
 
 .np-title {
-    font-size: .82rem;
+    font-size: .85rem;
     font-weight: 700;
-    line-height: 1.25;
+    line-height: 1.2;
     color: var(--text);
 }
 
 .np-artist {
     font-size: .7rem;
     color: var(--muted);
-    margin-top: .15rem;
+    margin-top: .1rem;
+}
+
+/* Progress bar */
+.np-progress {
+    margin-top: .45rem;
+}
+
+.np-progress-bar {
+    position: relative;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: visible;
+}
+
+.np-progress-fill {
+    height: 100%;
+    background: #1db954;
+    border-radius: 2px;
+    transition: width .5s linear;
+}
+
+.np-progress-dot {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: #1db954;
+    border-radius: 50%;
 }
 
 .np-bars {
