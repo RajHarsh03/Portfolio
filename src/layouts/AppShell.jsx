@@ -1,6 +1,6 @@
+import { useEffect, useState } from 'react';
 import Navbar from '../components/layout/Navbar.jsx';
 import Footer from '../components/layout/Footer.jsx';
-import CustomCursor from '../components/layout/CustomCursor.jsx';
 import ScrollProgress from '../components/layout/ScrollProgress.jsx';
 import QuoteStrip from '../components/home/QuoteStrip.jsx';
 
@@ -10,11 +10,18 @@ import QuoteStrip from '../components/home/QuoteStrip.jsx';
  * None of these components remount on route change.
  */
 export default function AppShell({ children }) {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
     <>
       {/* Persistent layout elements */}
       <ScrollProgress />
-      <CustomCursor />
 
       {/* Skip to content accessibility link */}
       <a href="#main-content" className="skip-link">Skip to content</a>
@@ -32,6 +39,9 @@ export default function AppShell({ children }) {
 
       <QuoteStrip />
       <Footer />
+
+      {/* Bottom scroll-fade overlay */}
+      <div className={`scroll-bottom-fade${scrolled ? ' visible' : ''}`} aria-hidden="true" />
     </>
   );
 }

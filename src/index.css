@@ -82,9 +82,26 @@ body {
     background: var(--bg);
     color: var(--text);
     overflow-x: hidden;
-    cursor: none;
     transition: background 0.35s, color 0.35s;
     line-height: 1.6;
+}
+
+/* Bottom scroll-fade overlay */
+.scroll-bottom-fade {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(to top, var(--bg) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 9990;
+    opacity: 0;
+    transition: opacity .4s ease;
+}
+
+.scroll-bottom-fade.visible {
+    opacity: 1;
 }
 
 /* Global grid background — fixed behind every page */
@@ -155,48 +172,7 @@ body::after {
 }
 
 /* ================
-   CURSOR — enhanced
-   ================ */
-.cursor {
-    width: 10px;
-    height: 10px;
-    background: var(--accent);
-    border-radius: 50%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 10002;
-    mix-blend-mode: difference;
-    transition: transform 0.15s ease, width 0.2s ease, height 0.2s ease;
-}
 
-.cursor-ring {
-    width: 32px;
-    height: 32px;
-    border: 1.5px solid var(--accent);
-    border-radius: 50%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 10001;
-    transition: width .3s, height .3s, border-color .3s;
-    opacity: .45;
-}
-
-/* Cursor glow on hover — activated by JS adding .hovered to body */
-body.cursor-hover .cursor {
-    transform: scale(1.5);
-    box-shadow: 0 0 20px var(--accent), 0 0 40px rgba(59, 130, 246, 0.3);
-}
-
-body.cursor-hover .cursor-ring {
-    width: 48px;
-    height: 48px;
-    border-color: var(--accent);
-    opacity: .25;
-}
 
 /* ================================
    NAVBAR — sticky blur, hover anim
@@ -259,7 +235,7 @@ nav.floating {
     border-radius: 999px;
     transition: color .2s, background .2s;
     white-space: nowrap;
-    cursor: none;
+
 }
 
 .nav-link:hover {
@@ -303,7 +279,7 @@ nav.floating {
     background: transparent;
     border: none;
     border-radius: 10px;
-    cursor: none;
+
     position: relative;
     display: flex;
     align-items: center;
@@ -375,7 +351,7 @@ nav.floating {
     text-decoration: none;
     opacity: .7;
     transition: opacity .2s ease, color .2s ease;
-    cursor: none;
+
     background: none;
     border: none;
     padding: 0;
@@ -491,7 +467,7 @@ section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 5.5rem 0 2rem;
+    padding: 4.5rem 0 2rem;
     position: relative;
 }
 
@@ -591,6 +567,27 @@ section {
 }
 
 .hero-banner-time-label { opacity: .6; }
+
+.hero-banner-location {
+    position: absolute;
+    bottom: .6rem;
+    left: .7rem;
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: .22rem .6rem;
+    border-radius: 6px;
+    margin-bottom: 0;
+    animation: none;
+}
+
+[data-theme="light"] .hero-banner-location {
+    background: rgba(255,255,255,.8);
+    backdrop-filter: blur(8px);
+}
+
 
 /* ── Profile body — bottom section of card ── */
 .hero-profile-body {
@@ -767,6 +764,7 @@ section {
     font-weight: 600;
     color: var(--text);
     margin-bottom: .3rem;
+    margin-left: auto;
     animation: fadeUp .6s .15s ease both;
 }
 
@@ -796,8 +794,8 @@ section {
     display: flex;
     align-items: center;
     gap: .6rem;
-    margin-top: .9rem;
-    margin-bottom: .5rem;
+    margin-top: .5rem;
+    margin-bottom: .55rem;
     animation: fadeUp .6s .2s ease both;
 }
 
@@ -811,7 +809,7 @@ section {
     font-weight: 500;
     text-decoration: none;
     transition: background .2s, color .2s, box-shadow .2s, transform .15s;
-    cursor: none;
+
 }
 
 .hero-cta-btn.primary {
@@ -889,7 +887,7 @@ section {
 .hero-actions {
     display: flex;
     gap: .55rem;
-    margin-top: 1.1rem;
+    margin-top: .4rem;
     flex-wrap: wrap;
     animation: fadeUp .6s .35s ease both;
 }
@@ -904,7 +902,7 @@ section {
     background: transparent;
     color: var(--muted);
     text-decoration: none;
-    cursor: none;
+
     border: none;
     transition: color .2s ease, transform .2s ease;
     flex-shrink: 0;
@@ -977,7 +975,7 @@ section {
     font-weight: 600;
     border: none;
     border-radius: 8px;
-    cursor: none;
+
     font-size: .88rem;
     text-decoration: none;
     transition: background .25s, transform .2s, box-shadow .2s;
@@ -1001,7 +999,7 @@ section {
     font-weight: 600;
     border: 1px solid var(--border);
     border-radius: 12px;
-    cursor: none;
+
     font-size: .9rem;
     text-decoration: none;
     transition: color .35s ease, border-color .35s ease;
@@ -1026,7 +1024,7 @@ section {
     font-weight: 600;
     border: 1px solid var(--border);
     border-radius: 8px;
-    cursor: none;
+
     font-size: .88rem;
     text-decoration: none;
     transition: color .35s ease, border-color .35s ease;
@@ -1372,7 +1370,7 @@ section {
     text-decoration: none;
     color: var(--text);
     transition: border-color .2s, background .2s;
-    cursor: none;
+
 }
 
 .hc-link-row:hover {
@@ -1499,7 +1497,7 @@ section {
     font-size: .82rem;
     font-weight: 600;
     color: var(--text);
-    cursor: none;
+
     transition: border-color .2s, background .2s, color .2s;
 }
 
@@ -1557,7 +1555,7 @@ section {
     border-radius: 10px;
     background: transparent;
     transition: background .2s, border-color .2s;
-    cursor: none;
+
     position: relative;
 }
 
@@ -1641,7 +1639,7 @@ section {
     border: 1px solid var(--text);
     border-radius: 6px;
     transition: opacity .2s;
-    cursor: none;
+
 }
 
 .edu-certs-verify:hover {
@@ -1660,7 +1658,7 @@ section {
     align-items: center;
     justify-content: center;
     padding: 1rem;
-    cursor: none;
+
 }
 
 .cert-modal {
@@ -1673,7 +1671,7 @@ section {
     position: relative;
     animation: fadeUp .2s ease both;
     overflow: hidden;
-    cursor: none;
+
 }
 
 .cert-modal-top-bar {
@@ -1690,7 +1688,7 @@ section {
     background: transparent;
     border: none;
     color: var(--muted);
-    cursor: none;
+
     padding: .3rem;
     border-radius: 6px;
     display: flex;
@@ -1809,7 +1807,7 @@ section {
     color: var(--text);
     text-decoration: none;
     transition: background .2s, border-color .2s, color .2s;
-    cursor: none;
+
 }
 
 .cert-modal-verify:hover {
@@ -2286,7 +2284,7 @@ section {
     justify-content: center;
     gap: .35rem;
     transition: color .2s, background .2s;
-    cursor: none;
+
 }
 
 .proj-footer-btn:hover {
@@ -2471,7 +2469,7 @@ section {
     font-size: .85rem;
     border: 1px solid var(--border);
     border-radius: 12px;
-    cursor: none;
+
     transition: all .25s ease;
     display: inline-flex;
     align-items: center;
@@ -2659,7 +2657,7 @@ section {
     font-size: .95rem;
     border: none;
     border-radius: 12px;
-    cursor: none;
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2849,7 +2847,7 @@ section {
     padding: 0;
     background: transparent;
     border: none;
-    cursor: none;
+
     font-family: 'DM Mono', monospace;
     font-size: .68rem;
     color: var(--muted);
@@ -2915,7 +2913,7 @@ section {
     text-decoration: none;
     color: var(--text);
     transition: background .2s;
-    cursor: none;
+
 }
 
 .gh-repo-row:hover {
@@ -2942,7 +2940,7 @@ section {
     color: var(--muted);
     text-decoration: none;
     transition: color .2s;
-    cursor: none;
+
 }
 
 .gh-username-link:hover { color: var(--accent); }
@@ -3149,7 +3147,7 @@ footer {
     color: var(--muted);
     text-decoration: none;
     transition: color .2s;
-    cursor: none;
+
 }
 
 .footer-nav-link:hover {
@@ -3173,7 +3171,7 @@ footer {
     color: var(--muted);
     text-decoration: none;
     transition: color .2s, background .2s;
-    cursor: none;
+
 }
 
 .footer-icon-btn:hover {
@@ -3228,7 +3226,7 @@ footer {
     background: transparent;
     font-family: 'DM Mono', monospace;
     font-size: .78rem;
-    cursor: none;
+
     transition: all .2s;
     text-decoration: none;
     display: inline-block;
@@ -3536,7 +3534,7 @@ footer {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 10px;
-    cursor: none;
+
     transition: all .25s ease;
     box-sizing: border-box;
     white-space: nowrap;
@@ -3587,7 +3585,7 @@ footer {
     background: transparent;
     border: none;
     border-radius: 8px;
-    cursor: none;
+
     text-align: left;
     transition: all .2s ease;
 }
@@ -4254,10 +4252,6 @@ footer {
         cursor: auto;
     }
 
-    .cursor,
-    .cursor-ring {
-        display: none;
-    }
 
     a,
     button,
@@ -4322,7 +4316,7 @@ footer {
     text-decoration: none;
     text-transform: uppercase;
     transition: color .2s ease, transform .2s ease;
-    cursor: none;
+
     display: inline-flex;
     align-items: center;
     gap: .25rem;
@@ -4544,7 +4538,7 @@ footer {
   border: 1px solid var(--border);
   background: transparent;
   color: var(--muted);
-  cursor: none;
+
   transition: background .2s, color .2s, border-color .2s;
 }
 
