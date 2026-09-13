@@ -7,6 +7,7 @@ import FeaturedProjects from '../components/home/FeaturedProjects.jsx';
 import GitHubHeatmap   from '../components/home/GitHubHeatmap.jsx';
 import EducationCerts  from '../components/home/EducationCerts.jsx';
 import HomeContact     from '../components/home/HomeContact.jsx';
+import QuoteStrip      from '../components/home/QuoteStrip.jsx';
 
 export default function Home() {
   return (
@@ -24,6 +25,7 @@ export default function Home() {
       <GitHubHeatmap />
       <EducationCerts />
       <HomeContact />
+      <QuoteStrip />
     </>
   );
 }

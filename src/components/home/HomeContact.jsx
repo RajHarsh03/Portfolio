@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
+import { useReveal } from '../../hooks/useReveal.js';
 
 const EMAILJS_SERVICE_ID  = 'service_gb3gqr6';
 const EMAILJS_TEMPLATE_ID = 'template_ngboxe4';
 const EMAILJS_PUBLIC_KEY  = 'f-P9D7rMpesYc3TAk';
 
 export default function HomeContact() {
+  const ref = useReveal();
   const [form, setForm]       = useState({ name: '', email: '', message: '' });
   const [sending, setSending] = useState(false);
   const [sent, setSent]       = useState(false);
@@ -38,7 +40,7 @@ export default function HomeContact() {
   }
 
   return (
-    <section id="home-contact">
+    <section id="home-contact" ref={ref}>
       <div className="container">
         <div className="section-label reveal">// let's connect</div>
         <h2 className="section-title reveal">Let's Work Together</h2>
@@ -51,7 +53,7 @@ export default function HomeContact() {
               <p className="hc-card-sub">Choose your preferred method to connect and let's discuss your project.</p>
 
               <div className="hc-links">
-                <a href="https://calendly.com" target="_blank" rel="noopener noreferrer" className="hc-link-row">
+                <a href="https://cal.com/rajharsh03/one-to-one" target="_blank" rel="noopener noreferrer" className="hc-link-row">
                   <span className="hc-link-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                       strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
@@ -67,7 +69,7 @@ export default function HomeContact() {
                   <span className="hc-link-arrow">↗</span>
                 </a>
 
-                <a href="mailto:raj.harsh4618@gmail.com" className="hc-link-row">
+                <a href="mailto:rajharsh.devx@gmail.com" className="hc-link-row">
                   <span className="hc-link-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                       strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
