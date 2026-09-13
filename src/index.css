@@ -1000,12 +1000,13 @@ section {
    ABOUT / INFO STRIP
    ================ */
 #about {
-    padding: 0 24px 2rem;
+    padding: 0 0 2rem;
 }
 
 .info-strip-row {
     max-width: 760px;
     margin: 0 auto;
+    padding: 0 24px;
     display: flex;
     align-items: stretch;
     gap: 12px;
@@ -1918,7 +1919,7 @@ section {
     align-items: center;
     gap: .5rem;
     padding: .65rem 1.75rem;
-    border-radius: 999px;
+    border-radius: 8px;
     border: 1px solid var(--border);
     color: var(--text);
     font-size: .85rem;
@@ -4395,7 +4396,7 @@ footer {
   font-size: .75rem;
   font-weight: 500;
   padding: .35rem .9rem;
-  border-radius: 999px;
+  border-radius: 6px;
   border: 1px solid var(--border);
   background: transparent;
   color: var(--muted);
@@ -4527,20 +4528,15 @@ footer {
 .exp-card {
   position: relative;
   border: 1px solid var(--border);
-  border-radius: 0;
-  padding: 1.4rem 1.5rem 1.5rem;
-  background: var(--card);
-  background-image:
-    linear-gradient(rgba(59,130,246,.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59,130,246,.03) 1px, transparent 1px);
-  background-size: 28px 28px;
-  transition: border-color .25s, transform .25s, box-shadow .25s;
+  border-radius: 10px;
+  padding: .9rem 1rem;
+  background: transparent;
+  transition: border-color .2s, background .2s;
 }
 
 .exp-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 28px rgba(59,130,246,.1);
+  border-color: var(--muted);
+  background: var(--card);
 }
 
 /* Top row: label + badge */
@@ -4548,12 +4544,12 @@ footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: .5rem;
 }
 
 .exp-card-label {
   font-family: 'DM Mono', monospace;
-  font-size: .7rem;
+  font-size: .62rem;
   letter-spacing: .1em;
   color: var(--muted);
   text-transform: uppercase;
@@ -4561,74 +4557,45 @@ footer {
 
 .exp-card-badge {
   font-family: 'DM Mono', monospace;
-  font-size: .65rem;
-  font-weight: 700;
-  letter-spacing: .1em;
+  font-size: .62rem;
+  font-weight: 600;
+  letter-spacing: .08em;
   text-transform: uppercase;
-  padding: .25rem .6rem;
-  border-radius: 0;
+  padding: .18rem .55rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: transparent;
 }
 
-.badge-purple {
-  background: rgba(139,92,246,.15);
-  color: #a78bfa;
-  border: 1px dashed rgba(139,92,246,.7);
-}
-[data-theme="light"] .badge-purple {
-  background: rgba(139,92,246,.1);
-  color: #7c3aed;
-  border-color: rgba(139,92,246,.6);
-}
-
-.badge-blue {
-  background: rgba(59,130,246,.12);
-  color: var(--accent);
-  border: 1px dashed rgba(59,130,246,.7);
-}
-[data-theme="light"] .badge-blue {
-  background: rgba(59,130,246,.08);
-  color: #1d4ed8;
-  border-color: rgba(59,130,246,.6);
-}
-
-.badge-teal {
-  background: rgba(20,184,166,.12);
-  color: var(--accent2);
-  border: 1px dashed rgba(20,184,166,.7);
-}
-[data-theme="light"] .badge-teal {
-  background: rgba(20,184,166,.08);
-  color: #0f766e;
-  border-color: rgba(20,184,166,.6);
-}
+.badge-purple { color: var(--muted); }
+.badge-blue   { color: var(--muted); }
+.badge-teal   { color: var(--muted); }
 
 /* Company row */
 .exp-card-company {
   display: flex;
   align-items: center;
   gap: .5rem;
-  font-size: 1rem;
+  font-size: .95rem;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: .35rem;
+  margin-bottom: .2rem;
 }
 
 .exp-card-icon {
   display: flex;
   align-items: center;
-  color: var(--accent);
+  color: var(--muted);
   flex-shrink: 0;
 }
 
 /* Role + date */
 .exp-card-role {
   font-family: 'DM Mono', monospace;
-  font-size: .78rem;
-  font-weight: 600;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  margin-bottom: 1rem;
+  font-size: .72rem;
+  color: var(--muted);
+  margin-bottom: .75rem;
 }
 
 /* Bullet list */
@@ -4638,24 +4605,24 @@ footer {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: .35rem;
 }
 
 .exp-card-bullets li {
-  font-size: .85rem;
+  font-size: .82rem;
   color: var(--muted);
   line-height: 1.6;
-  padding-left: 1.2rem;
+  padding-left: 1rem;
   position: relative;
 }
 
 .exp-card-bullets li::before {
-  content: '▪';
+  content: '·';
   position: absolute;
   left: 0;
   color: var(--muted);
-  font-size: .6rem;
-  top: .25rem;
+  font-size: 1rem;
+  top: -.1rem;
 }
 
 /* --- Certificates page --- */
@@ -4910,102 +4877,64 @@ footer {
 }
 
 /* ================================
-   DASHED BORDER — global card style
+   SOLID BORDER — global card style (replaces dashed)
    ================================ */
 .project-card,
 .cert-card,
 .journey-card,
 .exp-card,
-.gh-activity-card,
-.bottom-nav,
-.sort-toggle,
-.sort-dropdown,
-.filter-toggle,
-.filter-dropdown,
-.toolbar-search input,
+.skill-box,
+.btn-cv,
+.btn-primary,
 .projects-view-all-btn,
 .social-link,
 .pd-btn,
 .pd-img-wrap,
-.show-more-btn,
-.skill-box,
-.btn-cv,
-.btn-primary {
-  border-style: dashed !important;
+.show-more-btn {
+  border-style: solid !important;
 }
 
 [data-theme="dark"] .project-card,
 [data-theme="dark"] .cert-card,
 [data-theme="dark"] .journey-card,
 [data-theme="dark"] .exp-card,
-[data-theme="dark"] .gh-activity-card,
-[data-theme="dark"] .bottom-nav,
-[data-theme="dark"] .sort-toggle,
-[data-theme="dark"] .sort-dropdown,
-[data-theme="dark"] .filter-toggle,
-[data-theme="dark"] .filter-dropdown,
-[data-theme="dark"] .toolbar-search input,
+[data-theme="dark"] .skill-box,
+[data-theme="dark"] .btn-cv,
 [data-theme="dark"] .projects-view-all-btn,
 [data-theme="dark"] .social-link,
 [data-theme="dark"] .pd-btn,
 [data-theme="dark"] .pd-img-wrap,
-[data-theme="dark"] .show-more-btn,
-[data-theme="dark"] .skill-box,
-[data-theme="dark"] .btn-cv {
-  border-color: rgba(255, 255, 255, 0.35) !important;
+[data-theme="dark"] .show-more-btn {
+  border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 [data-theme="light"] .project-card,
 [data-theme="light"] .cert-card,
 [data-theme="light"] .journey-card,
 [data-theme="light"] .exp-card,
-[data-theme="light"] .gh-activity-card,
-[data-theme="light"] .bottom-nav,
-[data-theme="light"] .sort-toggle,
-[data-theme="light"] .sort-dropdown,
-[data-theme="light"] .filter-toggle,
-[data-theme="light"] .filter-dropdown,
-[data-theme="light"] .toolbar-search input,
+[data-theme="light"] .skill-box,
+[data-theme="light"] .btn-cv,
 [data-theme="light"] .projects-view-all-btn,
 [data-theme="light"] .social-link,
 [data-theme="light"] .pd-btn,
 [data-theme="light"] .pd-img-wrap,
-[data-theme="light"] .show-more-btn,
-[data-theme="light"] .skill-box,
-[data-theme="light"] .btn-cv {
-  border-color: rgba(0, 0, 0, 0.4) !important;
+[data-theme="light"] .show-more-btn {
+  border-color: rgba(0, 0, 0, 0.1) !important;
 }
 
 /* ================================
-   REMOVE BORDER RADIUS — everywhere
-   except cursor, nav pill, avatar, circular elements
+   REMOVE BORDER RADIUS — only specific flat elements
    ================================ */
-.project-card, .cert-card, .journey-card, .gh-activity-card,
-.skill-box, .skill-tag, .tl-tag, .pd-tag,
-.btn-primary, .btn-cv, .btn-outline,
-.proj-btn, .proj-btn-gh, .proj-btn-live,
-.pd-btn, .pd-btn-gh, .pd-btn-live,
-.form-btn, .social-link, .projects-view-all-btn,
-.sort-toggle, .sort-dropdown, .filter-toggle, .filter-dropdown,
-.sort-option, .filter-option,
-.toolbar-search input, .fg input, .fg textarea,
-.project-type-pill, .pd-type-pill,
-.project-status, .pd-status,
-.hero-tag, .view-all-btn,
-.gh-activity-card, .gh-profile-link,
+.gh-activity-card,
 .footer-new,
-.contact-form, .fg input, .fg textarea,
-.cert-link, .no-results,
-.pd-img-wrap,
-.show-more-btn,
-.theme-btn {
+.no-results {
   border-radius: 0 !important;
 }
 
 
-/* Timeline tags — dashed border */
+/* Timeline tags — solid border */
 .tl-tag {
-  border-style: dashed !important;
+  border-style: solid !important;
 }
 
 /* Project card image — remove radius so image fills full card width */
@@ -5016,36 +4945,8 @@ footer {
   border-radius: 0 !important;
 }
 
-/* Project type pill + action buttons — dashed border */
-.project-type-pill,
-.proj-btn-live,
-.proj-btn-gh {
-  border-style: dashed !important;
-}
-
-/* Contact form inputs — dashed border */
-.fg input,
-.fg textarea {
-  border-style: dashed !important;
-}
-
-/* Send Message + Get in touch — dashed border on colored buttons */
-.form-btn,
-.btn-primary {
-  border: 1px dashed rgba(255, 255, 255, 0.6) !important;
-}
-[data-theme="light"] .form-btn,
-[data-theme="light"] .btn-primary {
-  border: 1px dashed rgba(0, 0, 0, 0.65) !important;
-}
-
-/* Hero tag — dashed blue border */
+/* Hero tag — dashed accent border (keep as design element) */
 .hero-tag {
-  border: 1px dashed var(--accent) !important;
-}
-
-/* GitHub profile link — dashed blue border */
-.gh-profile-link {
   border: 1px dashed var(--accent) !important;
 }
 
