@@ -1,14 +1,6 @@
-/**
- * Gist-based CMS for experiences, internships, and certificates.
- *
- * To add/edit cards: just edit the Gist on github.com — no code push needed.
- * If the Gist is unreachable, the app falls back to FALLBACK_DATA below.
- */
-
 const GIST_RAW_URL =
   'https://gist.githubusercontent.com/RajHarsh03/c654e844cf7de53873dd45b3d9a00b05/raw/portfolio-content.json';
 
-// ─── Fallback — shown if Gist fetch fails ─────────────────────────────────────
 export const FALLBACK_DATA = {
   experiences: [
     {
@@ -44,7 +36,41 @@ export const FALLBACK_DATA = {
       date: '2025',
       desc: 'Participated in the national-level space hackathon organized by ISRO. Built a full-stack web application addressing a space-tech challenge.',
       link: 'https://drive.google.com/file/d/1sc-iWnc2tp9h3wmv6x4O_vBnQLVG9TcJ/view?usp=drive_link',
-    }
+    },
+  ],
+  education: [
+    {
+      school: 'Heritage Institute of Technology, Kolkata',
+      degree: 'B.Tech in Computer Science & Business Systems',
+      year: '2023 – 2027',
+      desc: 'Pursuing a four-year undergraduate program with a focus on software engineering, data structures, algorithms, and AI/ML fundamentals.',
+    },
+  ],
+  achievements: [
+    {
+      title: 'Hackathon Participant',
+      org: '',
+      year: '2024–2025',
+      desc: 'Participated in 5+ hackathons, collaborating in teams to rapidly prototype and deliver full-stack and AI solutions under tight deadlines.',
+    },
+    {
+      title: 'Core Tech Team Member',
+      org: 'GeeksforGeeks Campus Body',
+      year: '2024–Present',
+      desc: 'Contributed to campus technical initiatives, organized developer learning sessions, and led engineering activities.',
+    },
+    {
+      title: 'Member — Institute of Innovation Council (IIC)',
+      org: 'Institute of Innovation Council',
+      year: '2024–Present',
+      desc: 'Drove innovation, entrepreneurship, and technology initiatives through idea validation programs and cross-functional collaboration.',
+    },
+    {
+      title: 'Competitive Event Winner',
+      org: 'College-Level Technical Events',
+      year: '2024–Present',
+      desc: 'Won various college-level coding events, hackathons, and quizzes, securing multiple prize money accolades.',
+    },
   ],
 };
 
@@ -52,16 +78,10 @@ const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 let _cache = null;
 let _cacheTime = 0;
 
-/**
- * Fetches portfolio content from GitHub Gist.
- * Falls back to FALLBACK_DATA if the fetch fails for any reason.
- */
 export async function fetchGistContent() {
-  // Return cached result if still fresh
   if (_cache && Date.now() - _cacheTime < CACHE_TTL) return _cache;
 
   try {
-    // Cache-busting param so browsers don't serve stale Gist raw files
     const res = await fetch(`${GIST_RAW_URL}?t=${Date.now()}`, {
       headers: { Accept: 'application/json' },
     });
@@ -73,6 +93,8 @@ export async function fetchGistContent() {
     _cache = {
       experiences:  data.experiences  ?? FALLBACK_DATA.experiences,
       certificates: data.certificates ?? FALLBACK_DATA.certificates,
+      education:    data.education    ?? FALLBACK_DATA.education,
+      achievements: data.achievements ?? FALLBACK_DATA.achievements,
     };
     _cacheTime = Date.now();
     console.log('[gistContent] Loaded from Gist.');

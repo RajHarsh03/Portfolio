@@ -1598,7 +1598,7 @@ section {
 
 .edu-certs-sub {
     font-size: .75rem;
-    color: var(--muted);
+    color: #f59e0b;
     font-family: 'DM Mono', monospace;
     display: flex;
     align-items: center;
@@ -4763,19 +4763,19 @@ footer {
 .acert-verify {
     font-size: .72rem;
     font-weight: 600;
-    color: #111;
-    background: #fff;
-    border: 1px solid #ddd;
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 6px;
     padding: .2rem .55rem;
     text-decoration: none;
     white-space: nowrap;
-    transition: opacity .2s;
+    transition: border-color .2s, opacity .2s;
 }
 
 .acert-verify:hover {
-    border-color: #555;
-    opacity: 1;
+    border-color: var(--accent);
+    opacity: .9;
 }
 
 .acert-desc {
@@ -4812,6 +4812,121 @@ footer {
 }
 
 .acert-view-btn:hover { color: var(--text); }
+
+/* ── Education cards ── */
+.about-edu-list {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    margin-top: 1rem;
+}
+
+.about-edu-card {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    transition: background .2s, border-color .2s;
+}
+
+.about-edu-card:hover {
+    background: var(--card);
+    border-color: var(--accent);
+}
+
+.about-edu-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.about-edu-school {
+    font-weight: 600;
+    font-size: .9rem;
+    color: var(--text);
+    margin-bottom: .2rem;
+}
+
+.about-edu-degree {
+    font-size: .78rem;
+    color: #f59e0b;
+    font-weight: 500;
+    margin-bottom: .35rem;
+}
+
+.about-edu-desc {
+    font-size: .78rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.about-edu-year {
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    color: var(--muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ── Achievement cards ── */
+.about-achiev-list {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    margin-top: 1rem;
+    padding-bottom: 4rem;
+}
+
+.about-achiev-card {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    transition: background .2s, border-color .2s;
+}
+
+.about-achiev-card:hover {
+    background: var(--card);
+    border-color: var(--accent);
+}
+
+.about-achiev-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.about-achiev-title {
+    font-weight: 600;
+    font-size: .9rem;
+    color: var(--text);
+    margin-bottom: .2rem;
+}
+
+.about-achiev-org {
+    font-size: .75rem;
+    color: #f59e0b;
+    font-weight: 500;
+    margin-bottom: .35rem;
+}
+
+.about-achiev-desc {
+    font-size: .78rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.about-achiev-year {
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    color: var(--muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
 
 .about-certs-list {
     display: flex;
@@ -5116,9 +5231,9 @@ footer {
   background: transparent;
 }
 
-.badge-purple { color: var(--muted); }
-.badge-blue   { color: var(--muted); }
-.badge-teal   { color: var(--muted); }
+.badge-purple { color: #a78bfa; border-color: rgba(167,139,250,.3); }
+.badge-blue   { color: #60a5fa; border-color: rgba(96,165,250,.3); }
+.badge-teal   { color: #2dd4bf; border-color: rgba(45,212,191,.3); }
 
 /* Company row */
 .exp-card-company {
@@ -5127,14 +5242,14 @@ footer {
   gap: .5rem;
   font-size: .95rem;
   font-weight: 700;
-  color: var(--text);
+  color: #f59e0b;
   margin-bottom: .2rem;
 }
 
 .exp-card-icon {
   display: flex;
   align-items: center;
-  color: var(--muted);
+  color: #f59e0b;
   flex-shrink: 0;
 }
 
@@ -5168,7 +5283,7 @@ footer {
   content: '·';
   position: absolute;
   left: 0;
-  color: var(--muted);
+  color: #f59e0b;
   font-size: 1rem;
   top: -.1rem;
 }

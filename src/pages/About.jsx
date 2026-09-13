@@ -4,6 +4,7 @@ import { useGistContent } from '../hooks/useGistContent.js';
 
 const GH_USER = 'RajHarsh03';
 
+/* ── Rich cert card ── */
 function AboutCertCard({ c }) {
   return (
     <div className="acert-card reveal">
@@ -34,10 +35,42 @@ function AboutCertCard({ c }) {
   );
 }
 
+/* ── Education card ── */
+function EduCard({ e }) {
+  return (
+    <div className="about-edu-card reveal">
+      <div className="about-edu-top">
+        <div className="about-edu-info">
+          <div className="about-edu-school">{e.school}</div>
+          <div className="about-edu-degree">{e.degree}</div>
+          {e.desc && <p className="about-edu-desc">{e.desc}</p>}
+        </div>
+        {e.year && <span className="about-edu-year">{e.year}</span>}
+      </div>
+    </div>
+  );
+}
+
+/* ── Achievement card ── */
+function AchievCard({ a }) {
+  return (
+    <div className="about-achiev-card reveal">
+      <div className="about-achiev-top">
+        <div className="about-achiev-info">
+          <div className="about-achiev-title">{a.title}</div>
+          {a.org && <div className="about-achiev-org">{a.org}</div>}
+          {a.desc && <p className="about-achiev-desc">{a.desc}</p>}
+        </div>
+        {a.year && <span className="about-achiev-year">{a.year}</span>}
+      </div>
+    </div>
+  );
+}
+
 export default function About() {
   const ref = useReveal();
   const { data } = useGistContent();
-  const { certificates } = data;
+  const { certificates, education, achievements } = data;
 
   return (
     <>
@@ -61,15 +94,9 @@ export default function About() {
 
         {/* ── Two-column layout ── */}
         <div className="about-body">
-
-          {/* Left — photo */}
           <div className="about-photo-col reveal">
             <div className="about-photo-wrap">
-              <img
-                src={`https://github.com/${GH_USER}.png?size=600`}
-                alt="Harsh Raj"
-                className="about-photo"
-              />
+              <img src={`https://github.com/${GH_USER}.png?size=600`} alt="Harsh Raj" className="about-photo" />
             </div>
             <div className="about-photo-meta">
               <span className="about-photo-name">Harsh Raj</span>
@@ -85,7 +112,6 @@ export default function About() {
             </div>
           </div>
 
-          {/* Right — bio */}
           <div className="about-bio-col reveal">
             <h2 className="about-who-title">Who I Am</h2>
             <p className="about-bio-para">
@@ -112,13 +138,22 @@ export default function About() {
               ))}
             </div>
           </div>
-
         </div>
 
         {/* ── Quote ── */}
         <div className="about-quote-block reveal">
           <p className="about-quote-main">"Ship it. Learn from it. Build better."</p>
           <p className="about-quote-sub">"Every great developer was once a beginner who refused to give up."</p>
+        </div>
+
+        {/* ── Education ── */}
+        <div className="about-certs-section">
+          <div className="projects-page-header" style={{ marginTop: '2rem' }}>
+            <h2 className="section-title">Education</h2>
+          </div>
+          <div className="about-edu-list">
+            {education.map((e, i) => <EduCard key={i} e={e} />)}
+          </div>
         </div>
 
         {/* ── Certifications ── */}
@@ -128,6 +163,16 @@ export default function About() {
           </div>
           <div className="acert-list">
             {certificates.map((c, i) => <AboutCertCard key={i} c={c} />)}
+          </div>
+        </div>
+
+        {/* ── Achievements ── */}
+        <div className="about-certs-section">
+          <div className="projects-page-header" style={{ marginTop: '2rem' }}>
+            <h2 className="section-title">Achievements</h2>
+          </div>
+          <div className="about-achiev-list">
+            {achievements.map((a, i) => <AchievCard key={i} a={a} />)}
           </div>
         </div>
 
