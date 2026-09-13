@@ -6,7 +6,7 @@ import {
   Home,
   Projects,
   Contact,
-  Journey,
+  About,
   Certificates,
   NotFound,
 } from './router/routes.jsx';
@@ -25,9 +25,9 @@ export default function App() {
       <Suspense fallback={<RouteLoader />}>
         <Routes>
           <Route path="/"             element={<Home />} />
+          <Route path="/about"        element={<About />} />
           <Route path="/projects"     element={<Projects />} />
           <Route path="/contact"      element={<Contact />} />
-          <Route path="/journey"      element={<Journey />} />
           <Route path="/certificates" element={<Certificates />} />
           <Route path="*"             element={<NotFound />} />
         </Routes>

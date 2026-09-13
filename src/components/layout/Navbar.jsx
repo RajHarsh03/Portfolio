@@ -31,10 +31,10 @@ export default function Navbar() {
       {/* Right — links pill + icons */}
       <div className="nav-right">
         <div className="nav-links-pill">
-          <NavLink to="/"            end className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Home</NavLink>
-          <NavLink to="/projects"        className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Projects</NavLink>
-          <NavLink to="/journey"         className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Journey</NavLink>
-          <NavLink to="/contact"         className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Contact</NavLink>
+          <NavLink to="/"        end className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Home</NavLink>
+          <NavLink to="/about"      className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>About</NavLink>
+          <NavLink to="/projects"   className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Projects</NavLink>
+          <NavLink to="/contact"    className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Contact</NavLink>
         </div>
 
         <span

@@ -482,12 +482,6 @@ section {
     animation: fadeUp .6s ease both;
 }
 
-/* Inner wrapper that holds the border */
-.hero-profile-card > .hero-banner,
-.hero-profile-card > .hero-profile-body {
-    /* handled individually below */
-}
-
 /* ── Banner — top section of card ── */
 .hero-banner {
     width: 100%;
@@ -1599,10 +1593,7 @@ section {
     font-size: .88rem;
     font-weight: 600;
     color: var(--text);
-    margin-bottom: .18rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    margin-bottom: .2rem;
 }
 
 .edu-certs-sub {
@@ -1615,8 +1606,21 @@ section {
     flex-wrap: wrap;
 }
 
+/* Cert issuer — amber, only for certification rows */
+.cert-issuer {
+    font-size: .75rem;
+    color: #f59e0b;
+    font-family: 'DM Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    flex-wrap: wrap;
+}
+
 .edu-certs-date {
-    color: var(--muted);
+    color: var(--muted) !important;
+    font-size: .7rem;
+    font-weight: 400;
 }
 
 .edu-certs-year {
@@ -1644,6 +1648,27 @@ section {
 
 .edu-certs-verify:hover {
     opacity: .7;
+}
+
+/* Cert verify button — used by home certs and About page */
+.cert-page-verify {
+    font-family: 'DM Mono', monospace;
+    font-size: .72rem;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: .25rem .65rem;
+    text-decoration: none !important;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: border-color .2s, color .2s;
+}
+
+.cert-page-verify:hover {
+    border-color: var(--accent);
+    color: var(--accent);
 }
 
 /* ── Certificate Modal ── */
@@ -2240,6 +2265,7 @@ section {
     flex: 1;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -4502,6 +4528,267 @@ footer {
 
 
 /* --- Projects page --- */
+/* =============================================
+   ABOUT PAGE
+   ============================================= */
+
+/* Two-column layout */
+.about-body {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 3rem;
+    align-items: start;
+    max-width: 760px;
+    margin: 2rem auto 0;
+    padding: 0 24px 1rem;
+}
+
+/* Photo column */
+.about-photo-col {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+}
+
+.about-photo-wrap {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    aspect-ratio: 1;
+}
+
+.about-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(20%);
+    transition: filter .3s;
+}
+
+.about-photo-wrap:hover .about-photo {
+    filter: grayscale(0%);
+}
+
+.about-photo-meta {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+}
+
+.about-photo-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text);
+}
+
+.about-photo-role {
+    font-size: .78rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+}
+
+.about-photo-loc {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    font-size: .78rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+}
+
+.about-photo-loc svg { color: var(--accent); flex-shrink: 0; }
+
+/* Bio column */
+.about-bio-col { display: flex; flex-direction: column; gap: 1.2rem; }
+
+.about-who-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    padding-bottom: .4rem;
+    margin-bottom: .75rem;
+    position: relative;
+    display: inline-block;
+}
+
+.about-who-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 2.5rem;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+.about-bio-para {
+    color: var(--text-secondary, var(--muted));
+    font-size: .95rem;
+    line-height: 1.75;
+}
+
+.about-highlight {
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+.about-chips {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: .35rem;
+    margin-top: .5rem;
+    overflow-x: auto;
+}
+
+.about-chip {
+    font-family: 'DM Mono', monospace;
+    font-size: .62rem;
+    padding: .15rem .5rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: var(--card);
+    transition: border-color .2s, color .2s;
+    white-space: nowrap;
+}
+
+.about-chip:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+/* Quote block */
+.about-quote-block {
+    max-width: 760px;
+    margin: 0.5rem auto 0;
+    padding: 1.5rem 24px 1rem;
+    text-align: center;
+    border-top: 1px solid var(--border);
+}
+
+.about-quote-main {
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.25;
+    margin-bottom: .75rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    letter-spacing: -.01em;
+}
+
+.about-quote-sub {
+    font-size: clamp(.85rem, 2vw, 1rem);
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+/* ── Certifications section ── */
+.about-certs-section {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px 4rem;
+}
+
+.about-certs-list {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    margin-top: 1rem;
+}
+
+.about-cert-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.about-cert-card:hover {
+    border-color: rgba(255,255,255,.18);
+    box-shadow: 0 0 0 1px rgba(255,255,255,.06);
+}
+
+.about-cert-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.about-cert-info { flex: 1; }
+
+.about-cert-title {
+    font-weight: 600;
+    font-size: .95rem;
+    color: var(--text);
+    margin-bottom: .2rem;
+}
+
+.about-cert-issuer {
+    font-size: .7rem;
+    color: #f59e0b;
+    font-weight: 500;
+    margin-bottom: .3rem;
+}
+
+.about-cert-desc {
+    font-size: .8rem;
+    color: var(--muted);
+    line-height: 1.55;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.about-cert-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .5rem;
+    flex-shrink: 0;
+}
+
+.about-cert-date {
+    font-family: 'DM Mono', monospace;
+    font-size: .72rem;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.about-cert-verify {
+    font-size: .75rem;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--surface, var(--bg-secondary));
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: .25rem .6rem;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: border-color .2s, color .2s;
+}
+
+.about-cert-verify:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .about-body {
+        grid-template-columns: 1fr;
+    }
+    .about-photo-wrap {
+        max-width: 180px;
+    }
+}
+
 .projects-page-header {
   max-width: 760px;
   margin: 0 auto 1.5rem;

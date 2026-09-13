@@ -7,7 +7,7 @@ import CertModal from './CertModal.jsx';
 const EDUCATION = [
   {
     school: 'Heritage Institute of Technology, Kolkata',
-    degree: 'B.Tech in Computer Science & Business System',
+    degree: 'B.Tech in Computer Science & Business Systems',
     year: '2023 - 2027',
   },
 ];
@@ -19,7 +19,7 @@ function CertRow({ c }) {
       <div className="edu-certs-row reveal" onClick={() => setOpen(true)}>
         <div className="edu-certs-left">
           <div className="edu-certs-name">{c.title}</div>
-          <div className="edu-certs-sub">
+          <div className="about-cert-issuer">
             {c.issuer}
             {c.date && <span className="edu-certs-date">&nbsp;{c.date}</span>}
           </div>
@@ -28,7 +28,7 @@ function CertRow({ c }) {
           <span className="edu-certs-view-hint">View details</span>
           {c.link && (
             <a href={c.link} target="_blank" rel="noopener noreferrer"
-              className="edu-certs-verify"
+              className="about-cert-verify"
               aria-label="Verify certificate"
               onClick={e => e.stopPropagation()}>
               Verify ↗
@@ -74,13 +74,6 @@ export default function EducationCerts() {
           <div className="edu-certs-list">
             {certificates.map((c, i) => <CertRow key={i} c={c} />)}
           </div>
-        </div>
-
-        {/* View all link */}
-        <div className="journey-view-all reveal">
-          <Link to="/certificates" className="projects-view-all-btn">
-            View all certificates
-          </Link>
         </div>
       </div>
     </section>
