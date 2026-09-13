@@ -4,29 +4,32 @@ import { useGistContent } from '../hooks/useGistContent.js';
 
 const GH_USER = 'RajHarsh03';
 
-function CertCard({ c }) {
+function AboutCertCard({ c }) {
   return (
-    <div className="about-cert-card reveal">
-      <div className="about-cert-top">
-        <div className="about-cert-info">
-          <div className="about-cert-title">{c.title}</div>
-          <div className="about-cert-issuer">{c.issuer}</div>
-          {c.desc && <p className="about-cert-desc">{c.desc}</p>}
+    <div className="acert-card reveal">
+      <div className="acert-top">
+        <div className="acert-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
+            strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
+            <circle cx="12" cy="8" r="6" />
+            <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+          </svg>
         </div>
-        <div className="about-cert-right">
-          {c.date && <span className="about-cert-date">{c.date}</span>}
+        <div className="acert-info">
+          <div className="acert-title">{c.title}</div>
+          <div className="acert-issuer">{c.issuer}</div>
+        </div>
+        <div className="acert-right">
+          {c.date && <span className="acert-date">{c.date}</span>}
           {c.link && (
-            <a
-              href={c.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="about-cert-verify"
-            >
+            <a href={c.link} target="_blank" rel="noopener noreferrer"
+              className="acert-verify">
               Verify ↗
             </a>
           )}
         </div>
       </div>
+      {c.desc && <p className="acert-desc">{c.desc}</p>}
     </div>
   );
 }
@@ -44,6 +47,7 @@ export default function About() {
       </Helmet>
 
       <div style={{ paddingTop: '6.5rem' }} ref={ref}>
+
         {/* Header */}
         <div className="projects-page-header">
           <div className="projects-header-row">
@@ -84,28 +88,24 @@ export default function About() {
           {/* Right — bio */}
           <div className="about-bio-col reveal">
             <h2 className="about-who-title">Who I Am</h2>
-
             <p className="about-bio-para">
               I'm a Computer Science student and aspiring{' '}
               <strong className="about-highlight">Full Stack Developer &amp; AI/ML Engineer</strong>{' '}
               passionate about building real, useful technology — spanning web apps,
               intelligent systems, and everything in between.
             </p>
-
             <p className="about-bio-para">
               Right now I'm deep into{' '}
               <strong className="about-highlight">Generative AI</strong>,
               deep learning architectures, and scalable full-stack systems — shipping
               projects daily and growing through deliberate practice.
             </p>
-
             <p className="about-bio-para">
               Outside of writing code, I explore new ideas through reading, experiment
               with creative tools, and believe that{' '}
               <em>consistency and good daily habits</em> are the absolute foundation
               for getting better at anything.
             </p>
-
             <div className="about-chips">
               {['React', 'Node.js', 'Python', 'TypeScript', 'AI / ML', 'PostgreSQL'].map(t => (
                 <span key={t} className="about-chip">{t}</span>
@@ -123,11 +123,11 @@ export default function About() {
 
         {/* ── Certifications ── */}
         <div className="about-certs-section">
-          <div className="projects-page-header" style={{ marginTop: '2.5rem' }}>
+          <div className="projects-page-header" style={{ marginTop: '2rem' }}>
             <h2 className="section-title">Certifications</h2>
           </div>
-          <div className="about-certs-list">
-            {certificates.map((c, i) => <CertCard key={i} c={c} />)}
+          <div className="acert-list">
+            {certificates.map((c, i) => <AboutCertCard key={i} c={c} />)}
           </div>
         </div>
 

@@ -4691,6 +4691,128 @@ footer {
     padding: 0 24px 4rem;
 }
 
+/* ── Rich cert cards (About page) ── */
+.acert-list {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    margin-top: 1rem;
+}
+
+.acert-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    transition: border-color .2s;
+}
+
+.acert-card:hover {
+    border-color: var(--accent);
+}
+
+.acert-top {
+    display: flex;
+    align-items: flex-start;
+    gap: .85rem;
+}
+
+.acert-icon {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: rgba(99,102,241,.15);
+    color: #818cf8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.acert-info { flex: 1; }
+
+.acert-title {
+    font-weight: 600;
+    font-size: .9rem;
+    color: var(--text);
+    margin-bottom: .2rem;
+}
+
+.acert-issuer {
+    font-size: .72rem;
+    color: #f59e0b;
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
+}
+
+.acert-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .45rem;
+    flex-shrink: 0;
+}
+
+.acert-date {
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.acert-verify {
+    font-size: .72rem;
+    font-weight: 600;
+    color: #111;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: .2rem .55rem;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity .2s;
+}
+
+.acert-verify:hover {
+    border-color: #555;
+    opacity: 1;
+}
+
+.acert-desc {
+    font-size: .8rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: .75rem 0 0;
+}
+
+.acert-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: .75rem;
+    padding-top: .6rem;
+    border-top: 1px solid var(--border);
+}
+
+.acert-label {
+    font-family: 'DM Mono', monospace;
+    font-size: .68rem;
+    color: var(--muted);
+}
+
+.acert-view-btn {
+    font-size: .75rem;
+    font-weight: 500;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: color .2s;
+}
+
+.acert-view-btn:hover { color: var(--text); }
+
 .about-certs-list {
     display: flex;
     flex-direction: column;
