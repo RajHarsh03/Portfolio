@@ -62,7 +62,7 @@ export default function Hero() {
 
             {/* CTA buttons */}
             <div className="hero-cta-row">
-              <a href="https://cal.com" target="_blank" rel="noopener noreferrer" className="hero-cta-btn primary">
+              <a href="https://cal.com/rajharsh03/one-to-one" target="_blank" rel="noopener noreferrer" className="hero-cta-btn primary">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                   strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden="true">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
