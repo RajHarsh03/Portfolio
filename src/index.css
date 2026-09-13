@@ -1150,13 +1150,12 @@ section {
 }
 
 .info-strip-player {
-    width: 260px;
+    width: 220px;
     flex-shrink: 0;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: .75rem;
-    padding: .7rem .85rem;
+    flex-direction: column;
+    gap: .6rem;
+    padding: .85rem;
     text-decoration: none;
     color: inherit;
     overflow: hidden;
@@ -1169,10 +1168,16 @@ section {
     transform: translateY(-2px);
 }
 
-/* Small square art */
+/* Top row: art left, status+logo right */
+.np-top-row {
+    display: flex;
+    align-items: flex-start;
+    gap: .6rem;
+}
+
 .np-art {
-    width: 58px;
-    height: 58px;
+    width: 52px;
+    height: 52px;
     border-radius: 8px;
     overflow: hidden;
     flex-shrink: 0;
@@ -1199,31 +1204,37 @@ section {
     color: #1db954;
 }
 
-/* Right column */
-.np-meta {
-    min-width: 0;
+/* Header: status label + spotify logo stacked */
+.np-header {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: .08rem;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 52px;
 }
 
-.np-label {
+.np-status {
     display: flex;
     align-items: center;
     gap: .3rem;
-    font-size: .58rem;
-    letter-spacing: .06em;
+    font-size: .65rem;
+    letter-spacing: .05em;
     text-transform: uppercase;
     color: var(--muted);
     font-family: 'DM Mono', monospace;
-    margin-bottom: .15rem;
 }
 
-.np-source {
-    color: #1db954;
-    text-transform: none;
-    letter-spacing: 0;
+.np-spotify-logo {
+    display: block;
+}
+
+/* Bottom: title + artist */
+.np-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: .1rem;
+    min-width: 0;
 }
 
 .np-title,
@@ -1234,16 +1245,15 @@ section {
 }
 
 .np-title {
-    font-size: .85rem;
+    font-size: .88rem;
     font-weight: 700;
     line-height: 1.2;
     color: var(--text);
 }
 
 .np-artist {
-    font-size: .7rem;
+    font-size: .72rem;
     color: var(--muted);
-    margin-top: .1rem;
 }
 
 /* Progress bar */
