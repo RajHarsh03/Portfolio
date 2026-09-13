@@ -148,7 +148,7 @@ export default function About() {
 
         {/* ── Education ── */}
         <div className="about-certs-section">
-          <div className="projects-page-header" style={{ marginTop: '2rem' }}>
+          <div className="projects-page-header" style={{ marginTop: '1rem' }}>
             <h2 className="section-title">Education</h2>
           </div>
           <div className="about-edu-list">
@@ -158,7 +158,7 @@ export default function About() {
 
         {/* ── Certifications ── */}
         <div className="about-certs-section">
-          <div className="projects-page-header" style={{ marginTop: '2rem' }}>
+          <div className="projects-page-header" style={{ marginTop: '1rem' }}>
             <h2 className="section-title">Certifications</h2>
           </div>
           <div className="acert-list">
@@ -168,7 +168,7 @@ export default function About() {
 
         {/* ── Achievements ── */}
         <div className="about-certs-section">
-          <div className="projects-page-header" style={{ marginTop: '2rem' }}>
+          <div className="projects-page-header" style={{ marginTop: '1rem' }}>
             <h2 className="section-title">Achievements</h2>
           </div>
           <div className="about-achiev-list">

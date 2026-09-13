@@ -1728,13 +1728,13 @@ section {
     width: 52px;
     height: 52px;
     border-radius: 14px;
-    background: var(--card);
-    border: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto .9rem;
-    color: var(--accent);
+    color: #fff;
 }
 
 .cert-modal-title {
@@ -1823,22 +1823,21 @@ section {
     justify-content: center;
     margin: 0 1.25rem;
     padding: .85rem;
-    background: var(--card);
-    border: 1px solid var(--border);
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border: none;
     border-radius: 10px;
     font-family: 'DM Mono', monospace;
     font-size: .82rem;
     font-weight: 600;
-    color: var(--text);
+    color: #fff;
     text-decoration: none;
-    transition: background .2s, border-color .2s, color .2s;
-
+    transition: opacity .2s, transform .15s;
+    letter-spacing: .03em;
 }
 
 .cert-modal-verify:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
+    opacity: .88;
+    transform: translateY(-1px);
 }
 
 /* ===============
@@ -4688,7 +4687,7 @@ footer {
 .about-certs-section {
     max-width: 760px;
     margin: 0 auto;
-    padding: 0 24px 4rem;
+    padding: 0 24px;
 }
 
 /* ── Rich cert cards (About page) ── */
@@ -4817,8 +4816,8 @@ footer {
 .about-edu-list {
     display: flex;
     flex-direction: column;
-    gap: .75rem;
-    margin-top: 1rem;
+    gap: .6rem;
+    margin-top: .75rem;
 }
 
 .about-edu-card {
@@ -4874,9 +4873,9 @@ footer {
 .about-achiev-list {
     display: flex;
     flex-direction: column;
-    gap: .75rem;
-    margin-top: 1rem;
-    padding-bottom: 4rem;
+    gap: .6rem;
+    margin-top: .75rem;
+    padding-bottom: 2.5rem;
 }
 
 .about-achiev-card {
@@ -5086,7 +5085,7 @@ footer {
 #allProjects {
   max-width: 760px;
   margin: 0 auto;
-  padding: 0 24px 6rem;
+  padding: 0 24px 2.5rem;
 }
 .toolbar-row {
   display: flex;
@@ -5332,7 +5331,7 @@ footer {
 .contact-page-header { max-width: 760px; margin: 0 auto 1.5rem; padding: 0 24px; }
 .contact-page-header h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: .35rem; }
 .contact-page-header p { color: var(--muted); font-size: .88rem; }
-#contactSection { max-width: 760px; margin: 0 auto; padding: 0 24px 4rem; }
+#contactSection { max-width: 760px; margin: 0 auto; padding: 0 24px 2.5rem; }
 
 /* --- ProjectDetail page --- */
 .pd-wrap { max-width: 760px; margin: 0 auto; padding: 0 24px 6rem; }

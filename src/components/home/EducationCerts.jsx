@@ -1,8 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useGistContent } from '../../hooks/useGistContent.js';
 import { useReveal } from '../../hooks/useReveal.js';
-import CertModal from './CertModal.jsx';
 
 const EDUCATION = [
   {
@@ -13,31 +10,25 @@ const EDUCATION = [
 ];
 
 function CertRow({ c }) {
-  const [open, setOpen] = useState(false);
   return (
-    <>
-      <div className="edu-certs-row reveal" onClick={() => setOpen(true)}>
-        <div className="edu-certs-left">
-          <div className="edu-certs-name">{c.title}</div>
-          <div className="about-cert-issuer">
-            {c.issuer}
-            {c.date && <span className="edu-certs-date">&nbsp;{c.date}</span>}
-          </div>
-        </div>
-        <div className="edu-certs-row-right">
-          <span className="edu-certs-view-hint">View details</span>
-          {c.link && (
-            <a href={c.link} target="_blank" rel="noopener noreferrer"
-              className="about-cert-verify"
-              aria-label="Verify certificate"
-              onClick={e => e.stopPropagation()}>
-              Verify ↗
-            </a>
-          )}
+    <div className="edu-certs-row reveal">
+      <div className="edu-certs-left">
+        <div className="edu-certs-name">{c.title}</div>
+        <div className="about-cert-issuer">
+          {c.issuer}
+          {c.date && <span className="edu-certs-date">&nbsp;{c.date}</span>}
         </div>
       </div>
-      {open && <CertModal cert={c} onClose={() => setOpen(false)} />}
-    </>
+      <div className="edu-certs-row-right">
+        {c.link && (
+          <a href={c.link} target="_blank" rel="noopener noreferrer"
+            className="about-cert-verify"
+            aria-label="Verify certificate">
+            Verify ↗
+          </a>
+        )}
+      </div>
+    </div>
   );
 }
 
