@@ -44,7 +44,8 @@ function CertRow({ c }) {
 export default function EducationCerts() {
   const ref = useReveal();
   const { data } = useGistContent();
-  const { certificates } = data;
+  const certificates = (data.certificates ?? []).slice(0, 2);
+  const education    = (data.education    ?? EDUCATION).slice(0, 1);
 
   return (
     <section id="edu-certs" ref={ref}>
@@ -56,7 +57,7 @@ export default function EducationCerts() {
         <div className="edu-certs-group">
           <div className="edu-certs-group-title reveal">Education</div>
           <div className="edu-certs-list">
-            {EDUCATION.map((e, i) => (
+            {education.map((e, i) => (
               <div key={i} className="edu-certs-row reveal">
                 <div className="edu-certs-left">
                   <div className="edu-certs-name">{e.school}</div>

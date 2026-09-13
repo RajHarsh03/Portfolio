@@ -29,7 +29,7 @@ function ExperienceCard({ item }) {
 export default function JourneyPreview() {
   const ref = useReveal();
   const { data } = useGistContent();
-  const items = data.experiences ?? [];
+  const items = (data.experiences ?? []).slice(0, 1);
 
   return (
     <section id="journey" ref={ref}>
