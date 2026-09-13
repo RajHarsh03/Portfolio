@@ -47,7 +47,7 @@ export default function Contact() {
         <meta name="description" content="Get in touch with Harsh Raj for collaborations, freelance work, or just a good tech chat." />
       </Helmet>
 
-      <section id="home-contact" ref={ref} style={{ paddingTop: '6.5rem' }}>
+      <section id="home-contact" ref={ref} style={{ paddingTop: '4.5rem' }}>
         <div className="container">
           <div className="section-label reveal">// let's connect</div>
           <h2 className="section-title reveal">Let's Work Together</h2>

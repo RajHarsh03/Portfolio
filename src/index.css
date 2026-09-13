@@ -4690,6 +4690,16 @@ footer {
     padding: 0 24px;
 }
 
+.about-certs-section + .about-certs-section {
+    margin-top: 3rem;
+}
+
+/* Section headers inside about don't need extra horizontal padding */
+.about-certs-section .projects-page-header {
+    padding: 0;
+    margin: 0 0 .5rem;
+}
+
 /* ── Rich cert cards (About page) ── */
 .acert-list {
     display: flex;
@@ -4876,6 +4886,92 @@ footer {
     gap: .6rem;
     margin-top: .75rem;
     padding-bottom: 2.5rem;
+}
+
+/* ── Collapsible Experience Card (About page) ── */
+.about-exp-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: .65rem;
+    transition: border-color .2s;
+}
+.about-exp-card.open {
+    border-color: var(--accent);
+}
+.about-exp-header {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    padding: .85rem 1rem;
+    cursor: pointer;
+    user-select: none;
+}
+.about-exp-icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+}
+.about-exp-header-info {
+    flex: 1;
+    min-width: 0;
+}
+.about-exp-role {
+    font-weight: 700;
+    font-size: .9rem;
+    color: var(--text);
+}
+.about-exp-meta {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: .78rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    margin-top: .2rem;
+}
+.about-exp-sep { opacity: .4; }
+.about-exp-type { color: var(--accent3); }
+.about-exp-toggle {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: border-color .2s, color .2s;
+}
+.about-exp-toggle:hover,
+.about-exp-card.open .about-exp-toggle {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+.about-exp-bullets {
+    list-style: disc;
+    padding: 0 1.25rem 1rem 3.25rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+.about-exp-bullets li {
+    font-size: .85rem;
+    color: var(--text);
+    line-height: 1.55;
 }
 
 .about-achiev-card {
@@ -5180,6 +5276,98 @@ footer {
     margin-top: 2rem;
 }
 
+/* ── About Exp Card (reference design) ── */
+.aexp-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: .6rem;
+  transition: border-color .2s;
+}
+.aexp-header {
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+  padding: .75rem 1rem;
+}
+.aexp-icon-box {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  margin-top: .1rem;
+}
+.aexp-info { flex: 1; min-width: 0; }
+.aexp-role {
+  font-weight: 700;
+  font-size: .88rem;
+  color: var(--text);
+  line-height: 1.3;
+}
+.aexp-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .3rem;
+  font-size: .75rem;
+  color: var(--muted);
+  margin-top: .18rem;
+  font-family: 'DM Mono', monospace;
+}
+.aexp-dot { opacity: .4; }
+.aexp-toggle {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: .1rem .25rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color .2s;
+}
+.aexp-toggle:hover { color: var(--text); }
+
+/* Always-visible body with left accent line */
+.aexp-body {
+  border-left: 2px solid var(--border);
+  margin-left: 1rem;
+  padding: .5rem 1rem .75rem .85rem;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+.aexp-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+.aexp-bullets li {
+  font-size: .83rem;
+  color: var(--muted);
+  line-height: 1.6;
+  padding-left: 1rem;
+  position: relative;
+}
+.aexp-bullets li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+  font-size: .8rem;
+}
+
 /* ── Experience Cards ── */
 .exp-cards-list {
   display: flex;
@@ -5236,6 +5424,12 @@ footer {
 .badge-teal   { color: #2dd4bf; border-color: rgba(45,212,191,.3); }
 
 /* Company row */
+.exp-card-company-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .exp-card-company {
   display: flex;
   align-items: center;
@@ -5244,6 +5438,25 @@ footer {
   font-weight: 700;
   color: #f59e0b;
   margin-bottom: .2rem;
+}
+
+.exp-card-chevron {
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--muted);
+  transition: transform .25s ease, border-color .2s, color .2s;
+}
+.exp-card-chevron:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .exp-card-icon {
@@ -5286,6 +5499,55 @@ footer {
   color: #f59e0b;
   font-size: 1rem;
   top: -.1rem;
+}
+
+/* Left line on expanded bullets */
+.exp-bullets-lined {
+  border-left: 2px solid var(--border);
+  margin-top: .6rem;
+  padding-left: 1rem;
+  margin-left: .25rem;
+}
+.exp-bullets-lined li { padding-left: .75rem; }
+
+/* Expanded section with left accent line */
+.exp-card-expand {
+  margin-top: .75rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  margin-bottom: -.9rem;
+  padding: .75rem 1rem .9rem 1.25rem;
+  border-left: 3px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  background: var(--card);
+  border-bottom-left-radius: 9px;
+  border-bottom-right-radius: 9px;
+}
+
+/* Tech stack badges */
+.exp-card-stacks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+
+.exp-stack-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .22rem .6rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: .72rem;
+  color: var(--text);
+  background: var(--card);
+}
+
+.exp-stack-badge img {
+  flex-shrink: 0;
 }
 
 /* --- Certificates page --- */

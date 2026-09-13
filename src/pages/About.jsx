@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useReveal } from '../hooks/useReveal.js';
 import { useGistContent } from '../hooks/useGistContent.js';
@@ -67,10 +68,113 @@ function AchievCard({ a }) {
   );
 }
 
+/* ── Devicon helper ── */
+const ICON_MAP = {
+  html:         'html5/html5-original',
+  html5:        'html5/html5-original',
+  css:          'css3/css3-original',
+  css3:         'css3/css3-original',
+  javascript:   'javascript/javascript-original',
+  js:           'javascript/javascript-original',
+  typescript:   'typescript/typescript-original',
+  ts:           'typescript/typescript-original',
+  react:        'react/react-original',
+  nextjs:       'nextjs/nextjs-original',
+  python:       'python/python-original',
+  figma:        'figma/figma-original',
+  tailwind:     'tailwindcss/tailwindcss-original',
+  tailwindcss:  'tailwindcss/tailwindcss-original',
+  nodejs:       'nodejs/nodejs-original',
+  git:          'git/git-original',
+  mongodb:      'mongodb/mongodb-original',
+  mysql:        'mysql/mysql-original',
+  firebase:     'firebase/firebase-plain',
+  pandas:       'pandas/pandas-original',
+  numpy:        'numpy/numpy-original',
+  scikitlearn:  'scikitlearn/scikitlearn-original',
+  sklearn:      'scikitlearn/scikitlearn-original',
+  matplotlib:   'matplotlib/matplotlib-plain',
+  jupyter:      'jupyter/jupyter-original-wordmark',
+  flask:        'flask/flask-original',
+  fastapi:      'fastapi/fastapi-original',
+  docker:       'docker/docker-original',
+  postgresql:   'postgresql/postgresql-original',
+  redux:        'redux/redux-original',
+};
+function stackIcon(name) {
+  const key = name.toLowerCase().replace(/[\s.]/g, '');
+  const path = ICON_MAP[key];
+  if (!path) return null;
+  return `https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons/${path}.svg`;
+}
+
+/* ── Collapsible experience card ── */
+function ExpCard({ item }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="exp-card reveal">
+      <div className="exp-card-top">
+        <span className="exp-card-label">{item.label}</span>
+        <span className={`exp-card-badge ${item.typeColor}`}>{item.type}</span>
+      </div>
+      <div className="exp-card-company-row">
+        <div className="exp-card-company">
+          <span className="exp-card-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </span>
+          <strong>{item.company}</strong>
+        </div>
+        <button
+          className="exp-card-chevron"
+          aria-label={open ? 'Collapse' : 'Expand'}
+          onClick={() => setOpen(o => !o)}
+          style={{ transform: open ? 'rotate(90deg)' : 'rotate(-90deg)' }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="16 18 22 12 16 6" />
+            <polyline points="8 6 2 12 8 18" />
+          </svg>
+        </button>
+      </div>
+      <div className="exp-card-role">
+        {item.role} &bull; {item.date}
+        {item.duration && <span style={{ opacity: .6 }}> &nbsp;{item.duration}</span>}
+      </div>
+
+      {/* Bullets — shown only when expanded */}
+      {open && item.bullets?.length > 0 && (
+        <ul className="exp-card-bullets" style={{ marginTop: '.5rem', paddingLeft: '1rem' }}>
+          {item.bullets.map((b, i) => <li key={i}>{b}</li>)}
+        </ul>
+      )}
+
+      {/* Stacks — always visible */}
+      {item.stacks?.length > 0 && (
+        <div className="exp-card-stacks" style={{ marginTop: '.5rem' }}>
+          {item.stacks.map((s, i) => {
+            const icon = stackIcon(s);
+            return (
+              <span key={i} className="exp-stack-badge">
+                {icon && <img src={icon} alt={s} width="13" height="13" />}
+                {s}
+              </span>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function About() {
   const ref = useReveal();
   const { data } = useGistContent();
-  const { certificates, education, achievements } = data;
+  const { certificates, education, achievements, experiences } = data;
 
   return (
     <>
@@ -79,7 +183,7 @@ export default function About() {
         <meta name="description" content="A full-stack developer and aspiring AI/ML engineer. Discover who I am, what I build, and what drives me." />
       </Helmet>
 
-      <div style={{ paddingTop: '6.5rem' }} ref={ref}>
+      <div style={{ paddingTop: '4.5rem' }} ref={ref}>
 
         {/* Header */}
         <div className="projects-page-header">
@@ -153,6 +257,18 @@ export default function About() {
           </div>
           <div className="about-edu-list">
             {education.map((e, i) => <EduCard key={i} e={e} />)}
+          </div>
+        </div>
+
+        {/* ── Experience ── */}
+        <div className="about-certs-section">
+          <div className="projects-page-header" style={{ marginTop: '1rem' }}>
+            <h2 className="section-title">Experience</h2>
+          </div>
+          <div className="exp-cards-list">
+            {(experiences ?? []).map((item, i) => (
+              <ExpCard key={i} item={item} />
+            ))}
           </div>
         </div>
 

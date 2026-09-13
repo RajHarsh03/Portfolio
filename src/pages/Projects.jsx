@@ -9,13 +9,7 @@ const FILTERS = [
   { value: 'all',       label: 'All'         },
   { value: 'fullstack', label: 'Web Apps'    },
   { value: 'ai',        label: 'AI & ML'     },
-  { value: 'data',      label: 'Data Science'},
-];
-const SORTS = [
-  { value: 'newest', label: 'Newest First' },
-  { value: 'oldest', label: 'Oldest First' },
-  { value: 'a-z',    label: 'A → Z'        },
-  { value: 'z-a',    label: 'Z → A'        },
+  { value: 'data',      label: 'Data Science'}
 ];
 
 function ProjectCard({ p }) {
@@ -122,7 +116,7 @@ export default function Projects() {
         <meta name="description" content="A complete collection of everything I've built — filtered by category." />
       </Helmet>
 
-      <div style={{ paddingTop: '6.5rem' }} ref={ref}>
+      <div style={{ paddingTop: '4.5rem' }} ref={ref}>
         <div className="projects-page-header">
           <div className="projects-header-row">
             <h1 className="section-title">Projects</h1>
@@ -149,7 +143,6 @@ export default function Projects() {
 
             {!loading && error && (
               <div className="no-results">
-                <span className="nr-icon">⚠️</span>
                 <span className="nr-title">Could not load projects</span>
                 <a href={`https://github.com/${GH_USER}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>
                   View on GitHub ↗
@@ -159,7 +152,6 @@ export default function Projects() {
 
             {!loading && !error && filtered.length === 0 && (
               <div className="no-results">
-                <span className="nr-icon">🔍</span>
                 <span className="nr-title">No projects found</span>
                 Try a different search term or filter.
               </div>
@@ -173,8 +165,8 @@ export default function Projects() {
             <div className="show-more-wrap">
               <button className="show-more-btn" onClick={() => setExpanded(e => !e)}>
                 {expanded
-                  ? 'Show Less ↑'
-                  : <>Show More <span style={{ opacity: .55, fontSize: '.82em' }}>({hiddenCount} more)</span> ↓</>
+                  ? 'Show Less'
+                  : <>Show More <span style={{ opacity: .55, fontSize: '.82em' }}>({hiddenCount} more)</span></>
                 }
               </button>
             </div>
