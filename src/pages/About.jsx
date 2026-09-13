@@ -143,7 +143,7 @@ function ExpCard({ item }) {
       </div>
       <div className="exp-card-role">
         {item.role} &bull; {item.date}
-        {item.duration && <span style={{ opacity: .6 }}> &nbsp;{item.duration}</span>}
+        {item.duration && <span style={{ fontWeight: 700 }}> &nbsp;{item.duration}</span>}
       </div>
 
       {/* Bullets — shown only when expanded */}

@@ -69,7 +69,7 @@ export default function JourneyPreview() {
               </div>
               <div className="exp-card-role">
                 {item.role} &bull; {item.date}
-                {item.duration && <span style={{ opacity: .6 }}> &nbsp;{item.duration}</span>}
+                {item.duration && <span style={{ fontWeight: 700 }}> &nbsp;{item.duration}</span>}
               </div>
               {item.stacks?.length > 0 && (
                 <div className="exp-card-stacks" style={{ marginTop: '.5rem' }}>
