@@ -55,7 +55,7 @@ function SpotifyNowPlaying() {
     }
 
     load();
-    const id = setInterval(load, 10000);
+    const id = setInterval(load, 5000);
     return () => {
       cancelled = true;
       clearInterval(id);

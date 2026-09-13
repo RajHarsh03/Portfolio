@@ -1179,22 +1179,25 @@ section {
     padding-right: .5rem;
 }
 
-/* Spotify icon + label row */
+/* Spotify icon + label row — single line */
 .np-label-row {
     display: flex;
     align-items: center;
-    gap: .3rem;
-    margin-bottom: .1rem;
+    gap: .25rem;
+    margin-bottom: .12rem;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .np-status {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: .25rem;
-    font-size: .65rem;
+    gap: .2rem;
+    font-size: .6rem;
     color: var(--muted);
     font-family: 'DM Mono', monospace;
-    letter-spacing: .03em;
+    letter-spacing: .02em;
+    white-space: nowrap;
 }
 
 /* Right album art */
