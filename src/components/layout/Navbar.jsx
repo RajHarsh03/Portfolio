@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext.jsx';
 
 const GH_USER = 'RajHarsh03';
-
 
 export default function Navbar() {
   const { toggleTheme } = useTheme();
@@ -26,12 +25,18 @@ export default function Navbar() {
 
   return (
     <nav className={scrolled ? 'scrolled' : ''}>
-      <Link to="/" className="nav-logo">
-        harshx<span>.</span>in
-      </Link>
+      {/* Logo — left */}
+      <Link to="/" className="nav-logo">Harsh</Link>
 
+      {/* Right — links pill + icons */}
       <div className="nav-right">
-        {/* GitHub */}
+        <div className="nav-links-pill">
+          <NavLink to="/"            end className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Home</NavLink>
+          <NavLink to="/projects"        className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Projects</NavLink>
+          <NavLink to="/journey"         className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Journey</NavLink>
+          <NavLink to="/contact"         className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Contact</NavLink>
+        </div>
+
         <span
           className="nav-gh-btn"
           aria-label="GitHub profile"
@@ -43,7 +48,6 @@ export default function Navbar() {
           </svg>
         </span>
 
-        {/* Theme toggle */}
         <button
           ref={btnRef}
           className="theme-btn"

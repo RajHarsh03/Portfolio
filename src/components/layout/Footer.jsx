@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="footer-simple">
         <div className="footer-bottom">
           <div className="footer-bottom-left">
-            <span className="footer-copy">© {new Date().getFullYear()} &middot; Harsh Raj</span>
+            <span className="footer-copy">© {new Date().getFullYear()} &middot; <span className="footer-name-pixel">Harsh Raj</span></span>
           </div>
 
           <div className="footer-icons">

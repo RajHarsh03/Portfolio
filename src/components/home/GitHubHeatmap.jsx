@@ -169,7 +169,7 @@ export default function GitHubHeatmap() {
       const text = cell.count === 0
         ? `No contributions on ${formatDate(cell.date)}`
         : `${cell.count} contribution${cell.count > 1 ? 's' : ''} on ${formatDate(cell.date)}`;
-      setTooltip({ text, x: cx, y: cy - 8 });
+      setTooltip({ text, x: cx, y: cy - 8 + 48 }); // +48 offsets gh-heatmap-top height
     } else {
       setTooltip(null);
     }
@@ -201,12 +201,14 @@ export default function GitHubHeatmap() {
           onMouseLeave={() => setTooltip(null)}
         >
           {!failed && <canvas ref={canvasRef} />}
-          {tooltip && (
-            <div className="gh-tooltip" style={{ left: tooltip.x, top: tooltip.y }}>
-              {tooltip.text}
-            </div>
-          )}
         </div>
+
+        {/* Tooltip — outside canvas-wrap to avoid overflow clipping */}
+        {tooltip && (
+          <div className="gh-tooltip" style={{ left: tooltip.x, top: tooltip.y }}>
+            {tooltip.text}
+          </div>
+        )}
 
         {/* Footer: Less/More legend only */}
         <div className="gh-heatmap-footer">

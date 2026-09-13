@@ -39,10 +39,14 @@ export default function Journey() {
         <meta name="description" content="A timeline of my career - experiences, roles, and the internships that shaped me." />
       </Helmet>
 
-      <div className="page-wrap" ref={ref}>
-        <div className="journey-page-header">
-          <h1>My Journey</h1>
-          <p>A timeline of my career - experiences, roles, and the internships that shaped me.</p>
+      <div style={{ paddingTop: '6.5rem' }} ref={ref}>
+        <div className="projects-page-header">
+          <div className="projects-header-row">
+            <h1 className="section-title">My Journey</h1>
+          </div>
+          <p style={{ color: 'var(--muted)', fontSize: '.9rem', marginTop: '.5rem' }}>
+            A timeline of my career - experiences, roles, and the internships that shaped me.
+          </p>
         </div>
 
         <div className="journey-content">

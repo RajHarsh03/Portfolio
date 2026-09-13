@@ -2,6 +2,7 @@ import Navbar from '../components/layout/Navbar.jsx';
 import Footer from '../components/layout/Footer.jsx';
 import CustomCursor from '../components/layout/CustomCursor.jsx';
 import ScrollProgress from '../components/layout/ScrollProgress.jsx';
+import QuoteStrip from '../components/home/QuoteStrip.jsx';
 
 /**
  * AppShell — mounts exactly once.
@@ -29,6 +30,7 @@ export default function AppShell({ children }) {
         {children}
       </main>
 
+      <QuoteStrip />
       <Footer />
     </>
   );
