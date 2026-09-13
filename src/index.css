@@ -1130,7 +1130,7 @@ section {
     min-width: 0;
     display: flex;
     align-items: center;
-    padding: 1.05rem 1.2rem;
+    padding: .9rem 1.1rem;
     transition: border-color .25s, box-shadow .25s, transform .25s;
 }
 
@@ -1150,13 +1150,13 @@ section {
 }
 
 .info-strip-player {
-    width: 200px;
+    width: 190px;
     flex-shrink: 0;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: .5rem;
-    padding: .75rem;
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    padding: .8rem .85rem;
     text-decoration: none;
     color: inherit;
     overflow: hidden;
@@ -1169,18 +1169,39 @@ section {
     transform: translateY(-2px);
 }
 
-/* Top row: art + logo+status */
-.np-top-row {
+/* Left text block */
+.np-left {
+    flex: 1;
+    min-width: 0;
     display: flex;
-    align-items: flex-start;
-    gap: .55rem;
-    flex: 0 0 auto;
+    flex-direction: column;
+    gap: .18rem;
+    padding-right: .5rem;
 }
 
+/* Spotify icon + label row */
+.np-label-row {
+    display: flex;
+    align-items: center;
+    gap: .3rem;
+    margin-bottom: .1rem;
+}
+
+.np-status {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    font-size: .65rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .03em;
+}
+
+/* Right album art */
 .np-art {
-    width: 54px;
-    height: 54px;
-    border-radius: 8px;
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
     overflow: hidden;
     flex-shrink: 0;
     background: var(--surface);
@@ -1204,41 +1225,6 @@ section {
     justify-content: center;
     background: #121212;
     color: #1db954;
-}
-
-/* Right side: Spotify logo on top, status below */
-.np-header {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: .3rem;
-    height: 54px;
-}
-
-.np-spotify-logo { display: block; }
-
-.np-status {
-    display: flex;
-    align-items: center;
-    gap: .25rem;
-    font-size: .6rem;
-    letter-spacing: .05em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    line-height: 1;
-}
-
-/* Bottom: title + artist, fills remaining space */
-.np-bottom {
-    display: flex;
-    flex-direction: column;
-    gap: .08rem;
-    min-width: 0;
-    flex: 1;
-    justify-content: flex-end;
 }
 
 .np-title,
