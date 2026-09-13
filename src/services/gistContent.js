@@ -51,25 +51,7 @@ export const FALLBACK_DATA = {
       title: 'Hackathon Participant',
       org: '',
       year: '2024–2025',
-      desc: 'Participated in 5+ hackathons, collaborating in teams to rapidly prototype and deliver full-stack and AI solutions under tight deadlines.',
-    },
-    {
-      title: 'Core Tech Team Member',
-      org: 'GeeksforGeeks Campus Body',
-      year: '2024–Present',
-      desc: 'Contributed to campus technical initiatives, organized developer learning sessions, and led engineering activities.',
-    },
-    {
-      title: 'Member — Institute of Innovation Council (IIC)',
-      org: 'Institute of Innovation Council',
-      year: '2024–Present',
-      desc: 'Drove innovation, entrepreneurship, and technology initiatives through idea validation programs and cross-functional collaboration.',
-    },
-    {
-      title: 'Competitive Event Winner',
-      org: 'College-Level Technical Events',
-      year: '2024–Present',
-      desc: 'Won various college-level coding events, hackathons, and quizzes, securing multiple prize money accolades.',
+      desc: 'Participated in 6+ hackathons, collaborating in teams to rapidly prototype and deliver full-stack and AI solutions under tight deadlines.',
     },
   ],
 };

@@ -1150,12 +1150,13 @@ section {
 }
 
 .info-strip-player {
-    width: 220px;
+    width: 200px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    gap: .6rem;
-    padding: .85rem;
+    justify-content: space-between;
+    gap: .5rem;
+    padding: .75rem;
     text-decoration: none;
     color: inherit;
     overflow: hidden;
@@ -1168,16 +1169,17 @@ section {
     transform: translateY(-2px);
 }
 
-/* Top row: art left, status+logo right */
+/* Top row: art + logo+status */
 .np-top-row {
     display: flex;
     align-items: flex-start;
-    gap: .6rem;
+    gap: .55rem;
+    flex: 0 0 auto;
 }
 
 .np-art {
-    width: 52px;
-    height: 52px;
+    width: 54px;
+    height: 54px;
     border-radius: 8px;
     overflow: hidden;
     flex-shrink: 0;
@@ -1204,37 +1206,39 @@ section {
     color: #1db954;
 }
 
-/* Header: status label + spotify logo stacked */
+/* Right side: Spotify logo on top, status below */
 .np-header {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-start;
-    height: 52px;
+    gap: .3rem;
+    height: 54px;
 }
+
+.np-spotify-logo { display: block; }
 
 .np-status {
     display: flex;
     align-items: center;
-    gap: .3rem;
-    font-size: .65rem;
+    gap: .25rem;
+    font-size: .6rem;
     letter-spacing: .05em;
     text-transform: uppercase;
     color: var(--muted);
     font-family: 'DM Mono', monospace;
+    line-height: 1;
 }
 
-.np-spotify-logo {
-    display: block;
-}
-
-/* Bottom: title + artist */
+/* Bottom: title + artist, fills remaining space */
 .np-bottom {
     display: flex;
     flex-direction: column;
-    gap: .1rem;
+    gap: .08rem;
     min-width: 0;
+    flex: 1;
+    justify-content: flex-end;
 }
 
 .np-title,
@@ -1247,9 +1251,16 @@ section {
 .np-title {
     font-size: .88rem;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1.25;
     color: var(--text);
 }
+
+.np-artist {
+    font-size: .72rem;
+    color: var(--muted);
+}
+
+
 
 .np-artist {
     font-size: .72rem;
