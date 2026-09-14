@@ -28,6 +28,11 @@
     --gradient-cta: linear-gradient(135deg, #e2e8f0, #a0aec0);
     --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.35);
     --shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.45);
+    --hm-0: #2d333b;
+    --hm-1: #0e4429;
+    --hm-2: #006d32;
+    --hm-3: #26a641;
+    --hm-4: #39d353;
 }
 
 [data-theme="light"] {
@@ -57,6 +62,11 @@
     --gradient-cta: linear-gradient(135deg, #111111, #333333);
     --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
     --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
+    --hm-0: #c8d0d8;
+    --hm-1: #9be9a8;
+    --hm-2: #40c463;
+    --hm-3: #30a14e;
+    --hm-4: #216e39;
 }
 
 /* ========================
@@ -2823,23 +2833,66 @@ section {
     color: var(--text);
 }
 
-/* Canvas wrap */
+/* Grid wrap */
 .gh-canvas-wrap {
     width: 100%;
-    padding: .2rem 1rem .3rem;
-    overflow-x: auto;
+    padding: .3rem 1.1rem .4rem;
+    overflow: visible;
+    box-sizing: border-box;
+}
+
+/* Inner scroll container — sits inside the padded wrap */
+.gh-scroll-inner {
+    width: 100%;
+    overflow-x: hidden;
     overflow-y: hidden;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.gh-canvas-wrap::-webkit-scrollbar { display: none; }
+.gh-scroll-inner::-webkit-scrollbar { display: none; }
 
-.gh-canvas-wrap canvas {
-    display: block;
+/* DOM-based contribution grid — stretches to fill the card width */
+.gh-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+}
+
+.gh-month-row,
+.gh-day-row {
+    display: flex;
+    gap: 3px;
+    width: 100%;
+}
+
+.gh-month-cell {
+    flex: 1;
+    min-width: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: visible;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.gh-cell {
+    flex: 1;
+    min-width: 0;
+    aspect-ratio: 1 / 1;
+    border-radius: 2px;
+    cursor: default;
+    transition: opacity .1s;
+}
+
+.gh-cell:hover { opacity: .75; }
+
+.gh-cell--empty {
+    background: transparent !important;
+    pointer-events: none;
 }
 
 /* Tooltip */
@@ -4409,6 +4462,24 @@ footer {
     }
 }
 
+/* ── Footer: very narrow screens (<340px)*/ 
+@media (max-width: 340px) {
+    .footer-name-pixel {
+        font-size: .42rem;
+        letter-spacing: 0;
+    }
+    .footer-copy {
+        font-size: .58rem;
+    }
+    .footer-icon-btn {
+        width: 24px;
+        height: 24px;
+    }
+    .footer-icons {
+        gap: 0;
+    }
+}
+
 /* Back to top */
 .footer-back-top {
     font-family: 'DM Mono', monospace;
@@ -5222,7 +5293,8 @@ footer {
         flex-direction: column;
         align-items: center;
         text-align: center;
-        gap: .85rem;
+        gap: .5rem;
+        padding: .85rem 20px;
     }
     .quote-strip-left {
         flex-direction: column;
@@ -5231,11 +5303,12 @@ footer {
     }
     .quote-strip-visitors {
         text-align: center;
-        padding-top: .5rem;
+        padding-top: .4rem;
         border-top: 1px solid var(--border);
         width: 100%;
         font-size: .78rem;
     }
+
 
     /* ── About photo column: centered on mobile ── */
     .about-photo-col {
@@ -5287,28 +5360,29 @@ footer {
         font-size: .8rem;
     }
 
-    /* ── Contribution graph: scrollable on mobile ── */
-    .gh-heatmap-card {
-        overflow: hidden;
-    }
-    .gh-canvas-wrap {
-        justify-content: flex-start;
+    /* ── Contribution graph: scrollable on mobile, padding always visible ── */
+    /* wrap keeps its padding — scroll happens inside gh-scroll-inner */
+    .gh-scroll-inner {
         overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        cursor: default;
+        padding-bottom: 8px;
         scrollbar-width: thin;
         scrollbar-color: var(--border) transparent;
     }
-    .gh-canvas-wrap::-webkit-scrollbar {
+    .gh-scroll-inner::-webkit-scrollbar {
         display: block;
         height: 4px;
     }
-    .gh-canvas-wrap::-webkit-scrollbar-track {
+    .gh-scroll-inner::-webkit-scrollbar-track {
         background: transparent;
     }
-    .gh-canvas-wrap::-webkit-scrollbar-thumb {
+    .gh-scroll-inner::-webkit-scrollbar-thumb {
         background: var(--border);
         border-radius: 4px;
+    }
+    /* Fixed width so grid overflows the inner scroller */
+    .gh-grid {
+        min-width: 560px;
+        width: auto;
     }
 
     /* ── Hide card descriptions on small screens ── */
@@ -5339,7 +5413,8 @@ footer {
     .acert-top {
         gap: .5rem;
     }
-    /* Match home cert row style exactly */
+    /* Match home cert card style exactly */
+
     .acert-card {
         background: transparent;
         padding: .85rem 1rem;

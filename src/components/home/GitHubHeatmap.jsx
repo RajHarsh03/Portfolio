@@ -1,17 +1,24 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { fetchContributions, GH_USER } from '../../services/githubContributions.js';
 import { useReveal } from '../../hooks/useReveal.js';
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const COLORS_DARK  = ['#2d333b','#0e4429','#006d32','#26a641','#39d353'];
-const COLORS_LIGHT = ['#c8d0d8','#9be9a8','#40c463','#30a14e','#216e39'];
 
-function pickColor(count, colors) {
-  if (count === 0) return colors[0];
-  if (count <= 3)  return colors[1];
-  if (count <= 6)  return colors[2];
-  if (count <= 9)  return colors[3];
-  return colors[4];
+// CSS variable names for each level — defined in index.css per theme
+const LEVEL_VARS = [
+  'var(--hm-0)',
+  'var(--hm-1)',
+  'var(--hm-2)',
+  'var(--hm-3)',
+  'var(--hm-4)',
+];
+
+function pickLevel(count) {
+  if (count === 0) return 0;
+  if (count <= 3)  return 1;
+  if (count <= 6)  return 2;
+  if (count <= 9)  return 3;
+  return 4;
 }
 
 function buildWeeks(contributions) {
@@ -40,148 +47,56 @@ function formatDate(dateStr) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-export default function GitHubHeatmap() {
-  const canvasRef = useRef(null);
-  const wrapRef   = useRef(null);
-  const layoutRef = useRef({});
-  const ref       = useReveal();
+// Build month label row: one label per column, only shown when month changes
+function buildMonthLabels(weeks) {
+  let lastMonth = -1;
+  return weeks.map((week, wi) => {
+    const first = week.find(c => c);
+    if (first && first.month !== lastMonth) {
+      lastMonth = first.month;
+      return { wi, label: MONTHS[first.month] };
+    }
+    return null;
+  }).filter(Boolean);
+}
 
-  const [contribData,  setContribData]  = useState(null);
+export default function GitHubHeatmap() {
+  const wrapRef = useRef(null);
+  const ref     = useReveal();
+
+  const [weeks,        setWeeks]        = useState(null);
   const [contribTotal, setContribTotal] = useState(null);
   const [failed,       setFailed]       = useState(false);
   const [tooltip,      setTooltip]      = useState(null);
 
   useEffect(() => {
     fetchContributions()
-      .then(({ contributions, total }) => { setContribData(contributions); setContribTotal(total); })
-      .catch(() => setFailed(true));
-
-    // Fetch top repos by push events
-    fetch(`https://api.github.com/users/${GH_USER}/repos?sort=pushed&per_page=5`)
-      .then(r => r.json())
-      .then(repos => {
-        if (!Array.isArray(repos)) return;
-        const sorted = repos
-          .filter(r => !r.fork)
-          .sort((a, b) => b.size - a.size)
-          .slice(0, 3)
-          .map((r, i) => ({ name: r.name, commits: r.size, color: REPO_COLORS[i] }));
-        setTopRepos(sorted);
+      .then(({ contributions, total }) => {
+        setWeeks(buildWeeks(contributions));
+        setContribTotal(total);
       })
-      .catch(() => {});
+      .catch(() => setFailed(true));
   }, []);
 
-  const draw = useCallback((contributions) => {
-    const canvas = canvasRef.current;
-    if (!canvas || !contributions?.length) return;
-    const ctx       = canvas.getContext('2d');
-    const dpr       = window.devicePixelRatio || 1;
-    const container = canvas.parentElement;
-    const avail     = container.clientWidth;
-    const theme     = document.documentElement.getAttribute('data-theme') || 'light';
-    const isLight   = theme === 'light';
-    const colors    = isLight ? COLORS_LIGHT : COLORS_DARK;
-    const textColor = isLight ? '#57606a' : '#8b949e';
-    const weeks     = buildWeeks(contributions);
-    const cols      = weeks.length;
-    const padding   = 4;
-    const cellSize  = Math.max(9, Math.floor((avail - 2 * padding) / (cols * 1.22)));
-    const gap       = Math.max(2, Math.round(cellSize * 0.22));
-    const step      = cellSize + gap;
-    const radius    = Math.max(2, Math.round(cellSize * 0.2));
-    const labelTop  = 16;
-    const gridW     = cols * step - gap;
-    // Always render full grid — container scrolls on mobile
-    const width     = Math.max(avail, gridW + 2 * padding);
-    const height    = labelTop + 7 * step;
-
-
-    canvas.width  = width * dpr;
-    canvas.height = height * dpr;
-    canvas.style.width  = width + 'px';
-    canvas.style.height = height + 'px';
-    ctx.scale(dpr, dpr);
-    ctx.clearRect(0, 0, width, height);
-
-    const offsetX = Math.floor((width - gridW) / 2);
-    layoutRef.current = { weeks, offsetX, step, cellSize, labelTop };
-
-    const fontSize = 11;
-    ctx.font = `${fontSize}px "DM Mono", monospace`;
-    ctx.fillStyle = textColor;
-    ctx.textBaseline = 'top';
-    let lastMonth = -1, lastLabelX = -100;
-    weeks.forEach((week, wi) => {
-      const first = week.find(c => c);
-      if (first && first.month !== lastMonth) {
-        const x = offsetX + wi * step;
-        if (x - lastLabelX > fontSize * 3.5) {
-          ctx.fillText(MONTHS[first.month], x, 0);
-          lastLabelX = x;
-        }
-        lastMonth = first.month;
-      }
-    });
-
-    weeks.forEach((week, wi) => {
-      week.forEach((cell, di) => {
-        if (!cell) return;
-        const x = offsetX + wi * step;
-        const y = labelTop + di * step;
-        ctx.fillStyle = pickColor(cell.count, colors);
-        ctx.beginPath();
-        ctx.roundRect(x, y, cellSize, cellSize, radius);
-        ctx.fill();
-      });
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!contribData?.length) return;
-    draw(contribData);
-    const mo = new MutationObserver(() => draw(contribData));
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-    const ro = new ResizeObserver(() => draw(contribData));
-    if (wrapRef.current) ro.observe(wrapRef.current);
-    return () => { mo.disconnect(); ro.disconnect(); };
-  }, [contribData, draw]);
-
-  function handleMouseMove(e) {
-    const canvas = canvasRef.current;
-    if (!canvas || !layoutRef.current.weeks) return;
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
-    const { weeks, offsetX, step, cellSize, labelTop } = layoutRef.current;
-    let found = null;
-    outer: for (let wi = 0; wi < weeks.length; wi++) {
-      for (let di = 0; di < weeks[wi].length; di++) {
-        const cell = weeks[wi][di];
-        if (!cell) continue;
-        const x = offsetX + wi * step;
-        const y = labelTop + di * step;
-        if (mx >= x && mx <= x + cellSize && my >= y && my <= y + cellSize) {
-          found = { cell, cx: x + cellSize / 2, cy: y };
-          break outer;
-        }
-      }
-    }
-    if (found) {
-      const { cell, cx, cy } = found;
-      const text = cell.count === 0
-        ? `No contributions on ${formatDate(cell.date)}`
-        : `${cell.count} contribution${cell.count > 1 ? 's' : ''} on ${formatDate(cell.date)}`;
-      setTooltip({ text, x: cx, y: cy - 8 + 48 }); // +48 offsets gh-heatmap-top height
-    } else {
-      setTooltip(null);
-    }
+  function handleMouseEnter(e, cell) {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const wrapRect = wrap.getBoundingClientRect();
+    const cellRect = e.currentTarget.getBoundingClientRect();
+    const cx = cellRect.left + cellRect.width / 2 - wrapRect.left + wrap.scrollLeft;
+    const cy = cellRect.top - wrapRect.top + wrap.scrollTop;
+    const text = cell.count === 0
+      ? `No contributions on ${formatDate(cell.date)}`
+      : `${cell.count} contribution${cell.count > 1 ? 's' : ''} on ${formatDate(cell.date)}`;
+    // Clamp tooltip x so it stays inside the visible card area
+    const cardWidth = wrap.offsetWidth;
+    const tx = Math.min(Math.max(cx - wrap.scrollLeft, 80), cardWidth - 80);
+    setTooltip({ text, x: tx, y: cy - 4 + 48 });
   }
 
-  const year = new Date().getFullYear();
-  const isLight = typeof document !== 'undefined'
-    ? document.documentElement.getAttribute('data-theme') === 'light'
-    : true;
-  const legendColors = isLight ? COLORS_LIGHT : COLORS_DARK;
+  const year        = new Date().getFullYear();
+  const monthLabels = weeks ? buildMonthLabels(weeks) : [];
+  const labelMap    = Object.fromEntries(monthLabels.map(m => [m.wi, m.label]));
 
   return (
     <section className="gh-activity-section" id="ghActivity" ref={ref}>
@@ -191,34 +106,67 @@ export default function GitHubHeatmap() {
       <div className="gh-heatmap-card">
         {/* Top */}
         <div className="gh-heatmap-top">
-          {contribTotal != null
-            ? <span className="gh-contrib-count">{Number(contribTotal).toLocaleString()} contributions in {year}</span>
-            : <span className="gh-contrib-count">{failed ? '' : 'Loading…'}</span>
-          }
+          <span className="gh-contrib-count">
+            {contribTotal != null
+              ? `${Number(contribTotal).toLocaleString()} contributions in ${year}`
+              : failed ? '' : 'Loading…'}
+          </span>
         </div>
 
-        {/* Canvas */}
-        <div className="gh-canvas-wrap" ref={wrapRef} style={{ position: 'relative' }}
-          onMouseMove={handleMouseMove}
+        {/* Grid */}
+        <div className="gh-canvas-wrap" style={{ position: 'relative' }}
           onMouseLeave={() => setTooltip(null)}
         >
-          {!failed && <canvas ref={canvasRef} />}
+          <div className="gh-scroll-inner" ref={wrapRef}>
+          {!failed && weeks && (
+            <div className="gh-grid">
+              {/* Month label row */}
+              <div className="gh-month-row">
+                {weeks.map((_, wi) => (
+                  <div key={wi} className="gh-month-cell">
+                    {labelMap[wi] || ''}
+                  </div>
+                ))}
+              </div>
+
+              {/* 7 day-rows */}
+              {[0,1,2,3,4,5,6].map(di => (
+                <div key={di} className="gh-day-row">
+                  {weeks.map((week, wi) => {
+                    const cell = week[di];
+                    if (!cell) {
+                      return <div key={wi} className="gh-cell gh-cell--empty" />;
+                    }
+                    return (
+                      <div
+                        key={wi}
+                        className="gh-cell"
+                        style={{ background: LEVEL_VARS[pickLevel(cell.count)] }}
+                        onMouseEnter={e => handleMouseEnter(e, cell)}
+                      />
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          )}
+          </div>{/* gh-scroll-inner */}
         </div>
 
-        {/* Tooltip — outside canvas-wrap to avoid overflow clipping */}
+        {/* Tooltip */}
         {tooltip && (
           <div className="gh-tooltip" style={{ left: tooltip.x, top: tooltip.y }}>
             {tooltip.text}
           </div>
         )}
 
-        {/* Footer: Less/More legend only */}
+        {/* Legend */}
         <div className="gh-heatmap-footer">
           <div className="gh-legend">
             <span>Less</span>
             <div className="gh-legend-squares">
-              {legendColors.map((c, i) => (
-                <div key={i} className="gh-legend-sq" style={{ background: c }} />
+              {LEVEL_VARS.map((v, i) => (
+                <div key={i} className="gh-legend-sq" style={{ background: v }} />
               ))}
             </div>
             <span>More</span>
