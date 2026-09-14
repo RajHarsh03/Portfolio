@@ -91,8 +91,10 @@ export default function GitHubHeatmap() {
     const radius    = Math.max(2, Math.round(cellSize * 0.2));
     const labelTop  = 16;
     const gridW     = cols * step - gap;
-    const width     = avail;
+    // Always render full grid — container scrolls on mobile
+    const width     = Math.max(avail, gridW + 2 * padding);
     const height    = labelTop + 7 * step;
+
 
     canvas.width  = width * dpr;
     canvas.height = height * dpr;

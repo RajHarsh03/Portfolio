@@ -3040,10 +3040,10 @@ section {
     margin: 0 auto;
     padding: 1.25rem 24px;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    gap: 2rem;
-    flex-wrap: wrap;
+    gap: 1.5rem;
+    flex-wrap: nowrap;
 }
 
 .quote-strip-left {
@@ -3058,6 +3058,8 @@ section {
     color: #f59e0b;
     flex-shrink: 0;
     margin-top: 2px;
+    width: 24px;
+    height: 24px;
 }
 
 .quote-strip-text {
@@ -3079,7 +3081,8 @@ section {
     color: var(--muted);
     white-space: nowrap;
     flex-shrink: 0;
-    padding-top: 2px;
+    text-align: right;
+    line-height: 1.4;
 }
 
 .quote-strip-visitors strong {
@@ -5187,16 +5190,107 @@ footer {
     .about-body {
         grid-template-columns: 1fr;
     }
+
+    /* ── QuoteStrip: vertical on mobile (quote top, count bottom) ── */
+    .quote-strip-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: .85rem;
+    }
+    .quote-strip-visitors {
+        text-align: left;
+        padding-top: .5rem;
+        border-top: 1px solid var(--border);
+        width: 100%;
+        font-size: .78rem;
+    }
+
+    /* ── About photo column: centered on mobile ── */
+    .about-photo-col {
+        align-items: center;
+        text-align: center;
+    }
     .about-photo-wrap {
-        max-width: 180px;
+        max-width: 260px;
+        width: 100%;
+    }
+    .about-photo-meta {
+        align-items: center;
+    }
+    .about-photo-loc {
+        justify-content: center;
+    }
+
+    /* ── About bio section ── */
+    .about-who-title {
+        font-size: 1.2rem;
+    }
+    .about-bio-para {
+        font-size: .85rem;
+        line-height: 1.65;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+    .about-highlight {
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+    .about-chips {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: .25rem;
+        padding-bottom: .15rem;
+    }
+    .about-chip {
+        font-size: .54rem;
+        padding: .1rem .38rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .about-quote-main {
+        font-size: 1.1rem;
+    }
+    .about-quote-sub {
+        font-size: .8rem;
+    }
+
+    /* ── Contribution graph: scrollable on mobile ── */
+    .gh-heatmap-card {
+        overflow: hidden;
+    }
+    .gh-canvas-wrap {
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        cursor: default;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) transparent;
+    }
+    .gh-canvas-wrap::-webkit-scrollbar {
+        display: block;
+        height: 4px;
+    }
+    .gh-canvas-wrap::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .gh-canvas-wrap::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 4px;
     }
 
     /* ── Hide card descriptions on small screens ── */
     .about-edu-desc,
-    .about-achiev-desc,
     .acert-desc,
     .about-cert-desc {
         display: none;
+    }
+
+    /* ── Achievement desc: visible but smaller on mobile ── */
+    .about-achiev-desc {
+        font-size: .72rem;
+        line-height: 1.5;
+        margin-top: .35rem;
     }
 
     /* ── Cert card: compact layout on mobile ── */
