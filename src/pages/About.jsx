@@ -215,6 +215,7 @@ export default function About() {
 
         {/* Header */}
         <div className="projects-page-header">
+          <div className="section-label">// more to know me</div>
           <div className="projects-header-row">
             <h1 className="section-title">About</h1>
           </div>

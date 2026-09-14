@@ -125,6 +125,7 @@ export default function Projects() {
 
       <div style={{ paddingTop: '4.5rem' }} ref={ref}>
         <div className="projects-page-header">
+          <div className="section-label">// what i've built</div>
           <div className="projects-header-row">
             <h1 className="section-title">Projects</h1>
             <span className="projects-count-badge">{loading ? '-' : `${filtered.length.toString().padStart(2,'0')} BUILT`}</span>
