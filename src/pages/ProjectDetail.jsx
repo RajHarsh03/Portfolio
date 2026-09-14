@@ -70,7 +70,7 @@ export default function ProjectDetail() {
   return (
     <>
       <Helmet>
-        <title>{project.name} — Harsh Raj</title>
+        <title>{project.name} - Harsh Raj</title>
         <meta name="description" content={project.description} />
       </Helmet>
 

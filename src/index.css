@@ -1298,8 +1298,60 @@ section {
     height: 58px;
     object-fit: cover;
     display: block;
-    border-radius: 10px;
+    border-radius: 50%;
     box-shadow: 0 4px 16px rgba(0,0,0,.4);
+    transition: border-radius 0.3s ease;
+}
+
+/* Vinyl spinning effect when playing */
+.np-vinyl-spin {
+    animation: vinyl-spin 3s linear infinite;
+    border-radius: 50% !important;
+}
+
+@keyframes vinyl-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Tonearm */
+.np-tonearm {
+    position: absolute;
+    top: 2px;
+    right: -8px;
+    width: 32px;
+    height: 32px;
+    transform-origin: top right;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.np-tonearm-arm {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2px;
+    height: 26px;
+    background: linear-gradient(180deg, #888 0%, #555 100%);
+    border-radius: 1px;
+    transform-origin: top right;
+}
+
+.np-tonearm-head {
+    position: absolute;
+    bottom: -2px;
+    right: -3px;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle, #1db954 0%, #15803d 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(29, 185, 84, 0.6);
+}
+
+/* Tonearm on disk when playing */
+.np-tonearm--playing {
+    transform: rotate(-25deg);
 }
 
 /* Pulse ring on album art when playing */
@@ -1393,7 +1445,7 @@ section {
 }
 
 .np-title--marquee {
-    animation: np-marquee 8s linear infinite;
+    animation: np-karaoke 10s ease-in-out infinite;
     display: inline-block;
     padding-right: 2rem;
     text-overflow: clip;
@@ -1410,9 +1462,19 @@ section {
     }
 }
 
-@keyframes np-marquee {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+@keyframes np-karaoke {
+    0% { 
+        transform: translateX(0); 
+    }
+    45% { 
+        transform: translateX(calc(-100% + 200px)); 
+    }
+    55% { 
+        transform: translateX(calc(-100% + 200px)); 
+    }
+    100% { 
+        transform: translateX(0); 
+    }
 }
 
 .np-artist {
@@ -6323,6 +6385,113 @@ footer {
     }
     .about-cert-date {
         font-size: .58rem;
+    }
+}
+
+/* Medium-small screens - 430px - allow pills to wrap */
+@media (max-width: 430px) and (min-width: 361px) {
+    .about-chips {
+        flex-wrap: wrap;
+        overflow-x: visible;
+        gap: .3rem;
+    }
+    
+    .about-chip {
+        flex-shrink: 0;
+    }
+}
+
+/* Extra small screens - 358px */
+@media (max-width: 360px) and (min-width: 340px) {
+    .about-body {
+        padding: 0 20px 1rem;
+        max-width: 100%;
+        margin: 2rem auto 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .about-photo-col {
+        align-items: center;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .about-photo-wrap {
+        max-width: 240px;
+        margin: 0 auto;
+    }
+    
+    .about-photo-meta {
+        align-items: center;
+        width: 100%;
+    }
+    
+    .about-bio-col {
+        width: 100%;
+        align-items: flex-start;
+        text-align: left;
+    }
+    
+    .about-who-title,
+    .about-bio-para {
+        text-align: left;
+        width: 100%;
+    }
+    
+    .about-chip {
+        font-size: .5rem;
+        padding: .08rem .32rem;
+    }
+}
+
+/* Very small screens - 324px */
+@media (max-width: 339px) {
+    .about-body {
+        padding: 0 20px 1rem;
+        max-width: 100%;
+        margin: 2rem auto 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .about-photo-col {
+        align-items: center;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .about-photo-wrap {
+        max-width: 220px;
+        margin: 0 auto;
+    }
+    
+    .about-photo-meta {
+        align-items: center;
+        width: 100%;
+    }
+    
+    .about-bio-col {
+        width: 100%;
+        align-items: flex-start;
+        text-align: left;
+    }
+    
+    .about-who-title,
+    .about-bio-para {
+        text-align: left;
+        width: 100%;
+    }
+    
+    .about-chips {
+        gap: .2rem;
+    }
+    
+    .about-chip {
+        font-size: .45rem;
+        padding: .06rem .28rem;
     }
 }
 

@@ -4,7 +4,7 @@ export default function Guestbook() {
   return (
     <>
       <Helmet>
-        <title>Guestbook — Harsh Raj</title>
+        <title>Guestbook - Harsh Raj</title>
       </Helmet>
       <section style={{ paddingTop: '8rem', minHeight: '70vh', textAlign: 'center' }}>
         <div className="container">
@@ -29,7 +29,7 @@ export default function Guestbook() {
             maxWidth: '360px',
             margin: '0 auto',
           }}>
-            The guestbook is on its way — a place where you can leave a word, a thought, or just say hi.
+            The guestbook is on its way - a place where you can leave a word, a thought, or just say hi.
           </p>
         </div>
       </section>

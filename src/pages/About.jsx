@@ -207,7 +207,7 @@ export default function About() {
   return (
     <>
       <Helmet>
-        <title>About — Harsh Raj</title>
+        <title>About - Harsh Raj</title>
         <meta name="description" content="A full-stack developer and aspiring AI/ML engineer. Discover who I am, what I build, and what drives me." />
       </Helmet>
 
@@ -219,7 +219,7 @@ export default function About() {
             <h1 className="section-title">About</h1>
           </div>
           <p style={{ color: 'var(--muted)', fontSize: '.9rem', marginTop: '.5rem' }}>
-            A full-stack developer and aspiring AI/ML engineer — here's who I am
+            A full-stack developer and aspiring AI/ML engineer - here's who I am
             and what drives me.
           </p>
         </div>
@@ -249,13 +249,13 @@ export default function About() {
             <p className="about-bio-para">
               I'm a Computer Science student and aspiring{' '}
               <strong className="about-highlight">Full Stack Developer &amp; AI/ML Engineer</strong>{' '}
-              passionate about building real, useful technology — spanning web apps,
+              passionate about building real, useful technology - spanning web apps,
               intelligent systems, and everything in between.
             </p>
             <p className="about-bio-para">
               Right now I'm deep into{' '}
               <strong className="about-highlight">Generative AI</strong>,
-              deep learning architectures, and scalable full-stack systems — shipping
+              deep learning architectures, and scalable full-stack systems - shipping
               projects daily and growing through deliberate practice.
             </p>
             <p className="about-bio-para">

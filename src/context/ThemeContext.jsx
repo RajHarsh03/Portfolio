@@ -24,6 +24,11 @@ export function ThemeProvider({ children }) {
         Math.max(ox, window.innerWidth - ox),
         Math.max(oy, window.innerHeight - oy)
       );
+      
+      // Slower and smoother animation
+      const isMobile = window.innerWidth <= 768;
+      const duration = isMobile ? 600 : 800;
+      
       const vt = document.startViewTransition(() => setTheme(next));
       vt.ready.then(() => {
         document.documentElement.animate(
@@ -34,8 +39,8 @@ export function ThemeProvider({ children }) {
             ],
           },
           {
-            duration: 500,
-            easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            duration: duration,
+            easing: 'ease-in-out',
             pseudoElement: '::view-transition-new(root)',
           }
         );

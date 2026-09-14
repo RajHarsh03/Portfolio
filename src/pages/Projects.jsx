@@ -64,8 +64,7 @@ export default function Projects() {
     return list;
   }, [projects, filter]);
 
-  // Desktop: show SHOW_LIMIT_DESKTOP initially, then all
-  // Mobile: show visibleCount (starts at 3, increments by 3)
+
   const visible = useMemo(() => {
     if (isMobile) {
       return filtered.slice(0, visibleCount);
@@ -121,14 +120,14 @@ export default function Projects() {
     <>
       <Helmet>
         <title>Projects</title>
-        <meta name="description" content="A complete collection of everything I've built — filtered by category." />
+        <meta name="description" content="A complete collection of everything I've built - filtered by category." />
       </Helmet>
 
       <div style={{ paddingTop: '4.5rem' }} ref={ref}>
         <div className="projects-page-header">
           <div className="projects-header-row">
             <h1 className="section-title">Projects</h1>
-            <span className="projects-count-badge">{loading ? '—' : `${filtered.length.toString().padStart(2,'0')} BUILT`}</span>
+            <span className="projects-count-badge">{loading ? '-' : `${filtered.length.toString().padStart(2,'0')} BUILT`}</span>
           </div>
           {/* Filter pills */}
           <div className="projects-filter-pills">

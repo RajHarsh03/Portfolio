@@ -45,7 +45,7 @@ export default function Contact() {
   return (
     <>
       <Helmet>
-        <title>Contact — Harsh Raj</title>
+        <title>Contact - Harsh Raj</title>
         <meta name="description" content="Get in touch with Harsh Raj for collaborations, freelance work, or just a good tech chat." />
       </Helmet>
 

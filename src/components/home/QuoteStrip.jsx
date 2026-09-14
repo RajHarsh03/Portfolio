@@ -39,7 +39,7 @@ export default function QuoteStrip() {
           </svg>
           <div>
             <p className="quote-strip-text">{quote.text}</p>
-            <span className="quote-strip-author">— {quote.author.toUpperCase()}</span>
+            <span className="quote-strip-author">- {quote.author.toUpperCase()}</span>
           </div>
         </div>
 
