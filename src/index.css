@@ -508,6 +508,47 @@ section {
     padding: 2.5rem 0;
 }
 
+/* Home page sections — tighter spacing */
+#hero, #about, #skills, #edu-certs, #projects, #ghActivity, #journey, #home-contact {
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+}
+
+/* Reduce internal spacing for home-only sections */
+#edu-certs .section-title,
+#projects .section-title,
+#skills .section-title,
+#ghActivity .section-title,
+#about .section-title {
+    margin-bottom: 0.6rem;
+}
+
+#edu-certs .section-label,
+#projects .section-label,
+#skills .section-label,
+#ghActivity .section-label,
+#about .section-label {
+    margin-bottom: 0.2rem;
+}
+
+#edu-certs .edu-certs-group {
+    margin-bottom: 0.8rem;
+}
+
+#edu-certs .edu-certs-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Projects "view all" link top margin */
+#projects .projects-view-all {
+    margin-top: 0.75rem;
+}
+
+/* GitHub heatmap bottom padding */
+#ghActivity.gh-activity-section {
+    padding-bottom: 0.5rem;
+}
+
 .section-label {
     font-size: .68rem;
     color: var(--accent);
@@ -4456,6 +4497,12 @@ footer {
         padding: 3.5rem 6rem;
     }
 
+    /* Home sections — tighter on large desktop */
+    #hero, #about, #skills, #edu-certs, #projects, #ghActivity, #journey, #home-contact {
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
+
     #hero {
         padding: 5rem 6rem 6rem;
     }
@@ -4480,6 +4527,12 @@ footer {
 
     section {
         padding: 2rem 0;
+    }
+
+    /* Home sections — tighter on tablet */
+    #hero, #about, #skills, #edu-certs, #projects, #ghActivity, #journey, #home-contact {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
     }
 
     .gh-activity-section,
@@ -4642,6 +4695,12 @@ footer {
 
     section {
         padding: 1.5rem 0;
+    }
+
+    /* Home sections — tight on mobile */
+    #hero, #about, #skills, #edu-certs, #projects, #ghActivity, #journey, #home-contact {
+        padding-top: 0.8rem;
+        padding-bottom: 0.8rem;
     }
 
     .gh-activity-section,
