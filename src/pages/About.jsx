@@ -10,6 +10,7 @@ function AboutCertCard({ c }) {
   return (
     <div className="acert-card reveal">
       <div className="acert-top">
+        {/* Icon — hidden on mobile */}
         <div className="acert-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
             strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
@@ -19,14 +20,23 @@ function AboutCertCard({ c }) {
         </div>
         <div className="acert-info">
           <div className="acert-title">{c.title}</div>
-          <div className="acert-issuer">{c.issuer}</div>
+          {/* Desktop: issuer only; Mobile: issuer + date inline */}
+          <div className="acert-issuer-row">
+            <span className="acert-issuer">{c.issuer}</span>
+            {c.date && <span className="acert-date-inline">&nbsp;{c.date}</span>}
+          </div>
         </div>
         <div className="acert-right">
+          {/* Date column — desktop only */}
           {c.date && <span className="acert-date">{c.date}</span>}
           {c.link && (
             <a href={c.link} target="_blank" rel="noopener noreferrer"
               className="acert-verify">
-              Verify ↗
+              <span className="verify-text">Verify </span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M7 17L17 7"/>
+                <path d="M7 7h10v10"/>
+              </svg>
             </a>
           )}
         </div>
@@ -37,6 +47,11 @@ function AboutCertCard({ c }) {
 }
 
 /* ── Education card ── */
+function shortYear(y) {
+  // "2023 - 2027" → "23 - 27",  "2024" → "24"
+  return y.replace(/\b\d{2}(\d{2})\b/g, '$1');
+}
+
 function EduCard({ e }) {
   return (
     <div className="about-edu-card reveal">
@@ -46,7 +61,12 @@ function EduCard({ e }) {
           <div className="about-edu-degree">{e.degree}</div>
           {e.desc && <p className="about-edu-desc">{e.desc}</p>}
         </div>
-        {e.year && <span className="about-edu-year">{e.year}</span>}
+        {e.year && (
+          <span className="about-edu-year">
+            <span className="year-full">{e.year}</span>
+            <span className="year-short">{shortYear(e.year)}</span>
+          </span>
+        )}
       </div>
     </div>
   );
@@ -142,15 +162,23 @@ function ExpCard({ item }) {
         </button>
       </div>
       <div className="exp-card-role">
-        {item.role} &bull; {item.date}
-        {item.duration && <span style={{ fontWeight: 700 }}> &nbsp;{item.duration}</span>}
+        {item.role}
+        <span className="role-date-meta"> &bull; {item.date}{item.duration && <span style={{ fontWeight: 700 }}>&nbsp;{item.duration}</span>}</span>
       </div>
 
-      {/* Bullets — shown only when expanded */}
-      {open && item.bullets?.length > 0 && (
-        <ul className="exp-card-bullets" style={{ marginTop: '.5rem', paddingLeft: '1rem' }}>
-          {item.bullets.map((b, i) => <li key={i}>{b}</li>)}
-        </ul>
+      {/* Bullets + date shown when expanded */}
+      {open && (
+        <div style={{ marginTop: '.5rem' }}>
+          {/* Date visible on mobile only when expanded */}
+          <div className="role-date-expanded">
+            {item.date}{item.duration && <span style={{ fontWeight: 700 }}>&nbsp;{item.duration}</span>}
+          </div>
+          {item.bullets?.length > 0 && (
+            <ul className="exp-card-bullets" style={{ marginTop: '.4rem', paddingLeft: '1rem' }}>
+              {item.bullets.map((b, i) => <li key={i}>{b}</li>)}
+            </ul>
+          )}
+        </div>
       )}
 
       {/* Stacks — always visible */}
@@ -161,7 +189,7 @@ function ExpCard({ item }) {
             return (
               <span key={i} className="exp-stack-badge">
                 {icon && <img src={icon} alt={s} width="13" height="13" />}
-                {s}
+                <span className="stack-label">{s}</span>
               </span>
             );
           })}

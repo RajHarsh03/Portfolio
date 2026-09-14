@@ -1,6 +1,11 @@
 import { useGistContent } from '../../hooks/useGistContent.js';
 import { useReveal } from '../../hooks/useReveal.js';
 
+function shortYear(y) {
+  // "2023 - 2027" → "23 - 27",  "2024" → "24"
+  return y.replace(/\b\d{2}(\d{2})\b/g, '$1');
+}
+
 const EDUCATION = [
   {
     school: 'Heritage Institute of Technology, Kolkata',
@@ -8,6 +13,7 @@ const EDUCATION = [
     year: '2023 - 2027',
   },
 ];
+
 
 function CertRow({ c }) {
   return (
@@ -24,7 +30,11 @@ function CertRow({ c }) {
           <a href={c.link} target="_blank" rel="noopener noreferrer"
             className="about-cert-verify"
             aria-label="Verify certificate">
-            Verify ↗
+            <span className="verify-text">Verify </span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M7 17L17 7"/>
+              <path d="M7 7h10v10"/>
+            </svg>
           </a>
         )}
       </div>
@@ -54,11 +64,15 @@ export default function EducationCerts() {
                   <div className="edu-certs-name">{e.school}</div>
                   <div className="edu-certs-sub">{e.degree}</div>
                 </div>
-                <div className="edu-certs-year">{e.year}</div>
+                <div className="edu-certs-year">
+                  <span className="year-full">{e.year}</span>
+                  <span className="year-short">{shortYear(e.year)}</span>
+                </div>
               </div>
             ))}
           </div>
         </div>
+
 
         {/* Certifications */}
         <div className="edu-certs-group">

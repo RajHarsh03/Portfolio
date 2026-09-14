@@ -68,8 +68,8 @@ export default function JourneyPreview() {
                 <strong>{item.company}</strong>
               </div>
               <div className="exp-card-role">
-                {item.role} &bull; {item.date}
-                {item.duration && <span style={{ fontWeight: 700 }}> &nbsp;{item.duration}</span>}
+                {item.role}
+                <span className="role-date-meta"> &bull; {item.date}{item.duration && <span style={{ fontWeight: 700 }}>&nbsp;{item.duration}</span>}</span>
               </div>
               {item.stacks?.length > 0 && (
                 <div className="exp-card-stacks" style={{ marginTop: '.5rem' }}>
@@ -78,7 +78,7 @@ export default function JourneyPreview() {
                     return (
                       <span key={j} className="exp-stack-badge">
                         {icon && <img src={icon} alt={s} width="13" height="13" />}
-                        {s}
+                        <span className="stack-label">{s}</span>
                       </span>
                     );
                   })}

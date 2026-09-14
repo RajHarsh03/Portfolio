@@ -468,7 +468,7 @@ section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1.5rem 0 2rem;
+    padding: 4rem 0 2rem;
     position: relative;
 }
 
@@ -1643,6 +1643,15 @@ section {
     white-space: nowrap;
     flex-shrink: 0;
 }
+
+/* Year display: full by default, short on very narrow screens */
+.year-short { display: none; }
+
+@media (max-width: 429px) {
+    .year-full  { display: none; }
+    .year-short { display: inline; }
+}
+
 
 .edu-certs-verify {
     font-family: 'DM Mono', monospace;
@@ -4781,6 +4790,20 @@ footer {
 
 .acert-info { flex: 1; }
 
+.acert-issuer-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Date inline with issuer — hidden on desktop, shown on mobile */
+.acert-date-inline {
+    display: none;
+    font-family: 'DM Mono', monospace;
+    font-size: .68rem;
+    color: var(--muted);
+}
+
 .acert-title {
     font-weight: 600;
     font-size: .9rem;
@@ -4791,7 +4814,7 @@ footer {
 .acert-issuer {
     font-size: .72rem;
     color: #f59e0b;
-    font-weight: 600;
+    font-weight: 500;
     font-family: 'DM Mono', monospace;
 }
 
@@ -4820,6 +4843,9 @@ footer {
     padding: .2rem .55rem;
     text-decoration: none;
     white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
     transition: border-color .2s, opacity .2s;
 }
 
@@ -4893,15 +4919,15 @@ footer {
 
 .about-edu-school {
     font-weight: 600;
-    font-size: .9rem;
+    font-size: .88rem;
     color: var(--text);
     margin-bottom: .2rem;
 }
 
 .about-edu-degree {
-    font-size: .78rem;
+    font-size: .75rem;
     color: #f59e0b;
-    font-weight: 500;
+    font-family: 'DM Mono', monospace;
     margin-bottom: .35rem;
 }
 
@@ -4914,7 +4940,7 @@ footer {
 
 .about-edu-year {
     font-family: 'DM Mono', monospace;
-    font-size: .7rem;
+    font-size: .75rem;
     color: var(--muted);
     white-space: nowrap;
     flex-shrink: 0;
@@ -5145,6 +5171,9 @@ footer {
     padding: .25rem .6rem;
     text-decoration: none;
     white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
     transition: border-color .2s, color .2s;
 }
 
@@ -5161,7 +5190,154 @@ footer {
     .about-photo-wrap {
         max-width: 180px;
     }
+
+    /* ── Hide card descriptions on small screens ── */
+    .about-edu-desc,
+    .about-achiev-desc,
+    .acert-desc,
+    .about-cert-desc {
+        display: none;
+    }
+
+    /* ── Cert card: compact layout on mobile ── */
+    /* Hide icon and date column; show inline date beside issuer */
+    .acert-icon {
+        display: none;
+    }
+    .acert-date {
+        display: none;
+    }
+    .acert-date-inline {
+        display: inline;
+    }
+    .acert-top {
+        gap: .5rem;
+    }
+    /* Match home cert row style exactly */
+    .acert-card {
+        background: transparent;
+        padding: .85rem 1rem;
+        transition: background .2s, border-color .2s;
+    }
+    .acert-card:hover {
+        background: var(--card);
+        border-color: var(--accent);
+    }
+    .acert-issuer {
+        font-weight: 400;
+    }
+
+    /* ── Verify button → icon-only on mobile ── */
+    .verify-text {
+        display: none;
+    }
+
+    .acert-verify,
+    .about-cert-verify {
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        font-size: .88rem;
+        background: var(--card);
+    }
+
+    /* ── Education cards (About) ── */
+    .about-edu-card {
+        padding: .65rem .9rem;
+    }
+    .about-edu-school {
+        font-size: .78rem;
+        font-weight: 600;
+    }
+    .about-edu-degree {
+        font-size: .68rem;
+        margin-bottom: .1rem;
+    }
+    .about-edu-year {
+        font-size: .7rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* ── Home edu-certs-row: keep row, shrink fonts ── */
+    .edu-certs-row {
+        padding: .65rem .9rem;
+    }
+    .edu-certs-name {
+        font-size: .78rem;
+        font-weight: 600;
+    }
+    .edu-certs-sub {
+        font-size: .68rem;
+    }
+    .edu-certs-year {
+        font-size: .7rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+
+    /* ── Cert cards (About page acert-*) ── */
+
+    .acert-top {
+        gap: .6rem;
+    }
+    .acert-icon {
+        width: 26px;
+        height: 26px;
+    }
+    .acert-icon svg {
+        width: 14px;
+        height: 14px;
+    }
+    .acert-title {
+        font-size: .72rem;
+        line-height: 1.3;
+    }
+    .acert-issuer {
+        font-size: .6rem;
+    }
+    .acert-date {
+        font-size: .58rem;
+    }
+    .acert-verify {
+        font-size: .62rem;
+        padding: .15rem .4rem;
+    }
+
+    /* ── Achievement cards ── */
+    .about-achiev-card {
+        padding: .65rem .85rem;
+    }
+    .about-achiev-title {
+        font-size: .65rem;
+        font-weight: 600;
+    }
+    .about-achiev-org {
+        font-size: .6rem;
+        margin-bottom: .1rem;
+    }
+    .about-achiev-year {
+        font-size: .58rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* ── Home edu-certs extra overrides (already set above but repeated for specificity) ── */
+    .about-cert-issuer {
+        font-size: .6rem;
+    }
+    .about-cert-date {
+        font-size: .58rem;
+    }
 }
+
+
+
 
 .projects-page-header {
   max-width: 760px;
@@ -5515,6 +5691,11 @@ footer {
   margin-bottom: .75rem;
 }
 
+/* Hidden by default — only shown on mobile when card is expanded */
+.role-date-expanded {
+  display: none;
+}
+
 /* Bullet list */
 .exp-card-bullets {
   list-style: none;
@@ -5589,6 +5770,72 @@ footer {
 
 .exp-stack-badge img {
   flex-shrink: 0;
+}
+
+/* Mobile: icon-only badges */
+@media (max-width: 480px) {
+  .exp-card-stacks {
+    gap: .3rem;
+  }
+
+  .exp-stack-badge {
+    padding: .28rem .35rem;
+    gap: 0;
+  }
+
+  .exp-stack-badge .stack-label {
+    display: none;
+  }
+
+  .exp-stack-badge img {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Compact exp card on mobile */
+  .exp-card {
+    padding: .65rem .8rem;
+  }
+
+  .exp-card-top {
+    margin-bottom: .3rem;
+  }
+
+  .exp-card-company {
+    font-size: .82rem;
+    gap: .35rem;
+  }
+
+  .exp-card-role {
+    font-size: .65rem;
+    margin-bottom: .5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Hide date in summary line on mobile */
+  .role-date-meta {
+    display: none;
+  }
+
+  /* Show date in expanded section on mobile */
+  .role-date-expanded {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: .62rem;
+    color: var(--muted);
+    margin-bottom: .2rem;
+  }
+
+  .exp-card-chevron {
+    width: 22px;
+    height: 22px;
+  }
+
+  .exp-card-bullets li {
+    font-size: .75rem;
+  }
 }
 
 /* --- Certificates page --- */
