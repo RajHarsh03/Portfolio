@@ -1,14 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext.jsx';
 
 const GH_USER = 'RajHarsh03';
 
+const MORE_LINKS = [
+  { to: '/contact',   label: 'Contact'   },
+  { to: '/guestbook', label: 'Guestbook' },
+];
+
 export default function Navbar() {
   const { toggleTheme } = useTheme();
-  const btnRef = useRef(null);
-  const [scrolled, setScrolled] = useState(false);
-  const [repoCount, setRepoCount] = useState('');
+  const btnRef    = useRef(null);
+  const moreRef   = useRef(null);
+  const [scrolled,   setScrolled]   = useState(false);
+  const [repoCount,  setRepoCount]  = useState('');
+  const [moreOpen,   setMoreOpen]   = useState(false);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     function onScroll() { setScrolled(window.scrollY > 10); }
@@ -23,6 +31,20 @@ export default function Navbar() {
       .catch(() => {});
   }, []);
 
+  // Close dropdown on outside click
+  useEffect(() => {
+    function onPointerDown(e) {
+      if (moreRef.current && !moreRef.current.contains(e.target)) setMoreOpen(false);
+    }
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, []);
+
+  // Close on route change
+  useEffect(() => { setMoreOpen(false); }, [pathname]);
+
+  const moreActive = MORE_LINKS.some(l => pathname === l.to);
+
   return (
     <nav className={scrolled ? 'scrolled' : ''}>
       {/* Logo — left */}
@@ -34,7 +56,41 @@ export default function Navbar() {
           <NavLink to="/"        end className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Home</NavLink>
           <NavLink to="/about"      className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>About</NavLink>
           <NavLink to="/projects"   className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Projects</NavLink>
-          <NavLink to="/contact"    className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>Contact</NavLink>
+
+          {/* More dropdown — replaces Contact */}
+          <div className="nav-more-wrap" ref={moreRef}>
+            <button
+              className={`nav-link nav-more-btn${moreActive ? ' active' : ''}`}
+              onClick={() => setMoreOpen(o => !o)}
+              aria-haspopup="true"
+              aria-expanded={moreOpen}
+            >
+              More
+              <svg
+                className={`nav-chevron${moreOpen ? ' open' : ''}`}
+                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                width="11" height="11" aria-hidden="true"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+
+            {moreOpen && (
+              <div className="nav-more-dropdown" role="menu">
+                {MORE_LINKS.map(({ to, label }) => (
+                  <NavLink
+                    key={to}
+                    to={to}
+                    className={({ isActive }) => `nav-more-item${isActive ? ' active' : ''}`}
+                    role="menuitem"
+                  >
+                    {label}
+                  </NavLink>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <span

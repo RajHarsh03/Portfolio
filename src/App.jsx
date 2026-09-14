@@ -7,6 +7,7 @@ import {
   Projects,
   Contact,
   About,
+  Guestbook,
 } from './router/routes.jsx';
 
 /** Minimal loading fallback shown while a lazy page chunk loads */
@@ -25,7 +26,8 @@ export default function App() {
           <Route path="/"        element={<Home />} />
           <Route path="/about"    element={<About />} />
           <Route path="/projects" element={<Projects />} />
-          <Route path="/contact"  element={<Contact />} />
+          <Route path="/contact"   element={<Contact />} />
+          <Route path="/guestbook" element={<Guestbook />} />
           <Route path="*"         element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>

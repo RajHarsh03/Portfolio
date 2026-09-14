@@ -31,9 +31,6 @@ export default function AppShell({ children }) {
       {/* Persistent layout elements */}
       <ScrollProgress />
 
-      {/* Skip to content accessibility link */}
-      <a href="#main-content" className="skip-link">Skip to content</a>
-
       {/* Background glow orbs — fixed, always behind page */}
       <div className="hero-glow"  aria-hidden="true" />
       <div className="hero-glow2" aria-hidden="true" />
