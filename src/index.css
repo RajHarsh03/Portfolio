@@ -4383,6 +4383,32 @@ footer {
     }
 }
 
+/* ── Footer: single row on very narrow screens (<393px) ── */
+@media (max-width: 392px) {
+    .footer-bottom {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: .5rem;
+    }
+    .footer-bottom-left {
+        flex-wrap: nowrap;
+        gap: .5rem;
+    }
+    .footer-copy {
+        font-size: .62rem;
+        width: auto;
+    }
+    .footer-icons {
+        gap: .1rem;
+    }
+    .footer-icon-btn {
+        width: 28px;
+        height: 28px;
+    }
+}
+
 /* Back to top */
 .footer-back-top {
     font-family: 'DM Mono', monospace;
@@ -5191,14 +5217,20 @@ footer {
         grid-template-columns: 1fr;
     }
 
-    /* ── QuoteStrip: vertical on mobile (quote top, count bottom) ── */
+    /* ── QuoteStrip: vertical + centered on mobile ── */
     .quote-strip-inner {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
+        text-align: center;
         gap: .85rem;
     }
+    .quote-strip-left {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
     .quote-strip-visitors {
-        text-align: left;
+        text-align: center;
         padding-top: .5rem;
         border-top: 1px solid var(--border);
         width: 100%;
