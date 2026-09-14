@@ -139,7 +139,7 @@ export async function fetchPortfolioProjects() {
   try {
     const res = await fetch(
       `https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=updated`,
-      { headers: { Accept: 'application/vnd.github+json' }, cache: 'no-store' }
+      { headers: { Accept: 'application/vnd.github+json' } }
     );
     if (!res.ok) throw new Error('GitHub API ' + res.status);
     const repos = await res.json();
@@ -153,11 +153,23 @@ export async function fetchPortfolioProjects() {
   } catch (err) {
     try {
       const cached = JSON.parse(localStorage.getItem(GH_CACHE_KEY));
-      if (cached?.data?.length && Date.now() - (cached.ts || 0) < GH_CACHE_TTL * 6) {
+      if (cached?.data?.length) {
         console.warn('GitHub API failed — using cache:', err.message);
         return cached.data;
       }
     } catch {}
     throw err;
   }
+}
+
+/**
+ * Returns cached projects instantly (null if none), then fetches fresh in background.
+ * Used by useProjects to show something immediately while network loads.
+ */
+export function getCachedProjects() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(GH_CACHE_KEY));
+    if (cached?.data?.length) return cached.data;
+  } catch {}
+  return null;
 }

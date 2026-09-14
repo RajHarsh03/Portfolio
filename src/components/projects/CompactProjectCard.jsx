@@ -61,12 +61,17 @@ export default function CompactProjectCard({ project }) {
         </div>
         <p className="cpc-description">{shortDesc}</p>
         
-        {/* Tech tags - show max 4 */}
+        {/* Tech tags - max 3 to keep single row, hide status/rank badges but keep personal/client type tags */}
         {project.rawTopics && project.rawTopics.length > 0 && (
           <div className="cpc-tech-tags">
             {project.rawTopics
-              .filter(t => !['portfolio', 'featured'].includes(t))
-              .slice(0, 4)
+              .filter(t => {
+                const lower = t.toLowerCase();
+                if (['portfolio', 'featured', 'completed', 'in-progress', 'wip', 'archived'].includes(lower)) return false;
+                if (/^(rank[-]?\d+|top\d+|winner|hackathon-\w+)$/i.test(lower)) return false;
+                return true;
+              })
+              .slice(0, 3)
               .map(tag => (
                 <span key={tag} className="cpc-tech-tag">{tag}</span>
               ))

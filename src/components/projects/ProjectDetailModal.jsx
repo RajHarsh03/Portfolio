@@ -27,7 +27,12 @@ export default function ProjectDetailModal({ project, onClose }) {
     return () => window.removeEventListener('keydown', handleEscape);
   }, [onClose]);
 
-  const techTags = (project.rawTopics || []).filter(t => !['portfolio', 'featured'].includes(t));
+  const techTags = (project.rawTopics || []).filter(t => {
+    const lower = t.toLowerCase();
+    if (['portfolio', 'featured', 'completed', 'in-progress', 'wip', 'archived'].includes(lower)) return false;
+    if (/^(rank[-]?\d+|top\d+|winner|hackathon-\w+)$/i.test(lower)) return false;
+    return true;
+  });
 
   return (
     <div className="project-detail-modal" onClick={onClose}>

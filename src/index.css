@@ -2970,9 +2970,10 @@ section {
 
 .cpc-tech-tags {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: .4rem;
     margin-top: .25rem;
+    overflow: hidden;
 }
 
 .cpc-tech-tag {
