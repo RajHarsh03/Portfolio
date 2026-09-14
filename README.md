@@ -12,7 +12,7 @@
 
 <br/>
 
-> **Personal portfolio of Harsh Raj** - a fast, fully-featured React SPA with dark/light theme, live GitHub data, animated custom cursor, and a canvas contribution heatmap.
+> **Personal portfolio of Harsh Raj** - a fast, fully-featured React SPA with dark/light theme, live GitHub data, animated custom cursor, canvas contribution heatmap, live Spotify now-playing widget, and a Gist-powered CMS for experiences, internships, and certificates.
 
 </div>
 
@@ -28,7 +28,8 @@
 🎨 **Dark / Light Theme** - circular wipe via View Transition API\
 📡 **Live GitHub Projects** - fetched, filtered & sorted by topics\
 🔥 **GitHub Heatmap** - canvas-rendered contribution graph\
-📬 **Contact Form** - EmailJS + toast feedback + `Ctrl+Enter`
+📬 **Contact Form** - EmailJS + toast feedback + `Ctrl+Enter`\
+🎵 **Spotify Widget** - live now-playing / last-played with artwork
 
 </td>
 <td width="50%">
@@ -37,7 +38,8 @@
 🖱️ **Custom Cursor** - dual-ring, hover-expand (desktop only)\
 📊 **Visit Counter** - Upstash Redis via Vercel serverless\
 🧭 **Persistent Layout** - Nav, Footer, Cursor mount once\
-📱 **Fully Responsive** - mobile-first, all breakpoints covered
+📱 **Fully Responsive** - mobile-first, all breakpoints covered\
+💼 **Experience Cards** - collapsible cards with tech stack icons
 
 </td>
 </tr>
@@ -57,6 +59,7 @@
 | 🪖 Meta / SEO | **react-helmet-async** |
 | 🎨 Styling | Single global CSS (`src/index.css`) |
 | 📡 Data | **GitHub REST API** + **EmailJS** |
+| 🎵 Spotify | **Custom `/api/now-playing`** serverless endpoint |
 | 📊 Visit Counter | **Upstash Redis** via Vercel serverless |
 | 🚀 Deployment | **Vercel** |
 
@@ -70,11 +73,10 @@
 
 | URL | Page |
 |:----|:-----|
-| `/` | 🏠 Home - hero, about, journey preview, skills ticker, featured projects, GitHub heatmap |
+| `/` | 🏠 Home - hero, bio + Spotify strip, experience preview, skills ticker, featured projects, heatmap |
 | `/projects` | 🗂️ All Projects - search, filter (frontend / fullstack / AI), sort |
 | `/contact` | 📬 Contact - EmailJS form + social links |
-| `/journey` | 🗺️ Journey - experience & internship timeline |
-| `/certificates` | 🏆 Certificates & Achievements |
+| `/about` | 👤 About - bio, education, collapsible experience cards with tech stack icons |
 | `*` | 🔍 404 Not Found |
 
 </div>
@@ -115,7 +117,7 @@ Portfolio/
     ├── services/
     │   ├── 🐙 githubProjects.js        # Fetch + normalise portfolio repos
     │   ├── 🔥 githubContributions.js   # Fetch contribution heatmap data
-    │   └── 📝 gistContent.js           # Gist CMS - fetch + fallback for content
+    │   └── 📝 gistContent.js           # Gist CMS - fetch + fallback + spotify field
     │
     ├── components/
     │   ├── layout/
@@ -125,9 +127,9 @@ Portfolio/
     │   │   └── 📊 ScrollProgress.jsx  # Top gradient progress bar
     │   │
     │   └── home/
-    │       ├── 🦸 Hero.jsx            # Hero section
-    │       ├── 👤 About.jsx           # About section
-    │       ├── 🗺️  JourneyPreview.jsx # Journey + Certificates card links
+    │       ├── 🦸 Hero.jsx            # Hero section - avatar, name, CTA, socials
+    │       ├── ℹ️  InfoStrip.jsx       # Bio card + live Spotify now-playing widget
+    │       ├── 💼 JourneyPreview.jsx  # Experience card preview (static, home only)
     │       ├── 🛠️  Skills.jsx         # Ticker marquee tech stack
     │       ├── 🗂️  FeaturedProjects.jsx # Top 2 projects from GitHub
     │       ├── 🔥 GitHubHeatmap.jsx   # Canvas contribution heatmap
@@ -135,13 +137,11 @@ Portfolio/
     │
     └── pages/
         ├── 🏠 Home.jsx
+        ├── 👤 About.jsx           # Education + collapsible ExpCard with stacks
         ├── 🗂️  Projects.jsx        # Full grid - search, filter, sort, pagination
         ├── 📬 Contact.jsx         # EmailJS form + toast
-        ├── 🗺️  Journey.jsx         # Timeline - data from Gist CMS
-        ├── 🏆 Certificates.jsx    # Certificate cards - data from Gist CMS
         └── 🔍 NotFound.jsx        # 404
 ```
-
 
 ---
 
@@ -240,9 +240,9 @@ Tech icon topics (auto-mapped to devicons): `react`, `nodejs`, `python`, `typesc
 
 ---
 
-## 🗂️ Gist CMS - Experiences, Internships & Certificates
+## 🗂️ Gist CMS — Experiences & Certificates
 
-Content for the **Journey** and **Certificates** pages is managed via a **GitHub Gist** — no code push needed to add or edit cards.
+Content for the **About** page (experience cards) and education is managed via a **GitHub Gist** — no code push needed to add or edit cards.
 
 ### How it works
 
@@ -257,17 +257,14 @@ Fallback data in gistContent.js (always shown instantly)
 ### Adding or editing a card
 
 1. Go to your Gist: [https://gist.github.com/](https://gist.github.com/)
-2. Click **Add Gist**
-3. Add the JSON structure for (`experiences`, `internships`, or `certificates`)
-4. Click **Create secret gist** 
-5. Click **Raw** after creating the gist
-6. Copy the raw url after clicking **Raw**
-7. Replace the copied url in the src/services/gistContent.js with the **Replace with your URL** - changes are live within **5 minutes**, no deploy needed
-9. For any changes just addd/modify the present gist, dont create a new one
+2. Open and **edit the existing gist** (do NOT create a new one)
+3. Update the JSON for `experiences`, `certificates`, or `education`
+4. Save — changes are live within **5 minutes**, no deploy needed
+5. To update the offline fallback, also edit `FALLBACK_DATA` in [`src/services/gistContent.js`](./src/services/gistContent.js) and push
 
 ### JSON structure
 
-**Experience / Internship card:**
+**Experience card:**
 ```json
 {
   "label": "INTERNSHIP",
@@ -275,13 +272,20 @@ Fallback data in gistContent.js (always shown instantly)
   "typeColor": "badge-purple",
   "company": "Company Name",
   "role": "Your Role Title",
-  "date": "JAN 2025 - PRESENT",
+  "date": "JAN 2025 - AUG 2025",
+  "duration": "2m",
+  "stacks": ["Python", "Pandas", "NumPy", "ScikitLearn"],
   "bullets": [
     "First bullet point about what you did.",
     "Second bullet point with an achievement."
   ]
 }
 ```
+
+> **Fields:**
+> - `duration` — short label shown next to date (e.g. `"2m"`, `"6m"`)
+> - `stacks` — array of tech names; icons auto-resolved via Devicons CDN v2.16
+> - `bullets` — shown only when the card is expanded (chevron toggle)
 
 **Certificate card:**
 ```json
@@ -299,9 +303,36 @@ Fallback data in gistContent.js (always shown instantly)
 
 **`typeColor` options:** `badge-blue` | `badge-purple` | `badge-teal`
 
-### Permanent updates
+**Supported stack names (auto-icon via Devicons):**
 
-To update the fallback (shown before Gist loads), also edit `FALLBACK_DATA` in [`src/services/gistContent.js`](./src/services/gistContent.js) and push.
+`html`, `css`, `javascript`, `typescript`, `react`, `nextjs`, `python`, `figma`, `tailwindcss`, `nodejs`, `git`, `mongodb`, `mysql`, `firebase`, `pandas`, `numpy`, `scikitlearn`, `matplotlib`, `jupyter`, `flask`, `fastapi`, `docker`, `postgresql`, `redux`
+
+---
+
+## 🎵 Spotify Now Playing Widget
+
+The **InfoStrip** section on the home page displays a live Spotify widget showing the currently playing song (or last-played if nothing is active).
+
+### How it works
+
+```
+GET /api/now-playing  →  { track: { title, artist, artwork, url }, isPlaying }
+```
+
+- Polls every **5 seconds** for near-real-time updates
+- **Last played persisted in `localStorage`** — no blank flash on page reload
+- Falls back to production endpoint (`harshx.in/api/now-playing`) in local dev
+- Glows green on hover; clicking opens the track on Spotify
+
+### Widget layout
+
+```
+┌──────────────────────────────────────────┐
+│ 🎵 Last Played          [Album Artwork]  │
+│ Song Title (bold)                        │
+│ Artist Name (muted)                      │
+└──────────────────────────────────────────┘
+```
 
 ---
 

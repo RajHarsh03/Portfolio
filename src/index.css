@@ -74,6 +74,7 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
@@ -467,7 +468,7 @@ section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 4.5rem 0 2rem;
+    padding: 1.5rem 0 2rem;
     position: relative;
 }
 
@@ -575,6 +576,7 @@ section {
     border-radius: 6px;
     margin-bottom: 0;
     animation: none;
+    white-space: nowrap;
 }
 
 [data-theme="light"] .hero-banner-location {
@@ -760,6 +762,7 @@ section {
     margin-bottom: .3rem;
     margin-left: auto;
     animation: fadeUp .6s .15s ease both;
+    white-space: nowrap;
 }
 
 .hero-location svg {
@@ -1959,6 +1962,7 @@ section {
 #skills {
     background: transparent;
     padding-top: 0;
+    overflow: hidden;
 }
 
 /* Constrain skills section label and title to 760px */
@@ -3648,7 +3652,7 @@ footer {
     }
 
     #hero {
-        padding: 9rem 6rem 6rem;
+        padding: 5rem 6rem 6rem;
     }
 
     #journey {
@@ -3697,12 +3701,12 @@ footer {
     }
 
     #hero {
-        padding: 7rem 0 4rem;
+        padding: 4.5rem 0 3rem;
         min-height: auto;
     }
 
     #about {
-        padding: 0 16px 2rem;
+        padding-bottom: 2rem;
     }
 
     .info-strip-row {
@@ -3808,18 +3812,19 @@ footer {
     }
 
     .nav-right {
-        gap: .5rem;
+        gap: .4rem;
     }
 
-    /* Hide all tabs and dividers on mobile */
+    /* Hide tab links on mobile — BottomNav handles navigation */
+    .nav-links-pill,
     .exp-tabs,
     .nav-divider {
         display: none;
     }
 
-    /* Hide GitHub by default — home page only */
+    /* Show GitHub icon on mobile (only icon left in nav-right) */
     .nav-gh-btn {
-        display: none;
+        display: flex;
     }
 
     .theme-btn {
@@ -3858,12 +3863,12 @@ footer {
     }
 
     #hero {
-        padding: 5rem 0 2.5rem;
+        padding: 3.5rem 0 2rem;
         min-height: auto;
     }
 
     #about {
-        padding: 0 16px 2rem;
+        padding-bottom: 2rem;
     }
 
     #journey {
@@ -3871,7 +3876,32 @@ footer {
     }
 
     .hero-name {
-        font-size: clamp(1.4rem, 9vw, 1.8rem);
+        font-size: clamp(1.3rem, 8.5vw, 1.7rem);
+    }
+
+    /* Smaller avatar so it doesn't cover banner content */
+    .hero-avatar-ring {
+        width: 80px;
+        height: 80px;
+    }
+
+    .hero-avatar-wrap {
+        margin-top: -40px;
+    }
+
+    /* Taller banner so center text + time pill stay visible */
+    .hero-banner {
+        height: 130px;
+    }
+
+    .hero-banner-center-text {
+        font-size: .78rem;
+    }
+
+    .hero-banner-time,
+    .hero-banner-location {
+        font-size: .6rem;
+        padding: .18rem .45rem;
     }
 
     .hero-desc {
@@ -4379,10 +4409,11 @@ footer {
 .skills-ticker-section {
   max-width: 760px;
   margin: 1.2rem auto 0;
-  padding: 0;
+  padding: 0 24px;
   display: flex;
   flex-direction: column;
   gap: 1.4rem;
+  overflow: hidden;
 }
 
 .skill-group-label {
