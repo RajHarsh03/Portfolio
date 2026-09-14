@@ -1,108 +1,22 @@
 import { useProjects } from '../../hooks/useProjects.js';
-import { TECH_ICON_MAP, GH_USER } from '../../services/githubProjects.js';
+import { GH_USER } from '../../services/githubProjects.js';
 import { useReveal } from '../../hooks/useReveal.js';
+import CompactProjectCard from '../projects/CompactProjectCard.jsx';
 
 /** Skeleton card shown while loading */
 function SkeletonCard() {
   return (
-    <div className="project-card">
-      <div className="project-card-glow" />
-      <div className="project-body">
-        <div className="skel-block" style={{ width: '60%', height: 22, borderRadius: 6, marginBottom: '1rem' }} />
-        <div className="skel-block" style={{ width: '100%', height: 12, borderRadius: 4, marginBottom: '.5rem' }} />
-        <div className="skel-block" style={{ width: '88%', height: 12, borderRadius: 4, marginBottom: '.5rem' }} />
-        <div className="skel-block" style={{ width: '72%', height: 12, borderRadius: 4, marginBottom: '1.2rem' }} />
-        <div style={{ display: 'flex', gap: '.5rem' }}>
-          <div className="skel-block" style={{ width: 64, height: 24, borderRadius: 999 }} />
-          <div className="skel-block" style={{ width: 72, height: 24, borderRadius: 999 }} />
+    <div className="compact-project-card">
+      <div className="cpc-thumbnail">
+        <div className="skel-block" style={{ width: '100%', height: '100%', borderRadius: 12 }} />
+      </div>
+      <div className="cpc-content">
+        <div className="cpc-header">
+          <div className="skel-block" style={{ width: '70%', height: 20, borderRadius: 6, marginBottom: '.5rem' }} />
+          <div className="skel-block" style={{ width: '40%', height: 14, borderRadius: 4, marginBottom: '.75rem' }} />
         </div>
-      </div>
-      <div className="project-footer" style={{ borderTop: '1px solid var(--border)', padding: '1rem', justifyContent: 'flex-end' }}>
-        <div style={{ display: 'flex', gap: '.5rem' }}>
-          <div className="skel-block" style={{ width: 78, height: 28, borderRadius: 8 }} />
-          <div className="skel-block" style={{ width: 60, height: 28, borderRadius: 8 }} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/** Full project card */
-function ProjectCard({ p }) {
-  const ghImgUrl      = `https://raw.githubusercontent.com/${GH_USER}/${p.repoName}/HEAD/preview.png`;
-  const ghImgFallback = `https://opengraph.githubassets.com/1/${GH_USER}/${p.repoName}`;
-
-  const techTags = (p.rawTopics || [])
-    .filter(t => !['portfolio','featured'].includes(t))
-    .slice(0, 5);
-
-  const isLive = p.completed;
-
-  return (
-    <div className="project-card reveal" data-category={p.category} data-rank={p.rank}>
-      <div className="project-card-glow" />
-
-      {/* Preview image */}
-      <div className="project-img-wrap">
-        <img
-          src={ghImgUrl}
-          alt={`${p.name} preview`}
-          loading="lazy"
-          onError={e => {
-            if (e.currentTarget.src !== ghImgFallback) {
-              e.currentTarget.src = ghImgFallback;
-            } else {
-              e.currentTarget.closest('.project-img-wrap').style.display = 'none';
-            }
-          }}
-        />
-      </div>
-
-      {/* Body */}
-      <div className="project-body">
-        {/* Title + status */}
-        <div className="project-title-row">
-          <div className="project-title">{p.name}</div>
-          <div className={`project-status-dot${isLive ? ' live' : ''}`}>
-            <span className="status-dot" />
-            {isLive ? 'Live' : 'Building'}
-          </div>
-        </div>
-
-        {/* Subtitle / type */}
-        {p.projectType && (
-          <div className="project-subtitle">{p.projectType.label}</div>
-        )}
-
-        {/* Description */}
-        <div className="project-desc">{p.description}</div>
-
-        {/* Tech tags */}
-        {techTags.length > 0 && (
-          <div className="project-tech-tags">
-            {techTags.map(t => (
-              <span key={t} className="project-tech-tag">{t}</span>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Footer */}
-      <div className="project-footer">
-        {p.live ? (
-          <a className="proj-footer-btn" href={p.live} target="_blank" rel="noopener noreferrer">
-            Live link
-          </a>
-        ) : (
-          <span className="proj-footer-btn disabled">Live link</span>
-        )}
-        <div className="proj-footer-divider" />
-        <a className="proj-footer-btn" href={p.github} target="_blank" rel="noopener noreferrer">
-          GitHub
-          <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
-            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-          </svg>
-        </a>
+        <div className="skel-block" style={{ width: '100%', height: 12, borderRadius: 4, marginBottom: '.4rem' }} />
+        <div className="skel-block" style={{ width: '90%', height: 12, borderRadius: 4 }} />
       </div>
     </div>
   );
@@ -117,7 +31,7 @@ export default function FeaturedProjects() {
       <div className="section-label">// featured work</div>
       <h2 className="section-title reveal">Projects</h2>
 
-      <div className="projects-grid" id="homeProjectsGrid">
+      <div className="compact-projects-list" id="homeProjectsGrid">
         {loading && (
           <>
             <SkeletonCard />
@@ -137,7 +51,12 @@ export default function FeaturedProjects() {
             No projects tagged "portfolio" yet.
           </p>
         )}
-        {!loading && projects.map(p => <ProjectCard key={p.repoName} p={p} />)}
+        {!loading && projects.map(p => (
+          <CompactProjectCard 
+            key={p.repoName} 
+            project={p}
+          />
+        ))}
       </div>
     </section>
   );

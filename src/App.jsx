@@ -5,6 +5,7 @@ import ScrollToTop from './router/ScrollToTop.jsx';
 import {
   Home,
   Projects,
+  ProjectDetail,
   Contact,
   About,
   Guestbook,
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/"        element={<Home />} />
           <Route path="/about"    element={<About />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/contact"   element={<Contact />} />
           <Route path="/guestbook" element={<Guestbook />} />
           <Route path="*"         element={<Navigate to="/" replace />} />
