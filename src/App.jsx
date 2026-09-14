@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import AppShell from './layouts/AppShell.jsx';
 import ScrollToTop from './router/ScrollToTop.jsx';
+import useNeko from './hooks/useNeko.js';
 import {
   Home,
   Projects,
@@ -19,6 +20,8 @@ function RouteLoader() {
 }
 
 export default function App() {
+  useNeko();
+
   return (
     <AppShell>
       <ScrollToTop />

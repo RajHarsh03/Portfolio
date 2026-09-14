@@ -11,8 +11,26 @@ export default function Hero() {
 
         {/* ── Banner ── */}
         <div className="hero-banner">
-          {/* Replace src with your banner image later */}
           <div className="hero-banner-placeholder" aria-hidden="true" />
+
+          {/* Corner notes */}
+          <aside className="hb-note hb-note-lt" aria-hidden="true">
+            <span className="hb-note-rule" />
+            <span>Somewhere<br />between<br />ideas and<br />reality</span>
+          </aside>
+          <aside className="hb-note hb-note-rt" aria-hidden="true">
+            <span className="hb-note-rule" style={{marginLeft:'auto'}} />
+            <span>GOOD IDEAS TAKE TIME</span>
+          </aside>
+          {/* <aside className="hb-note hb-note-lb" aria-hidden="true">
+            <span>Ver. 1.0<br />Est. 2026</span>
+            <span className="hb-note-rule" />
+          </aside>
+          <aside className="hb-note hb-note-rb" aria-hidden="true">
+            <span className="hb-note-rule" style={{marginLeft:'auto'}} />
+            <span>Same<br />sky<br />different<br />dreams</span>
+          </aside> */}
+
           {/* Centered availability text */}
           <div className="hero-banner-center-text">
             Open for full-time<br />&amp; freelance work

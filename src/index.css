@@ -140,7 +140,7 @@ body::after {
     content: '';
     position: fixed;
     inset: 0;
-    z-index: 9997;
+    z-index: 1;
     pointer-events: none;
     background-image: radial-gradient(circle, rgba(255,255,255,.18) 1px, transparent 1px);
     background-size: 28px 28px;
@@ -559,30 +559,69 @@ section {
     animation: fadeUp .6s ease both;
 }
 
+/* Top-left corner */
+.hero-profile-card::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 14px;
+    width: 22px;
+    height: 22px;
+    border-color: rgba(255, 255, 255, 0.5);
+    border-style: solid;
+    border-width: 2px 0 0 2px;
+    z-index: 20;
+    pointer-events: none;
+}
+
+[data-theme="light"] .hero-profile-card::before {
+    border-color: rgba(0, 0, 0, 0.35);
+}
+
 /* ── Banner — top section of card ── */
 .hero-banner {
     width: 100%;
     height: 155px;
-    border-radius: 12px 12px 0 0;
-    overflow: hidden;
+    border-radius: 0;
+    overflow: visible;
     position: relative;
     background: transparent;
-    border: 1px solid var(--border);
-    border-bottom: none;
+    border: none;
+}
+
+/* Bottom-right corner on banner */
+.hero-banner::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    width: 22px;
+    height: 22px;
+    border-color: rgba(255, 255, 255, 0.5);
+    border-style: solid;
+    border-width: 0 2px 2px 0;
+    z-index: 10;
+    pointer-events: none;
+}
+
+[data-theme="light"] .hero-banner::after {
+    border-color: rgba(0, 0, 0, 0.35);
 }
 
 .hero-banner-placeholder {
     position: absolute;
     inset: 0;
     background: #0c0c0c;
-    background-image: radial-gradient(circle, rgba(255,255,255,.15) 1px, transparent 1px);
-    background-size: 24px 24px;
+    background-image: radial-gradient(circle, rgba(255,255,255,.15) 0.5px, transparent 1px);
+    background-size: 14px 14px;
+    border-radius: 0;
+    overflow: hidden;
 }
 
 [data-theme="light"] .hero-banner-placeholder {
-    background: #e5e7eb;
-    background-image: radial-gradient(circle, rgba(0,0,0,.12) 1px, transparent 1px);
-    background-size: 24px 24px;
+    background: #dadcdf;
+    background-image: radial-gradient(circle, rgba(0,0,0,.35) 0.5px, transparent 1px);
+    background-size: 14px 14px;
 }
 
 .hero-banner-img {
@@ -593,6 +632,46 @@ section {
     object-fit: cover;
     object-position: center;
     display: block;
+    border-radius: 0;
+}
+
+/* ── Banner corner notes ── */
+.hb-note {
+    position: absolute;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: .48rem;
+    font-weight: 700;
+    letter-spacing: .16em;
+    line-height: 1.65;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.35);
+    pointer-events: none;
+}
+.hb-note-lt { top: 14px;    left: 16px; }
+.hb-note-rt { top: 14px;    right: 16px; text-align: right; }
+.hb-note-lb { bottom: 14px; left: 16px; }
+.hb-note-rb { bottom: 14px; right: 16px; text-align: right; }
+
+.hb-note-rule {
+    display: block;
+    width: 20px;
+    height: 1.5px;
+    background: rgba(255,255,255,.4);
+}
+.hb-note-rt .hb-note-rule,
+.hb-note-rb .hb-note-rule {
+    margin-left: auto;
+}
+
+[data-theme="light"] .hb-note {
+    color: rgba(0,0,0,.7);
+}
+[data-theme="light"] .hb-note-rule {
+    background: rgba(0,0,0,.5);
 }
 
 /* Centered text inside banner */
@@ -604,7 +683,7 @@ section {
     font-family: 'DM Mono', monospace;
     font-size: .95rem;
     font-weight: 400;
-    color: rgba(255,255,255,.35);
+    color: rgba(255,255,255,.65);
     text-align: center;
     line-height: 1.6;
     pointer-events: none;
@@ -612,28 +691,26 @@ section {
 }
 
 [data-theme="light"] .hero-banner-center-text {
-    color: rgba(0,0,0,.35);
+    color: rgba(0,0,0,.65);
 }
 
 /* Clock pill — bottom-right inside banner */
 .hero-banner-time {
     position: absolute;
-    bottom: .6rem;
-    right: .7rem;
+    bottom: 6px;
+    right: 8px;
     font-family: 'DM Mono', monospace;
     font-size: .7rem;
     color: var(--text);
     display: flex;
     align-items: center;
     gap: .3rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    border: none;
     padding: .22rem .6rem;
-    border-radius: 6px;
+    z-index: 15;
 }
 
 [data-theme="light"] .hero-banner-time {
-    background: rgba(255,255,255,.8);
     backdrop-filter: blur(8px);
 }
 
@@ -641,18 +718,19 @@ section {
 
 .hero-banner-location {
     position: absolute;
-    bottom: .6rem;
-    left: .7rem;
+    bottom: 16px;
+    left: 54px;
     font-family: 'DM Mono', monospace;
     font-size: .7rem;
     color: var(--text);
     background: var(--surface);
-    border: 1px solid var(--border);
+    border: none;
     padding: .22rem .6rem;
     border-radius: 6px;
     margin-bottom: 0;
     animation: none;
     white-space: nowrap;
+    z-index: 15;
 }
 
 [data-theme="light"] .hero-banner-location {
@@ -664,8 +742,7 @@ section {
 /* ── Profile body — bottom section of card ── */
 .hero-profile-body {
     background: transparent;
-    border: 1px solid var(--border);
-    border-top: none;
+    border: none;
     border-radius: 0 0 12px 12px;
     padding: 0 1.25rem 1.25rem;
     position: relative;
@@ -1298,60 +1375,8 @@ section {
     height: 58px;
     object-fit: cover;
     display: block;
-    border-radius: 50%;
+    border-radius: 10px;
     box-shadow: 0 4px 16px rgba(0,0,0,.4);
-    transition: border-radius 0.3s ease;
-}
-
-/* Vinyl spinning effect when playing */
-.np-vinyl-spin {
-    animation: vinyl-spin 3s linear infinite;
-    border-radius: 50% !important;
-}
-
-@keyframes vinyl-spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* Tonearm */
-.np-tonearm {
-    position: absolute;
-    top: 2px;
-    right: -8px;
-    width: 32px;
-    height: 32px;
-    transform-origin: top right;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-    z-index: 2;
-}
-
-.np-tonearm-arm {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 2px;
-    height: 26px;
-    background: linear-gradient(180deg, #888 0%, #555 100%);
-    border-radius: 1px;
-    transform-origin: top right;
-}
-
-.np-tonearm-head {
-    position: absolute;
-    bottom: -2px;
-    right: -3px;
-    width: 8px;
-    height: 8px;
-    background: radial-gradient(circle, #1db954 0%, #15803d 100%);
-    border-radius: 50%;
-    box-shadow: 0 0 6px rgba(29, 185, 84, 0.6);
-}
-
-/* Tonearm on disk when playing */
-.np-tonearm--playing {
-    transform: rotate(-25deg);
 }
 
 /* Pulse ring on album art when playing */
@@ -4676,8 +4701,21 @@ footer {
 
     .hero-banner-time,
     .hero-banner-location {
-        font-size: .6rem;
-        padding: .18rem .45rem;
+        font-size: .55rem;
+        padding: .15rem .38rem;
+    }
+
+    .hero-location {
+        font-size: .65rem;
+    }
+
+    .hero-profile-card::before,
+    .hero-banner::after {
+        display: none;
+    }
+
+    .hb-note {
+        display: none;
     }
 
     .hero-desc {
