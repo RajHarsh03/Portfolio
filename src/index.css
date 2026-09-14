@@ -356,7 +356,7 @@ nav.floating {
     background: transparent;
     border: none;
     border-radius: 10px;
-
+    margin-left: -.5rem;
     position: relative;
     display: flex;
     align-items: center;
@@ -514,41 +514,6 @@ section {
     padding-bottom: 1.2rem;
 }
 
-/* Reduce internal spacing for home-only sections */
-#edu-certs .section-title,
-#projects .section-title,
-#skills .section-title,
-#ghActivity .section-title,
-#about .section-title {
-    margin-bottom: 0.6rem;
-}
-
-#edu-certs .section-label,
-#projects .section-label,
-#skills .section-label,
-#ghActivity .section-label,
-#about .section-label {
-    margin-bottom: 0.2rem;
-}
-
-#edu-certs .edu-certs-group {
-    margin-bottom: 0.8rem;
-}
-
-#edu-certs .edu-certs-group:last-child {
-    margin-bottom: 0;
-}
-
-/* Projects "view all" link top margin */
-#projects .projects-view-all {
-    margin-top: 0.75rem;
-}
-
-/* GitHub heatmap bottom padding */
-#ghActivity.gh-activity-section {
-    padding-bottom: 0.5rem;
-}
-
 .section-label {
     font-size: .68rem;
     color: var(--accent);
@@ -585,7 +550,7 @@ section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 4rem 0 2rem;
+    padding: 5rem 0 2rem;
     position: relative;
 }
 
@@ -4040,7 +4005,7 @@ footer {
 .footer-icons {
     display: flex;
     align-items: center;
-    gap: .25rem;
+    gap: .75rem;
 }
 
 .footer-icon-btn {
@@ -4557,8 +4522,7 @@ footer {
 
     #hero {
         padding: 4.5rem 0 3rem;
-        min-height: auto;
-    }
+        min-height: auto;    }
 
     #about {
         padding-bottom: 2rem;
@@ -4691,6 +4655,7 @@ footer {
         box-shadow: none !important;
         background: transparent !important;
         -webkit-tap-highlight-color: transparent !important;
+        margin-left: 0;
     }
 
 
@@ -4724,7 +4689,7 @@ footer {
     }
 
     #hero {
-        padding: 3.5rem 0 2rem;
+        padding: 4rem 0 2rem;
         min-height: auto;
     }
 
