@@ -27,6 +27,7 @@
 🚀 **SPA Navigation** - zero full-page reloads\
 🎨 **Dark / Light Theme** - circular wipe via View Transition API\
 📡 **Live GitHub Projects** - fetched, filtered & sorted by topics\
+📖 **Project Detail Pages** - route-based with Gist-powered content\
 🔥 **GitHub Heatmap** - canvas-rendered contribution graph\
 📬 **Contact Form** - EmailJS + toast feedback + `Ctrl+Enter`\
 🎵 **Spotify Widget** - live now-playing / last-played with artwork
@@ -38,8 +39,9 @@
 🖱️ **Custom Cursor** - dual-ring, hover-expand (desktop only)\
 📊 **Visit Counter** - Upstash Redis via Vercel serverless\
 🧭 **Persistent Layout** - Nav, Footer, Cursor mount once\
-📱 **Fully Responsive** - mobile-first, all breakpoints covered\
-💼 **Experience Cards** - collapsible cards with tech stack icons
+📱 **Fully Responsive** - mobile-first, incremental load on mobile\
+💼 **Experience Cards** - collapsible cards with tech stack icons\
+🗂️ **Gist CMS** - manage content without redeployment
 
 </td>
 </tr>
@@ -74,7 +76,8 @@
 | URL | Page |
 |:----|:-----|
 | `/` | 🏠 Home - hero, bio + Spotify strip, experience preview, skills ticker, featured projects, heatmap |
-| `/projects` | 🗂️ All Projects - search, filter (frontend / fullstack / AI), sort |
+| `/projects` | 🗂️ All Projects - search, filter (frontend / fullstack / AI), sort, incremental mobile load |
+| `/projects/:id` | 📖 Project Detail - full overview, tech stack, features, highlights, challenges (Gist-powered) |
 | `/contact` | 📬 Contact - EmailJS form + social links |
 | `/about` | 👤 About - bio, education, collapsible experience cards with tech stack icons |
 | `*` | 🔍 404 Not Found |
@@ -109,15 +112,17 @@ Portfolio/
     │   └── 🌗 ThemeContext.jsx    # Theme state + View Transition toggle
     │
     ├── hooks/
-    │   ├── 📡 useProjects.js      # GitHub projects fetch + cache + auto-refresh
-    │   ├── 🗂️  useGistContent.js  # Gist CMS hook - experiences, internships, certs
-    │   ├── 👁️  useReveal.js       # IntersectionObserver scroll reveal
-    │   └── 🌗 useTheme.js         # Re-export of useTheme from context
+    │   ├── 📡 useProjects.js           # GitHub projects fetch + cache + auto-refresh
+    │   ├── � useProjectDetails.js     # Gist project details fetch + 5min cache
+    │   ├── �🗂️  useGistContent.js       # Gist CMS hook - experiences, internships, certs
+    │   ├── 👁️  useReveal.js            # IntersectionObserver scroll reveal
+    │   └── 🌗 useTheme.js              # Re-export of useTheme from context
     │
     ├── services/
-    │   ├── 🐙 githubProjects.js        # Fetch + normalise portfolio repos
-    │   ├── 🔥 githubContributions.js   # Fetch contribution heatmap data
-    │   └── 📝 gistContent.js           # Gist CMS - fetch + fallback + spotify field
+    │   ├── 🐙 githubProjects.js             # Fetch + normalise portfolio repos
+    │   ├── 📖 projectDetailsGist.js         # Fetch project details from Gist
+    │   ├── 🔥 githubContributions.js        # Fetch contribution heatmap data
+    │   └── 📝 gistContent.js                # Gist CMS - fetch + fallback + spotify field
     │
     ├── components/
     │   ├── layout/
@@ -126,21 +131,25 @@ Portfolio/
     │   │   ├── 🖱️  CustomCursor.jsx   # Dual-ring cursor (desktop only)
     │   │   └── 📊 ScrollProgress.jsx  # Top gradient progress bar
     │   │
-    │   └── home/
-    │       ├── 🦸 Hero.jsx            # Hero section - avatar, name, CTA, socials
-    │       ├── ℹ️  InfoStrip.jsx       # Bio card + live Spotify now-playing widget
-    │       ├── 💼 JourneyPreview.jsx  # Experience card preview (static, home only)
-    │       ├── 🛠️  Skills.jsx         # Ticker marquee tech stack
-    │       ├── 🗂️  FeaturedProjects.jsx # Top 2 projects from GitHub
-    │       ├── 🔥 GitHubHeatmap.jsx   # Canvas contribution heatmap
-    │       └── 📱 BottomNav.jsx       # Floating pill nav (home page only)
+    │   ├── home/
+    │   │   ├── 🦸 Hero.jsx            # Hero section - avatar, name, CTA, socials
+    │   │   ├── ℹ️  InfoStrip.jsx       # Bio card + live Spotify now-playing widget
+    │   │   ├── 💼 JourneyPreview.jsx  # Experience card preview (static, home only)
+    │   │   ├── 🛠️  Skills.jsx         # Ticker marquee tech stack
+    │   │   ├── 🗂️  FeaturedProjects.jsx # Top 2 projects from GitHub
+    │   │   ├── 🔥 GitHubHeatmap.jsx   # Canvas contribution heatmap
+    │   │   └── 📱 BottomNav.jsx       # Floating pill nav (home page only)
+    │   │
+    │   └── projects/
+    │       └── 💳 CompactProjectCard.jsx # Compact project card with arrow navigation
     │
     └── pages/
         ├── 🏠 Home.jsx
-        ├── 👤 About.jsx           # Education + collapsible ExpCard with stacks
-        ├── 🗂️  Projects.jsx        # Full grid - search, filter, sort, pagination
-        ├── 📬 Contact.jsx         # EmailJS form + toast
-        └── 🔍 NotFound.jsx        # 404
+        ├── 👤 About.jsx              # Education + collapsible ExpCard with stacks
+        ├── 🗂️  Projects.jsx           # Full grid - search, filter, sort, incremental mobile load
+        ├── 📖 ProjectDetail.jsx      # Individual project page with Gist-powered details
+        ├── 📬 Contact.jsx            # EmailJS form + toast
+        └── 🔍 NotFound.jsx           # 404
 ```
 
 ---
@@ -242,7 +251,7 @@ Tech icon topics (auto-mapped to devicons): `react`, `nodejs`, `python`, `typesc
 
 ## 🗂️ Gist CMS — Experiences & Certificates
 
-Content for the **About** page (experience cards) and education is managed via a **GitHub Gist** — no code push needed to add or edit cards.
+Content for the **About** page (experience cards, education, certificates) is managed via a **GitHub Gist** — no code push needed to add or edit cards.
 
 ### How it works
 
@@ -306,6 +315,64 @@ Fallback data in gistContent.js (always shown instantly)
 **Supported stack names (auto-icon via Devicons):**
 
 `html`, `css`, `javascript`, `typescript`, `react`, `nextjs`, `python`, `figma`, `tailwindcss`, `nodejs`, `git`, `mongodb`, `mysql`, `firebase`, `pandas`, `numpy`, `scikitlearn`, `matplotlib`, `jupyter`, `flask`, `fastapi`, `docker`, `postgresql`, `redux`
+
+---
+
+## 📖 Project Details — Gist CMS
+
+Each project can have additional details (features, highlights, challenges) managed through a **separate Gist** without redeployment.
+
+### How it works
+
+```
+/projects/:repoName  →  fetches project-details.json from Gist
+                     →  displays Overview, Tech, Features, Highlights, Challenges
+                     →  cached 5 minutes
+```
+
+**Gist URL:** `https://gist.githubusercontent.com/RajHarsh03/d9dafa7d57b7af090604cc06f0e69c9f/raw/project-details.json`
+
+### Project Details JSON Structure
+
+```json
+{
+  "CropGaurd": {
+    "features": [
+      "AI-powered crop disease detection using MobileNetV2",
+      "Upload leaf images to identify 18 different plant diseases",
+      "Treatment recommendations for identified diseases",
+      "Built with React, FastAPI & TensorFlow"
+    ],
+    "highlights": [
+      "Achieved 95% accuracy in disease classification",
+      "Processes images in under 2 seconds",
+      "Supports multiple crop types"
+    ],
+    "challenges": [
+      "Optimizing model size for faster inference",
+      "Handling various image qualities and lighting conditions"
+    ]
+  },
+  "Library-Management-System": {
+    "features": [...],
+    "highlights": [...],
+    "challenges": [...]
+  }
+}
+```
+
+**Key:** Use the exact `repoName` from GitHub (matches the URL slug)\
+**Fields:** All three arrays (`features`, `highlights`, `challenges`) are optional
+
+### Route-Based Detail Pages
+
+- Project cards show an **arrow button** that navigates to `/projects/:repoName`
+- Detail page displays: large preview image, live/code buttons, tech tags, overview, features, highlights, challenges
+- **Mobile optimizations:**
+  - Buttons shown as small icons on mobile (358px, 324px)
+  - Images use `object-fit: cover` with proper positioning
+  - Incremental loading: 3 projects initially, load 3 more at a time
+  - "Show Less" appears only when all projects loaded
 
 ---
 

@@ -1,11 +1,14 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useProjects } from '../hooks/useProjects.js';
 import { GH_USER } from '../services/githubProjects.js';
 import { useReveal } from '../hooks/useReveal.js';
 import CompactProjectCard from '../components/projects/CompactProjectCard.jsx';
 
-const SHOW_LIMIT = 6;
+const SHOW_LIMIT_DESKTOP = 6;
+const SHOW_LIMIT_MOBILE_INITIAL = 3;
+const SHOW_LIMIT_MOBILE_INCREMENT = 3;
+
 const FILTERS = [
   { value: 'all',       label: 'All'         },
   { value: 'fullstack', label: 'Web Apps'    },
@@ -35,8 +38,20 @@ export default function Projects() {
   const { projects, loading, error } = useProjects();
   const ref = useReveal();
 
-  const [filter,     setFilter]     = useState('all');
-  const [expanded,   setExpanded]   = useState(false);
+  const [filter, setFilter] = useState('all');
+  const [expanded, setExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(SHOW_LIMIT_MOBILE_INITIAL);
+
+  // Detect mobile view
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const filtered = useMemo(() => {
     let list = [...projects];
@@ -49,9 +64,58 @@ export default function Projects() {
     return list;
   }, [projects, filter]);
 
-  const showAll     = expanded;
-  const visible     = showAll ? filtered : filtered.slice(0, SHOW_LIMIT);
-  const hiddenCount = filtered.length - SHOW_LIMIT;
+  // Desktop: show SHOW_LIMIT_DESKTOP initially, then all
+  // Mobile: show visibleCount (starts at 3, increments by 3)
+  const visible = useMemo(() => {
+    if (isMobile) {
+      return filtered.slice(0, visibleCount);
+    } else {
+      return expanded ? filtered : filtered.slice(0, SHOW_LIMIT_DESKTOP);
+    }
+  }, [filtered, expanded, isMobile, visibleCount]);
+
+  const handleShowMore = () => {
+    if (isMobile) {
+      setVisibleCount(prev => prev + SHOW_LIMIT_MOBILE_INCREMENT);
+    } else {
+      setExpanded(true);
+    }
+  };
+
+  const handleShowLess = () => {
+    // Smooth scroll to projects section
+    const projectsSection = document.getElementById('allProjects');
+    if (projectsSection) {
+      projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    
+    // Delay the collapse slightly to allow scroll
+    setTimeout(() => {
+      if (isMobile) {
+        setVisibleCount(SHOW_LIMIT_MOBILE_INITIAL);
+      } else {
+        setExpanded(false);
+      }
+    }, 300);
+  };
+
+  const hasMore = isMobile 
+    ? visibleCount < filtered.length 
+    : !expanded && filtered.length > SHOW_LIMIT_DESKTOP;
+
+  const canShowLess = isMobile 
+    ? visibleCount >= filtered.length && visibleCount > SHOW_LIMIT_MOBILE_INITIAL 
+    : expanded;
+
+  const remainingCount = isMobile 
+    ? filtered.length - visibleCount 
+    : filtered.length - SHOW_LIMIT_DESKTOP;
+
+  // Reset visible count when filter changes
+  useEffect(() => {
+    setVisibleCount(SHOW_LIMIT_MOBILE_INITIAL);
+    setExpanded(false);
+  }, [filter]);
 
   return (
     <>
@@ -110,14 +174,18 @@ export default function Projects() {
           </div>
 
           {/* Show More / Less */}
-          {!loading && !error && filtered.length > SHOW_LIMIT && (
+          {!loading && !error && (hasMore || canShowLess) && (
             <div className="show-more-wrap">
-              <button className="show-more-btn" onClick={() => setExpanded(e => !e)}>
-                {expanded
-                  ? 'Show Less'
-                  : <>Show More <span style={{ opacity: .55, fontSize: '.82em' }}>({hiddenCount} more)</span></>
-                }
-              </button>
+              {hasMore && (
+                <button className="show-more-btn" onClick={handleShowMore}>
+                  Show More {remainingCount > 0 && <span style={{ opacity: .55, fontSize: '.82em' }}>({Math.min(remainingCount, isMobile ? SHOW_LIMIT_MOBILE_INCREMENT : remainingCount)} more)</span>}
+                </button>
+              )}
+              {canShowLess && (
+                <button className="show-more-btn" onClick={handleShowLess} style={{ marginLeft: hasMore ? '.5rem' : '0' }}>
+                  Show Less
+                </button>
+              )}
             </div>
           )}
         </section>

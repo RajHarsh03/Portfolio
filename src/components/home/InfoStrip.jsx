@@ -43,9 +43,14 @@ function SpotifyNowPlaying() {
         }
 
         if (!cancelled) {
+          // Only update if we have a track AND (we're playing OR we don't have a cached track yet)
+          // This prevents overwriting a recently played track with an older one from the API
           if (json?.track) {
-            lastTrackRef.current = json.track;
-            try { localStorage.setItem('sp_last_track', JSON.stringify(json.track)); } catch {}
+            const shouldUpdate = json.isPlaying || !lastTrackRef.current;
+            if (shouldUpdate) {
+              lastTrackRef.current = json.track;
+              try { localStorage.setItem('sp_last_track', JSON.stringify(json.track)); } catch {}
+            }
           }
           setData(json || { configured: false });
         }
