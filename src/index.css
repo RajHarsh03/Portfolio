@@ -1350,9 +1350,14 @@ section {
     overflow: hidden;
 }
 
-/* Hide Spotify logo when music is playing — below 900px keep bars only */
-@media (max-width: 900px) {
-    .info-strip-player.is-playing .np-label-row > svg { display: none !important; }
+/* Hide Spotify logo when music is playing on all screen sizes */
+.info-strip-player.is-playing .np-label-row > svg { 
+    display: none !important; 
+}
+
+/* Hide bars when music is NOT playing */
+.info-strip-player:not(.is-playing) .np-bars { 
+    display: none !important; 
 }
 
 .np-status {
@@ -1392,6 +1397,17 @@ section {
     display: inline-block;
     padding-right: 2rem;
     text-overflow: clip;
+}
+
+/* Disable marquee on screens below 900px */
+@media (max-width: 900px) {
+    .np-title--marquee {
+        animation: none;
+        display: block;
+        padding-right: 0;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 }
 
 @keyframes np-marquee {
@@ -1539,10 +1555,12 @@ section {
 }
 
 .hc-link-arrow {
-    font-size: .8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: var(--muted);
     flex-shrink: 0;
-    transition: transform .2s;
+    transition: transform .2s, color .2s;
 }
 
 .hc-link-row:hover .hc-link-arrow {
@@ -5302,9 +5320,17 @@ footer {
     transition: border-color .2s, opacity .2s;
 }
 
+.acert-verify svg {
+    transition: transform .2s;
+}
+
 .acert-verify:hover {
     border-color: var(--accent);
     opacity: .9;
+}
+
+.acert-verify:hover svg {
+    transform: translate(2px, -2px);
 }
 
 .acert-desc {
@@ -5630,9 +5656,17 @@ footer {
     transition: border-color .2s, color .2s;
 }
 
+.about-cert-verify svg {
+    transition: transform .2s;
+}
+
 .about-cert-verify:hover {
     border-color: var(--accent);
     color: var(--accent);
+}
+
+.about-cert-verify:hover svg {
+    transform: translate(2px, -2px);
 }
 
 /* Responsive */

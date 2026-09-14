@@ -96,7 +96,12 @@ export default function Contact() {
                         <div className="hc-link-title">Book a quick chat</div>
                         <div className="hc-link-desc">Discuss code, projects, or just say hello</div>
                       </div>
-                      <span className="hc-link-arrow">↗</span>
+                      <span className="hc-link-arrow">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M7 17L17 7"/>
+                          <path d="M7 7h10v10"/>
+                        </svg>
+                      </span>
                     </a>
 
                     <a href="mailto:rajharsh.devx@gmail.com" className="hc-link-row">
@@ -111,7 +116,12 @@ export default function Contact() {
                         <div className="hc-link-title">Write an email</div>
                         <div className="hc-link-desc">For collaborations or quick questions</div>
                       </div>
-                      <span className="hc-link-arrow">↗</span>
+                      <span className="hc-link-arrow">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M7 17L17 7"/>
+                          <path d="M7 7h10v10"/>
+                        </svg>
+                      </span>
                     </a>
                   </div>
                 </div>
