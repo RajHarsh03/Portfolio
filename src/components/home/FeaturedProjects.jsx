@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';import { useProjects } from '../../hooks/useProjects.js';
+import { useProjects } from '../../hooks/useProjects.js';
 import { TECH_ICON_MAP, GH_USER } from '../../services/githubProjects.js';
 import { useReveal } from '../../hooks/useReveal.js';
 
@@ -138,12 +138,6 @@ export default function FeaturedProjects() {
           </p>
         )}
         {!loading && projects.map(p => <ProjectCard key={p.repoName} p={p} />)}
-      </div>
-
-      <div className="projects-view-all">
-        <Link to="/projects" className="projects-view-all-btn">
-          Show all projects
-        </Link>
       </div>
     </section>
   );

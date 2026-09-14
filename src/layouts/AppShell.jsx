@@ -3,6 +3,7 @@ import Navbar from '../components/layout/Navbar.jsx';
 import Footer from '../components/layout/Footer.jsx';
 import ScrollProgress from '../components/layout/ScrollProgress.jsx';
 import QuoteStrip from '../components/home/QuoteStrip.jsx';
+import BottomNav from '../components/home/BottomNav.jsx';
 
 /**
  * AppShell — mounts exactly once.
@@ -10,10 +11,17 @@ import QuoteStrip from '../components/home/QuoteStrip.jsx';
  * None of these components remount on route change.
  */
 export default function AppShell({ children }) {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled,    setScrolled]    = useState(false);
+  const [atBottom,    setAtBottom]    = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
+    const onScroll = () => {
+      const scrolled = window.scrollY > 10;
+      // Consider "at bottom" when within 80px of the page end
+      const nearBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 80;
+      setScrolled(scrolled);
+      setAtBottom(nearBottom);
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -40,8 +48,11 @@ export default function AppShell({ children }) {
       <QuoteStrip />
       <Footer />
 
-      {/* Bottom scroll-fade overlay */}
-      <div className={`scroll-bottom-fade${scrolled ? ' visible' : ''}`} aria-hidden="true" />
+      {/* Bottom nav pill — visible on mobile, handles page navigation */}
+      <BottomNav />
+
+      {/* Bottom scroll-fade overlay — hidden at bottom so footer is never covered */}
+      <div className={`scroll-bottom-fade${scrolled && !atBottom ? ' visible' : ''}`} aria-hidden="true" />
     </>
   );
 }
