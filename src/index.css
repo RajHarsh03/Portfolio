@@ -5553,18 +5553,18 @@ footer {
   }
 
   .bottom-nav {
-    gap: .08rem;
-    padding: .25rem;
+    gap: .15rem;
+    padding: .3rem;
   }
 
   .bnav-link {
-    padding: .35rem .65rem;
-    font-size: .65rem;
+    padding: .45rem .85rem;
+    font-size: .74rem;
   }
 
   .bnav-drop-item {
-    font-size: .65rem;
-    padding: .45rem .75rem;
+    font-size: .72rem;
+    padding: .5rem .85rem;
   }
 }
 
