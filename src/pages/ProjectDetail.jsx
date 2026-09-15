@@ -80,6 +80,7 @@ export default function ProjectDetail() {
           <div className="container">
             <div className="pd-header-row reveal">
               <div className="pd-header-left">
+                <div className="section-label" style={{ marginBottom: '.4rem' }}>// detailed view</div>
                 <h1 className="pd-hero-title">{project.name}</h1>
                 <span className={`pd-status-badge ${isLive ? 'live' : 'dev'}`}>
                   <span className="pd-status-dot" />
