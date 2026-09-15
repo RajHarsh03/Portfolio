@@ -13,7 +13,7 @@ export default function useNeko() {
     const startNeko = () => {
       if (typeof window.createNeko === 'function') {
         window.createNeko({
-          speed: 28,
+          speed: 20,
           fps: 120,
           behaviorMode: 0,
           allowBehaviorChange: true,

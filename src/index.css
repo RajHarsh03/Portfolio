@@ -588,7 +588,7 @@ section {
     right: -10px;
     width: 22px;
     height: 22px;
-    border-color: rgba(255, 255, 255, 0.5);
+    border-color: rgba(177, 176, 176, 0.5);
     border-style: solid;
     border-width: 0 2px 2px 0;
     z-index: 10;
@@ -603,7 +603,7 @@ section {
     position: absolute;
     inset: 0;
     background: #0c0c0c;
-    background-image: radial-gradient(circle, rgba(255,255,255,.15) 0.5px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0.5px, transparent 1px);
     background-size: 14px 14px;
     border-radius: 0;
     overflow: hidden;
@@ -611,7 +611,7 @@ section {
 
 [data-theme="light"] .hero-banner-placeholder {
     background: #dadcdf;
-    background-image: radial-gradient(circle, rgba(0,0,0,.35) 0.5px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(0,0,0, 0.35) 0.5px, transparent 1px);
     background-size: 14px 14px;
 }
 
@@ -628,7 +628,7 @@ section {
     letter-spacing: .16em;
     line-height: 1.65;
     text-transform: uppercase;
-    color: rgba(255,255,255,.35);
+    color: rgba(255, 255, 255, 0.614);
     pointer-events: none;
 }
 .hb-note-lt { top: 14px;    left: 16px; }
@@ -2018,6 +2018,15 @@ section {
     padding-bottom: 2.5rem;
 }
 
+#projects > .section-label,
+#projects > h2.section-title {
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
 /* ===============
    COMPACT PROJECT CARDS
    =============== */
@@ -2353,9 +2362,22 @@ section {
         line-clamp: 3;
     }
 
+    .cpc-tech-tags {
+        gap: .3rem;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
     .cpc-tech-tag {
-        font-size: .65rem;
-        padding: .18rem .45rem;
+        max-width: 9rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: .58rem;
+        padding: .15rem .4rem;
+    }
+
+    .cpc-tech-tag:nth-child(n + 3) {
+        display: none;
     }
 
     /* Disable hover effects on mobile */
@@ -2704,7 +2726,7 @@ section {
 /* Grid wrap */
 .gh-canvas-wrap {
     width: 100%;
-    padding: .3rem 1.1rem .4rem;
+    padding: .3rem 1rem .4rem;
     overflow: visible;
     box-sizing: border-box;
 }
@@ -4816,8 +4838,6 @@ footer {
         font-size: .8rem;
     }
 
-    /* ── Contribution graph: scrollable on mobile, padding always visible ── */
-    /* wrap keeps its padding — scroll happens inside gh-scroll-inner */
     .gh-scroll-inner {
         overflow-x: auto;
         padding-bottom: 8px;
@@ -6542,7 +6562,7 @@ footer {
 
 .pd-hero-title {
     font-family: 'Syne', sans-serif;
-    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-size: clamp(1.6rem, 3vw, 2rem);
     font-weight: 700;
     color: var(--text);
     margin: 0 0 1rem;
@@ -6579,9 +6599,9 @@ footer {
     display: inline-flex;
     align-items: center;
     gap: .5rem;
-    padding: .5rem 1rem;
+    padding: .4rem .8rem;
     border-radius: 6px;
-    font-size: .85rem;
+    font-size: .75rem;
     font-weight: 600;
     font-family: 'Syne', sans-serif;
     text-decoration: none;
@@ -6629,11 +6649,11 @@ footer {
     display: inline-flex;
     align-items: center;
     gap: .5rem;
-    padding: .5rem 1rem;
+    padding: .4rem .75rem;
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 8px;
-    font-size: .8rem;
+    font-size: .7rem;
     font-weight: 600;
     color: var(--text-secondary);
     font-family: 'DM Mono', monospace;
@@ -6665,27 +6685,27 @@ footer {
 /* Content Section */
 .pd-content-section {
     background: var(--bg);
-    padding: 2rem 0 4rem;
+    padding: 1.5rem 0 1rem;
 }
 
 /* Content Blocks */
 .pd-block {
-    margin-bottom: 3.5rem;
+    margin-bottom: 2.1rem;
 }
 
 .pd-block-title {
-    font-size: .75rem;
+    font-size: .66rem;
     font-weight: 700;
     color: var(--text-secondary);
     font-family: 'DM Mono', monospace;
     text-transform: uppercase;
     letter-spacing: .1em;
-    margin: 0 0 1.25rem;
+    margin: 0 0 .65rem;
 }
 
 .pd-block-text {
-    font-size: 1rem;
-    line-height: 1.7;
+    font-size: .84rem;
+    line-height: 1.58;
     color: var(--text-secondary);
     margin: 0;
 }
@@ -6694,15 +6714,15 @@ footer {
 .pd-tech-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: .75rem;
+    gap: .4rem;
 }
 
 .pd-tech-tag {
-    padding: .5rem 1rem;
+    padding: .28rem .55rem;
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: .85rem;
+    border-radius: 6px;
+    font-size: .66rem;
     font-weight: 500;
     color: var(--text);
     font-family: 'DM Mono', monospace;
@@ -6715,15 +6735,15 @@ footer {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: .75rem;
+    gap: .55rem;
 }
 
 .pd-feature-item {
     display: flex;
     align-items: flex-start;
-    gap: .75rem;
-    font-size: 1rem;
-    line-height: 1.7;
+    gap: .45rem;
+    font-size: .84rem;
+    line-height: 1.58;
     color: var(--text-secondary);
 }
 
@@ -6737,26 +6757,26 @@ footer {
 .pd-numbered-list {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: .8rem;
 }
 
 .pd-numbered-item {
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
+    gap: .6rem;
 }
 
 .pd-number {
     flex-shrink: 0;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 50%;
-    font-size: .85rem;
+    font-size: .72rem;
     font-weight: 700;
     color: var(--text);
     font-family: 'Syne', sans-serif;
@@ -6764,8 +6784,8 @@ footer {
 
 .pd-numbered-item p {
     flex: 1;
-    font-size: 1rem;
-    line-height: 1.7;
+    font-size: .84rem;
+    line-height: 1.58;
     color: var(--text-secondary);
     margin: .25rem 0 0;
 }
@@ -6776,7 +6796,7 @@ footer {
     align-items: center;
     gap: 1.5rem;
     flex-wrap: wrap;
-    padding-top: 2rem;
+    padding-top: 1rem;
     border-top: 1px solid var(--border);
 }
 
@@ -6845,7 +6865,7 @@ footer {
     }
 
     .pd-content-section {
-        padding: 1.5rem 0 3rem;
+        padding: 1.5rem 0 1rem;
     }
 
     .pd-block {
