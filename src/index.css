@@ -4929,7 +4929,7 @@ footer {
     footer {
         margin-top: 2rem;
         /* Push footer above the fixed bottom nav pill (~56px tall + margin) */
-        padding-bottom: 2rem;
+        padding-bottom: 2.6rem;
     }
 
     .section-title {
