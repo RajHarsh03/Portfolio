@@ -4001,6 +4001,51 @@ footer {
 /* ====================
    GUESTBOOK
    ==================== */
+.guestbook-home-cta {
+    max-width: 760px;
+    margin: 2.5rem auto 3rem;
+    padding: 1rem 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.guestbook-home-cta p {
+    max-width: 620px;
+    margin: 0;
+    color: var(--muted);
+    font-size: .98rem;
+    font-weight: 600;
+    line-height: 1.65;
+}
+
+.guestbook-home-cta .guestbook-preview-link {
+    padding: .72rem 1rem;
+    border-radius: 15px;
+    border-color: var(--text);
+    background: var(--text);
+    color: var(--bg);
+    font-size: .78rem;
+}
+
+@media (max-width: 640px) {
+    .guestbook-home-cta {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .guestbook-home-cta-break {
+        display: none;
+    }
+
+    .guestbook-home-cta .guestbook-preview-link {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 .guestbook-preview,
 .guestbook-page {
     max-width: 760px;
@@ -4061,6 +4106,13 @@ footer {
 
 .guestbook-preview-link:hover svg {
     transform: translate(2px, -2px);
+}
+
+.guestbook-home-cta .guestbook-preview-link:hover {
+    border-color: var(--text);
+    background: var(--text);
+    color: var(--bg);
+    opacity: .88;
 }
 
 .guestbook-preview-marquee {

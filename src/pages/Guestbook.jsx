@@ -35,8 +35,9 @@ function GuestbookCard({ entry }) {
 }
 
 export default function Guestbook() {
-  const [user, setUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
+  const initialUser = auth?.currentUser || null;
+  const [user, setUser] = useState(initialUser);
+  const [authLoading, setAuthLoading] = useState(Boolean(auth && !initialUser));
   const [entries, setEntries] = useState([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
