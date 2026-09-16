@@ -10,6 +10,10 @@ function formatDate(value) {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
+function wordCount(value) {
+  return value.trim() ? value.trim().split(/\s+/).length : 0;
+}
+
 function GuestbookCard({ entry }) {
   const initial = (entry.displayName || 'V').charAt(0).toUpperCase();
   return (
@@ -24,6 +28,7 @@ function GuestbookCard({ entry }) {
       <p>{entry.message}</p>
       <div className="guestbook-card-footer">
         <span>{formatDate(entry.createdAt)}</span>
+        <span>{entry.pinned ? 'Pri' : ''} <span className="guestbook-preview-heart" aria-hidden="true">♡</span> {entry.likes || 0}</span>
       </div>
     </article>
   );
@@ -76,7 +81,7 @@ export default function Guestbook() {
   async function handleSubmit(event) {
     event.preventDefault();
     const trimmedMessage = message.trim();
-    if (!user || !trimmedMessage || trimmedMessage.length > 500) return;
+    if (!user || !trimmedMessage || wordCount(trimmedMessage) > 100 || trimmedMessage.length > 500) return;
     setSending(true);
     setError('');
     try {
@@ -114,16 +119,26 @@ export default function Guestbook() {
           {!firebaseReady ? (
             <p className="guestbook-muted">Firebase configuration is missing. Add the Vite Firebase variables to continue.</p>
           ) : user ? (
-            <form onSubmit={handleSubmit}>
+            <form className="guestbook-composer-form" onSubmit={handleSubmit}>
               <div className="guestbook-compose-user">
                 {user.photoURL ? <img src={user.photoURL} alt="" /> : <span>{(user.displayName || 'V').charAt(0)}</span>}
-                <div><strong>{user.displayName}</strong><small>Signed in with Google</small></div>
-                <button type="button" className="guestbook-signout" onClick={() => signOut(auth)}>Sign out</button>
+                <div><strong>{user.displayName}</strong><small>Logged in as: Visitor</small></div>
+                <button type="button" className="guestbook-signout" onClick={() => signOut(auth)}>Disconnect</button>
               </div>
-              <textarea value={message} onChange={event => setMessage(event.target.value)} maxLength={500} placeholder="Write something kind..." rows="4" required />
+              <textarea value={message} onChange={event => {
+                const nextValue = event.target.value;
+                if (wordCount(nextValue) <= 100) setMessage(nextValue);
+              }} maxLength={500} placeholder="Write a message, share your feedback, or just say hello..." rows="4" required />
+              <div className="guestbook-theme-row" aria-label="Card theme">
+                <span>Card Theme:</span>
+                <i className="guestbook-theme-dot guestbook-theme-red" />
+                <i className="guestbook-theme-dot guestbook-theme-green" />
+                <i className="guestbook-theme-dot guestbook-theme-gold selected" />
+                <i className="guestbook-theme-dot guestbook-theme-blue" />
+              </div>
               <div className="guestbook-compose-footer">
-                <small>{message.length}/500</small>
-                <button className="guestbook-submit" disabled={sending}>{sending ? 'Posting...' : 'Post note'}</button>
+                <small>{wordCount(message)}/100 words</small>
+                <button className="guestbook-submit" disabled={sending || !message.trim()}>{sending ? 'Posting...' : 'Post Note'}</button>
               </div>
             </form>
           ) : (

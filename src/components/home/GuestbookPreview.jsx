@@ -16,7 +16,7 @@ export default function GuestbookPreview() {
         const entriesQuery = query(
             collection(db, 'guestbook_entries'),
             orderBy('createdAt', 'desc'),
-            limit(3),
+            limit(1),
         );
         return onSnapshot(entriesQuery, snapshot => {
             setEntries(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
@@ -40,17 +40,21 @@ export default function GuestbookPreview() {
             </div>
             {entries.length > 0 ? (
                 <div className="guestbook-preview-marquee">
-                    <div className="guestbook-preview-track">
-                        {[...entries, ...entries].map((entry, index) => (
-                            <article className="guestbook-preview-card" key={`${entry.id}-${index}`}>
+                    <div className="guestbook-preview-track is-static">
+                        {entries.map(entry => (
+                            <article className="guestbook-preview-card" key={entry.id}>
                                 <div className="guestbook-author">
                                     {entry.photoURL ? <img src={entry.photoURL} alt="" /> : <span>{(entry.displayName || 'V').charAt(0).toUpperCase()}</span>}
                                     <div>
                                         <strong>{entry.displayName || 'Visitor'}</strong>
-                                        <small>{formatDate(entry.createdAt)}</small>
+                                        <small>Visitor</small>
                                     </div>
                                 </div>
                                 <p>{entry.message}</p>
+                                <div className="guestbook-preview-card-footer">
+                                    <small>{formatDate(entry.createdAt)}</small>
+                                    <span>{entry.pinned ? 'Pri' : ''} <span className="guestbook-preview-heart" aria-hidden="true">♡</span> {entry.likes || 0}</span>
+                                </div>
                             </article>
                         ))}
                     </div>
