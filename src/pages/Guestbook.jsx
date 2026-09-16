@@ -5,6 +5,7 @@ import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { auth, db, firebaseReady, googleProvider } from '../services/firebase.js';
 
 const NOTES_CACHE_KEY = 'guestbook_entries_cache_v1';
+const AUTH_CACHE_KEY = 'guestbook_auth_user_v1';
 const TOAST_AVATAR_URL = 'https://github.com/RajHarsh03.png?size=96';
 const ADMIN_EMAIL = 'rajharsh.devx@gmail.com';
 
@@ -25,6 +26,31 @@ function cacheEntries(entries) {
     }))));
   } catch {
   }
+}
+
+function readCachedUser() {
+  try {
+    return JSON.parse(window.localStorage.getItem(AUTH_CACHE_KEY) || 'null');
+  } catch {
+    return null;
+  }
+}
+
+function cacheUser(user) {
+  try {
+    window.localStorage.setItem(AUTH_CACHE_KEY, JSON.stringify({
+      uid: user.uid,
+      email: user.email || '',
+      displayName: user.displayName || 'Visitor',
+      photoURL: user.photoURL || '',
+    }));
+  } catch {
+    // Best-effort session hint only.
+  }
+}
+
+function clearCachedUser() {
+  try { window.localStorage.removeItem(AUTH_CACHE_KEY); } catch { /* no-op */ }
 }
 
 function formatDate(value) {
@@ -51,7 +77,7 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
   }
 
   return (
-    <article className="guestbook-card">
+    <article className="guestbook-card guestbook-compact-card">
       <div className="guestbook-card-top">
         <div className="guestbook-card-author">
           {entry.photoURL ? <img src={entry.photoURL} alt="" /> : <span className="guestbook-avatar-fallback">{initial}</span>}
@@ -61,8 +87,12 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
           </div>
         </div>
         {isAdmin && <div className="guestbook-admin-actions">
-          <button type="button" onClick={() => onPin(entry)}>{entry.pinned ? 'Unpin' : 'Pin'}</button>
-          <button type="button" onClick={() => onDelete(entry)} className="is-danger">Delete</button>
+          <button type="button" onClick={() => onPin(entry)} aria-label={entry.pinned ? 'Unpin note' : 'Pin note'} title={entry.pinned ? 'Unpin note' : 'Pin note'}>
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m12 17 5 4v-6l2-2V8a7 7 0 0 0-14 0v5l2 2v6l5-4Z" /><path d="M9 21h6" /></svg>
+          </button>
+          <button type="button" onClick={() => onDelete(entry)} className="is-danger" aria-label="Delete note" title="Delete note">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h16" /><path d="M10 11v6m4-6v6" /><path d="m6 7 1 13h10l1-13M9 7V4h6v3" /></svg>
+          </button>
         </div>}
       </div>
       <p>{entry.message}</p>
@@ -84,10 +114,10 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
 }
 
 export default function Guestbook() {
-  const initialUser = auth?.currentUser || null;
+  const initialUser = auth?.currentUser || readCachedUser();
   const initialEntries = readCachedEntries();
   const [user, setUser] = useState(initialUser);
-  const [authLoading, setAuthLoading] = useState(Boolean(auth && !initialUser));
+  const [authLoading, setAuthLoading] = useState(false);
   const [entries, setEntries] = useState(initialEntries);
   const [visibleCount, setVisibleCount] = useState(3);
   const [message, setMessage] = useState('');
@@ -109,6 +139,8 @@ export default function Guestbook() {
     }
     return onAuthStateChanged(auth, nextUser => {
       setUser(nextUser);
+      if (nextUser) cacheUser(nextUser);
+      else clearCachedUser();
       setAuthLoading(false);
     });
   }, []);
@@ -137,7 +169,8 @@ export default function Guestbook() {
   async function handleSignIn() {
     try {
       await signInWithPopup(auth, googleProvider);
-      showToast('Sign in successful', 'Signed in successfully! Now, leave a lovely note for me. 😊', 'success');
+      if (auth.currentUser) cacheUser(auth.currentUser);
+      showToast('Sign in successful', "You're signed in. Leave a note whenever you're ready. 😊", 'success');
     } catch (err) {
       if (err.code !== 'auth/popup-closed-by-user') {
         showToast('Sign in failed', 'Google sign-in could not be completed.', 'error');
@@ -171,10 +204,15 @@ export default function Guestbook() {
 
   async function handleLike(entry) {
     if (!user || !db) return;
-    await updateDoc(doc(db, 'guestbook_entries', entry.id), {
-      likes: increment(1),
-      ...(isAdmin ? { likedBy: arrayUnion('HR') } : {}),
-    });
+    try {
+      await updateDoc(doc(db, 'guestbook_entries', entry.id), {
+        likes: increment(1),
+        ...(isAdmin ? { likedBy: arrayUnion('HR') } : {}),
+      });
+    } catch (error) {
+      showToast('Like could not be saved', 'Publish the Firestore rules to enable likes.', 'error');
+      throw error;
+    }
   }
 
   async function handlePin(entry) {
@@ -265,8 +303,10 @@ export default function Guestbook() {
         </div>
 
         {entries.some(entry => entry.pinned) && <section className="guestbook-pinned" aria-label="Pinned notes">
-          <div className="guestbook-notes-heading"><div><p className="section-label">// highlighted by the author</p><h2>Pinned Notes</h2><p className="guestbook-notes-subtitle">Notes worth keeping close.</p></div></div>
-          <div className="guestbook-grid">{entries.filter(entry => entry.pinned).slice(0, 3).map(entry => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={`pinned-${entry.id}`} />)}</div>
+          <div className="guestbook-notes-heading"><div><p className="section-label">// highlights</p><h2>Pinned Notes</h2></div></div>
+          <div className="guestbook-pinned-marquee"><div className="guestbook-pinned-track">
+            {[...entries.filter(entry => entry.pinned).slice(0, 5), ...entries.filter(entry => entry.pinned).slice(0, 5)].map((entry, index) => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={`pinned-${entry.id}-${index}`} />)}
+          </div></div>
         </section>}
 
         <div className="guestbook-notes">

@@ -4083,7 +4083,7 @@ footer {
 .guestbook-toast span {
     grid-column: 2;
     color: var(--muted);
-    font-size: .7rem;
+    font-size: .65rem;
 }
 
 .guestbook-toast button {
@@ -4221,8 +4221,9 @@ footer {
 
 .guestbook-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: .8rem;
+    grid-template-columns: repeat(2, minmax(0, 280px));
+    justify-content: space-between;
+    gap: 1rem;
 }
 
 .guestbook-preview-card,
@@ -4254,7 +4255,7 @@ footer {
 
 .guestbook-card {
     min-height: 0;
-    padding: 1.3rem 1.4rem 1.15rem;
+    padding: 1.15rem 1.2rem 1rem;
     border: 1px solid var(--border);
     border-radius: 20px;
     background: var(--surface);
@@ -4266,10 +4267,40 @@ footer {
     transform: translateY(-4px);
 }
 
+.guestbook-compact-card {
+    position: relative;
+    z-index: 2;
+    width: 280px;
+    padding: 1rem;
+    border-radius: 18px;
+    background: var(--surface);
+    background-image: radial-gradient(circle, rgba(255, 255, 255, .18) 1px, transparent 1px);
+    background-size: 28px 28px;
+}
+
+[data-theme="light"] .guestbook-compact-card {
+    background-image: radial-gradient(circle, rgba(0, 0, 0, .18) 1px, transparent 1px);
+}
+
+.guestbook-compact-card .guestbook-card-author img,
+.guestbook-compact-card .guestbook-card-author > span {
+    width: 42px;
+    height: 42px;
+}
+
+.guestbook-compact-card .guestbook-card-author strong {
+    font-size: .9rem;
+}
+
+.guestbook-compact-card p {
+    margin: .8rem 0 .7rem;
+    font-size: .9rem;
+}
+
 .guestbook-card .guestbook-card-author img,
 .guestbook-card .guestbook-card-author > span {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     border: 2px solid var(--border);
     box-shadow: 0 0 0 3px var(--card);
 }
@@ -4297,7 +4328,11 @@ footer {
 }
 
 .guestbook-admin-actions button {
-    padding: .28rem .5rem;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
     border: 1px solid var(--border);
     border-radius: 999px;
     background: transparent;
@@ -4331,9 +4366,9 @@ footer {
 
 .guestbook-card p {
     min-height: 0;
-    margin: 1rem 0 .95rem;
+    margin: .9rem 0 .8rem;
     color: var(--text);
-    font-size: 1rem;
+    font-size: .95rem;
     line-height: 1.45;
     overflow-wrap: anywhere;
 }
@@ -4376,7 +4411,7 @@ footer {
 }
 
 .guestbook-preview-card-footer > span {
-    color: #fbbf24;
+    color: var(--accent);
     font-weight: 700;
     white-space: nowrap;
 }
@@ -4655,7 +4690,8 @@ footer {
 .guestbook-compose textarea {
     display: block;
     width: 100%;
-    min-height: 116px;
+    height: 96px;
+    min-height: 96px;
     padding: .85rem;
     resize: vertical;
     border: 1px solid var(--border);
@@ -4684,13 +4720,14 @@ footer {
 }
 
 .guestbook-composer-form .guestbook-compose-footer {
-    padding-top: .75rem;
+    margin-top: .6rem;
+    padding-top: .6rem;
     border-top: 1px solid var(--border);
 }
 
 .guestbook-composer-form .guestbook-submit {
-    min-width: 128px;
-    padding: .55rem .95rem;
+    min-width: 112px;
+    padding: .48rem .85rem;
     border-color: var(--text);
     background: var(--text);
     color: var(--bg);
@@ -4760,6 +4797,34 @@ footer {
     margin-bottom: 3.5rem;
 }
 
+.guestbook-pinned-marquee {
+    width: 100%;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
+.guestbook-pinned-track {
+    display: flex;
+    width: max-content;
+    gap: 1rem;
+    animation: guestbookPinnedRTL 42s linear infinite;
+}
+
+.guestbook-pinned-track:hover {
+    animation-play-state: paused;
+}
+
+.guestbook-pinned-track .guestbook-card {
+    width: 280px;
+    flex: 0 0 280px;
+}
+
+@keyframes guestbookPinnedRTL {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-50% - .5rem)); }
+}
+
 .guestbook-load-more {
     display: flex;
     align-items: center;
@@ -4805,8 +4870,13 @@ footer {
 }
 
 .guestbook-liked-by {
+    padding: .22rem .42rem;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    background: var(--card);
     color: var(--accent);
     font-size: .56rem;
+    font-weight: 700;
     white-space: nowrap;
 }
 
@@ -4853,6 +4923,11 @@ footer {
 
     .guestbook-grid {
         grid-template-columns: 1fr;
+    }
+
+    .guestbook-pinned-track .guestbook-card {
+        width: min(82vw, 300px);
+        flex-basis: min(82vw, 300px);
     }
 
     .guestbook-preview-card {
@@ -7548,9 +7623,9 @@ footer {
 }
 
 .pd-status-badge.dev {
-    background: rgba(251, 191, 36, 0.1);
-    border-color: rgba(251, 191, 36, 0.3);
-    color: #fbbf24;
+    background: var(--card);
+    border-color: var(--border);
+    color: var(--accent);
 }
 
 .pd-status-dot {
