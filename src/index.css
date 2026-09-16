@@ -11,6 +11,9 @@
     --accent2: #a0aec0;
     --accent3: #718096;
     --accent-orange: #a0aec0;
+    --warm-accent: #f4d6a0;
+    --like-accent: #fbbf24;
+    --like-bg: rgba(251, 191, 36, .12);
     --text: #f0f0f0;
     --text-secondary: #a0aec0;
     --muted: #888888;
@@ -38,6 +41,9 @@
     --accent2: #555555;
     --accent3: #777777;
     --accent-orange: #555555;
+    --warm-accent: #0f766e;
+    --like-accent: #0f766e;
+    --like-bg: rgba(15, 118, 110, .1);
     --text: #111111;
     --text-secondary: #555555;
     --muted: #888888;
@@ -58,6 +64,24 @@
 /* ========================
    DESIGN SYSTEM: TYPOGRAPHY
    ======================== */
+
+/* Warm, theme-aware accent used by education and certification metadata. */
+.cert-issuer,
+.acert-issuer,
+.about-cert-issuer,
+.about-edu-degree,
+.edu-certs-sub,
+.about-highlight,
+.about-achiev-org,
+.exp-card-company,
+.exp-card-icon {
+    color: var(--warm-accent) !important;
+}
+
+.acert-icon {
+    color: var(--warm-accent);
+}
+
 /* Scale: H1→48px, H2→36px, H3→28px, H4→22px, Body→16px, Small→14px */
 
 *,
@@ -4098,6 +4122,12 @@ footer {
     cursor: pointer;
 }
 
+.nav-more-btn.active {
+    color: var(--text);
+    background: var(--bg);
+    font-weight: 600;
+}
+
 .guestbook-toast button:hover {
     color: var(--text);
 }
@@ -4221,9 +4251,8 @@ footer {
 
 .guestbook-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 280px));
-    justify-content: space-between;
-    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .75rem;
 }
 
 .guestbook-preview-card,
@@ -4270,9 +4299,9 @@ footer {
 .guestbook-compact-card {
     position: relative;
     z-index: 2;
-    width: 280px;
-    padding: 1rem;
-    border-radius: 18px;
+    width: 100%;
+    padding: .72rem .8rem .7rem;
+    border-radius: 16px;
     background: var(--surface);
     background-image: radial-gradient(circle, rgba(255, 255, 255, .18) 1px, transparent 1px);
     background-size: 28px 28px;
@@ -4284,17 +4313,27 @@ footer {
 
 .guestbook-compact-card .guestbook-card-author img,
 .guestbook-compact-card .guestbook-card-author > span {
-    width: 42px;
-    height: 42px;
+    width: 36px;
+    height: 36px;
 }
 
 .guestbook-compact-card .guestbook-card-author strong {
-    font-size: .9rem;
+    font-size: .82rem;
 }
 
 .guestbook-compact-card p {
-    margin: .8rem 0 .7rem;
-    font-size: .9rem;
+    margin: .55rem 0 .5rem;
+    font-size: .82rem;
+    line-height: 1.4;
+}
+
+.guestbook-compact-card .guestbook-card-footer {
+    margin-top: .55rem;
+    padding-top: .45rem;
+}
+
+.guestbook-compact-card .guestbook-card-footer > span:first-child {
+    padding: .25rem .45rem;
 }
 
 .guestbook-card .guestbook-card-author img,
@@ -4330,11 +4369,11 @@ footer {
 .guestbook-admin-actions button {
     display: grid;
     place-items: center;
-    width: 30px;
-    height: 30px;
+    width: 21px;
+    height: 21px;
     padding: 0;
-    border: 1px solid var(--border);
-    border-radius: 999px;
+    border: 0;
+    border-radius: 0;
     background: transparent;
     color: var(--muted);
     font-family: 'DM Mono', monospace;
@@ -4344,15 +4383,11 @@ footer {
 }
 
 .guestbook-admin-actions button:hover {
-    border-color: var(--accent);
-    background: var(--accent);
-    color: var(--bg);
+    color: var(--accent);
 }
 
 .guestbook-admin-actions button.is-danger:hover {
-    border-color: #ef4444;
-    background: #ef4444;
-    color: #fff;
+    color: #ef4444;
 }
 
 .guestbook-preview-card p {
@@ -4787,6 +4822,10 @@ footer {
     font-size: .65rem;
 }
 
+.guestbook-composer-form {
+    padding: 0 1rem;
+}
+
 .guestbook-notes-subtitle {
     margin: .35rem 0 0;
     color: var(--muted);
@@ -4857,7 +4896,7 @@ footer {
 }
 
 .guestbook-card-footer > span:first-child {
-    padding: .38rem .65rem;
+    padding: .3rem .5rem;
     border-radius: 999px;
     background: var(--card);
     color: var(--muted);
@@ -4870,12 +4909,11 @@ footer {
 }
 
 .guestbook-liked-by {
-    padding: .22rem .42rem;
-    border: 1px solid var(--accent);
-    border-radius: 999px;
-    background: var(--card);
-    color: var(--accent);
-    font-size: .56rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--like-accent);
+    font-size: .5rem;
     font-weight: 700;
     white-space: nowrap;
 }
@@ -4896,6 +4934,51 @@ footer {
 .guestbook-like-button:hover {
     color: var(--accent);
     transform: translateY(-1px);
+}
+
+/* Keep the full note cards close to the compact reference proportions. */
+.guestbook-card.guestbook-compact-card {
+    min-height: 0;
+    padding: .85rem 1rem .75rem;
+    border-radius: 18px;
+}
+
+.guestbook-card.guestbook-compact-card .guestbook-card-author img,
+.guestbook-card.guestbook-compact-card .guestbook-card-author > span {
+    width: 38px;
+    height: 38px;
+}
+
+.guestbook-card.guestbook-compact-card .guestbook-card-author strong {
+    font-size: .86rem;
+    line-height: 1.15;
+}
+
+.guestbook-card.guestbook-compact-card .guestbook-card-author small {
+    margin-top: .15rem;
+    font-size: .59rem;
+}
+
+.guestbook-card.guestbook-compact-card p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    margin: .52rem 0 .45rem;
+    font-size: .92rem;
+    line-height: 1.35;
+}
+
+.guestbook-card.guestbook-compact-card .guestbook-card-footer {
+    margin-top: .45rem;
+    padding-top: .45rem;
+    gap: .45rem;
+    font-size: .6rem;
+}
+
+.guestbook-card.guestbook-compact-card .guestbook-card-footer > span:first-child {
+    padding: .28rem .48rem;
 }
 
 .guestbook-like-message {
@@ -4942,6 +5025,10 @@ footer {
     .guestbook-compose {
         width: 100%;
         padding: 1rem;
+    }
+
+    .guestbook-composer-form {
+        padding: 0 .25rem;
     }
 
     .guestbook-google {

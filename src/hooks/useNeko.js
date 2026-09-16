@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 // Module-level flag — survives StrictMode double-mount
 let nekoStarted = false;
+let nekoInstance = null;
 
 export default function useNeko() {
   useEffect(() => {
@@ -12,18 +13,32 @@ export default function useNeko() {
 
     const startNeko = () => {
       if (typeof window.createNeko === 'function') {
-        window.createNeko({
-          speed: 20,
+        nekoInstance = window.createNeko({
+          speed: 16,
           fps: 120,
           behaviorMode: 0,
           allowBehaviorChange: true,
-        }).start();
+        });
+        nekoInstance.start();
       }
     };
 
+  
+    const resumeNeko = () => {
+      if (document.visibilityState === 'hidden') return;
+      if (nekoInstance && typeof nekoInstance.start === 'function') {
+        nekoInstance.start();
+      } else {
+        startNeko();
+      }
+    };
+
+    document.addEventListener('visibilitychange', resumeNeko);
+    window.addEventListener('focus', resumeNeko);
+
     if (document.getElementById(SCRIPT_ID)) {
       startNeko();
-      return;
+      return undefined;
     }
 
     const script = document.createElement('script');

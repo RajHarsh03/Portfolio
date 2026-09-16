@@ -88,7 +88,7 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
         </div>
         {isAdmin && <div className="guestbook-admin-actions">
           <button type="button" onClick={() => onPin(entry)} aria-label={entry.pinned ? 'Unpin note' : 'Pin note'} title={entry.pinned ? 'Unpin note' : 'Pin note'}>
-            <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m12 17 5 4v-6l2-2V8a7 7 0 0 0-14 0v5l2 2v6l5-4Z" /><path d="M9 21h6" /></svg>
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z" /></svg>
           </button>
           <button type="button" onClick={() => onDelete(entry)} className="is-danger" aria-label="Delete note" title="Delete note">
             <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h16" /><path d="M10 11v6m4-6v6" /><path d="m6 7 1 13h10l1-13M9 7V4h6v3" /></svg>
