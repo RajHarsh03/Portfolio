@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 
 const QUOTES = [
   { text: 'To understand recursion, you must first understand recursion.', author: 'Anonymous' },
@@ -10,23 +10,60 @@ const QUOTES = [
   { text: 'Simplicity is the soul of efficiency.', author: 'Austin Freeman' },
 ];
 
+function getInitialQuoteIndex() {
+  const previousIndex = Number(sessionStorage.getItem('quoteIndex'));
+  let nextIndex = Math.floor(Math.random() * QUOTES.length);
+
+  if (QUOTES.length > 1 && nextIndex === previousIndex) {
+    nextIndex = (nextIndex + 1) % QUOTES.length;
+  }
+
+  sessionStorage.setItem('quoteIndex', String(nextIndex));
+  return nextIndex;
+}
+
 export default function QuoteStrip() {
-  const quote = useMemo(() => QUOTES[Math.floor(Math.random() * QUOTES.length)], []);
+  const [quoteIndex, setQuoteIndex] = useState(getInitialQuoteIndex);
   const [visitors, setVisitors] = useState(null);
+
+  const quote = QUOTES[quoteIndex];
+
+  useEffect(() => {
+    const quoteTimer = window.setInterval(() => {
+      setQuoteIndex(currentIndex => {
+        const nextIndex = (currentIndex + 1) % QUOTES.length;
+        sessionStorage.setItem('quoteIndex', String(nextIndex));
+        return nextIndex;
+      });
+    }, 15000);
+
+    return () => window.clearInterval(quoteTimer);
+  }, []);
 
   useEffect(() => {
     const isProd = window.location.hostname !== 'localhost'
       && !window.location.hostname.startsWith('127.');
     const apiUrl = isProd ? '/api/visits' : 'https://harshx.in/api/visits';
+    let active = true;
 
-    fetch(apiUrl, { method: isProd ? 'POST' : 'GET' })
-      .then(r => r.ok ? r.json() : null)
-      .then(data => {
-        if (data?.total != null) {
-          setVisitors(Number(data.total).toLocaleString('en-IN'));
-        }
-      })
-      .catch(() => {});
+    const fetchVisitors = () => {
+      fetch(apiUrl, { method: isProd ? 'POST' : 'GET' })
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          if (active && data?.total != null) {
+            setVisitors(Number(data.total).toLocaleString('en-IN'));
+          }
+        })
+        .catch(() => {});
+    };
+
+    fetchVisitors();
+    const visitorsTimer = window.setInterval(fetchVisitors, 15000);
+
+    return () => {
+      active = false;
+      window.clearInterval(visitorsTimer);
+    };
   }, []);
 
   return (

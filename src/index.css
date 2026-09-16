@@ -2892,8 +2892,8 @@ section {
     color: #f59e0b;
     flex-shrink: 0;
     margin-top: 2px;
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
 }
 
 .quote-strip-text {
@@ -4775,9 +4775,9 @@ footer {
         padding: .85rem 20px;
     }
     .quote-strip-left {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
+        flex-direction: row;
+        align-items: flex-start;
+        text-align: left;
     }
     .quote-strip-visitors {
         text-align: center;
