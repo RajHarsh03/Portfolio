@@ -14,6 +14,8 @@
     --warm-accent: #f4d6a0;
     --like-accent: #fbbf24;
     --like-bg: rgba(251, 191, 36, .12);
+    --visitor-role: #9fb1c2;
+    --admin-role: #f4c76b;
     --text: #f0f0f0;
     --text-secondary: #a0aec0;
     --muted: #888888;
@@ -44,6 +46,8 @@
     --warm-accent: #0f766e;
     --like-accent: #0f766e;
     --like-bg: rgba(15, 118, 110, .1);
+    --visitor-role: #64748b;
+    --admin-role: #b45309;
     --text: #111111;
     --text-secondary: #555555;
     --muted: #888888;
@@ -4518,6 +4522,14 @@ footer {
     font-size: .6rem;
 }
 
+.guestbook-role.role-visitor {
+    color: var(--visitor-role) !important;
+}
+
+.guestbook-role.role-admin {
+    color: var(--admin-role) !important;
+}
+
 .guestbook-empty-state {
     display: flex;
     min-height: 150px;
@@ -4716,9 +4728,9 @@ footer {
 }
 
 .guestbook-compose-user .guestbook-signout:hover {
-    border-color: var(--text);
-    background: var(--text);
-    color: var(--bg);
+    border-color: var(--border);
+    background: transparent;
+    color: #fff;
     transform: translateY(-1px);
 }
 

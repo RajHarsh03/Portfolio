@@ -47,7 +47,7 @@ export default function GuestbookPreview() {
                                     {entry.photoURL ? <img src={entry.photoURL} alt="" /> : <span>{(entry.displayName || 'V').charAt(0).toUpperCase()}</span>}
                                     <div>
                                         <strong>{entry.displayName || 'Visitor'}</strong>
-                                        <small>Visitor</small>
+                                        <small className={entry.authorRole === 'Admin' || entry.authorEmail?.toLowerCase() === 'rajharsh.devx@gmail.com' || entry.displayName?.trim().toLowerCase() === 'harsh raj' || entry.userId === 'VqE9wVvuIZXMoMjOlPtw8J3V6Go2' ? 'guestbook-role role-admin' : 'guestbook-role role-visitor'}>{entry.authorRole === 'Admin' || entry.authorEmail?.toLowerCase() === 'rajharsh.devx@gmail.com' || entry.displayName?.trim().toLowerCase() === 'harsh raj' || entry.userId === 'VqE9wVvuIZXMoMjOlPtw8J3V6Go2' ? 'Admin' : 'Visitor'}</small>
                                     </div>
                                 </div>
                                 <p>{entry.message}</p>

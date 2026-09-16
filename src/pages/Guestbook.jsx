@@ -8,6 +8,8 @@ const NOTES_CACHE_KEY = 'guestbook_entries_cache_v1';
 const AUTH_CACHE_KEY = 'guestbook_auth_user_v1';
 const TOAST_AVATAR_URL = 'https://github.com/RajHarsh03.png?size=96';
 const ADMIN_EMAIL = 'rajharsh.devx@gmail.com';
+const ADMIN_DISPLAY_NAME = 'Harsh Raj';
+const ADMIN_UID = 'VqE9wVvuIZXMoMjOlPtw8J3V6Go2';
 
 function readCachedEntries() {
   try {
@@ -65,6 +67,11 @@ function wordCount(value) {
 
 function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, onDelete }) {
   const initial = (entry.displayName || 'V').charAt(0).toUpperCase();
+  const entryIsAdmin = entry.authorRole === 'Admin'
+    || entry.authorEmail?.toLowerCase() === ADMIN_EMAIL
+    || entry.displayName?.trim().toLowerCase() === ADMIN_DISPLAY_NAME.toLowerCase()
+    || entry.userId === ADMIN_UID
+    || (entry.userId === user?.uid && isAdmin);
 
   async function handleLike() {
     if (!user) {
@@ -83,12 +90,12 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
           {entry.photoURL ? <img src={entry.photoURL} alt="" /> : <span className="guestbook-avatar-fallback">{initial}</span>}
           <div>
             <strong>{entry.displayName || 'Visitor'}</strong>
-            <small>{entry.userId && entry.userId === user?.uid ? (isAdmin ? 'Admin' : 'Visitor') : 'Visitor'}</small>
+            <small className={entryIsAdmin ? 'guestbook-role role-admin' : 'guestbook-role role-visitor'}>{entryIsAdmin ? 'Admin' : 'Visitor'}</small>
           </div>
         </div>
         {isAdmin && <div className="guestbook-admin-actions">
           <button type="button" onClick={() => onPin(entry)} aria-label={entry.pinned ? 'Unpin note' : 'Pin note'} title={entry.pinned ? 'Unpin note' : 'Pin note'}>
-            <svg aria-hidden="true" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z" /></svg>
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><g transform="rotate(35 12 12)"><path d="M7 2h10v3l-2 2v4l3 3v2h-5v6h-2v-6H6v-2l3-3V7L7 5V2Z" /></g></svg>
           </button>
           <button type="button" onClick={() => onDelete(entry)} className="is-danger" aria-label="Delete note" title="Delete note">
             <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h16" /><path d="M10 11v6m4-6v6" /><path d="m6 7 1 13h10l1-13M9 7V4h6v3" /></svg>
@@ -131,6 +138,23 @@ export default function Guestbook() {
     const avatar = new Image();
     avatar.src = TOAST_AVATAR_URL;
   }, []);
+
+  // Backfill the role on older notes created by the admin before authorRole
+  // was stored. The realtime listener then shares that role with every viewer.
+  useEffect(() => {
+    if (!isAdmin || !db || !user?.uid || !entries.length) return;
+    entries
+      .filter(entry => (entry.userId === user.uid || entry.userId === ADMIN_UID || entry.displayName?.trim().toLowerCase() === ADMIN_DISPLAY_NAME.toLowerCase()) && !entry.authorRole)
+      .forEach(entry => {
+        setEntries(current => current.map(item => item.id === entry.id
+          ? { ...item, authorRole: 'Admin', authorEmail: user.email || ADMIN_EMAIL }
+          : item));
+        updateDoc(doc(db, 'guestbook_entries', entry.id), {
+          authorRole: 'Admin',
+          authorEmail: user.email || ADMIN_EMAIL,
+        }).catch(() => {});
+      });
+  }, [entries, isAdmin, user]);
 
   useEffect(() => {
     if (!auth) {
@@ -186,6 +210,8 @@ export default function Guestbook() {
     try {
       await addDoc(collection(db, 'guestbook_entries'), {
         userId: user.uid,
+        authorEmail: user.email || '',
+        authorRole: isAdmin ? 'Admin' : 'Visitor',
         displayName: user.displayName || 'Visitor',
         photoURL: user.photoURL || '',
         message: trimmedMessage,
@@ -274,7 +300,7 @@ export default function Guestbook() {
             <form className="guestbook-composer-form" onSubmit={handleSubmit}>
               <div className="guestbook-compose-user">
                 {user.photoURL ? <img src={user.photoURL} alt="" /> : <span>{(user.displayName || 'V').charAt(0)}</span>}
-                <div><strong>{user.displayName}</strong><small>Logged in as: {isAdmin ? 'Admin' : 'Visitor'}</small></div>
+                <div><strong>{user.displayName}</strong><small className={isAdmin ? 'guestbook-role role-admin' : 'guestbook-role role-visitor'}>Logged in as: {isAdmin ? 'Admin' : 'Visitor'}</small></div>
                 <button type="button" className="guestbook-signout" onClick={() => signOut(auth)}>Disconnect</button>
               </div>
               <textarea value={message} onChange={event => {
