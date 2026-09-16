@@ -9,10 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "firebase": "^12.19.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.6.2",
-    "react-helmet-async": "^2.0.5"
+    "react-helmet-async": "^2.0.5",
+    "react-router-dom": "^7.6.2"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.5.2",

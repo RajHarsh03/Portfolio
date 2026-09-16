@@ -4,6 +4,7 @@ import InfoStrip       from '../components/home/InfoStrip.jsx';
 import Skills          from '../components/home/Skills.jsx';
 import FeaturedProjects from '../components/home/FeaturedProjects.jsx';
 import GitHubHeatmap   from '../components/home/GitHubHeatmap.jsx';
+import GuestbookPreview from '../components/home/GuestbookPreview.jsx';
 import EducationCerts  from '../components/home/EducationCerts.jsx';
 
 export default function Home() {
@@ -20,6 +21,7 @@ export default function Home() {
       <EducationCerts />
       <FeaturedProjects />
       <GitHubHeatmap />
+      <GuestbookPreview />
     </>
   );
 }

@@ -31,6 +31,7 @@
 🔥 **GitHub Heatmap** - canvas-rendered contribution graph\
 📬 **Contact Form** - EmailJS + toast feedback + `Ctrl+Enter`\
 🎵 **Spotify Widget** - live now-playing / last-played with artwork
+📖 **Firebase Guestbook** - Google sign-in, real-time visitor notes, and Home preview
 
 </td>
 <td width="50%">
@@ -63,6 +64,7 @@
 | 📡 Data | **GitHub REST API** + **EmailJS** |
 | 🎵 Spotify | **Custom `/api/now-playing`** serverless endpoint |
 | 📊 Visit Counter | **Upstash Redis** via Vercel serverless |
+| 📖 Guestbook | **Firebase Authentication** + **Cloud Firestore** |
 | 🚀 Deployment | **Vercel** |
 
 </div>
@@ -80,6 +82,7 @@
 | `/projects/:id` | 📖 Project Detail - full overview, tech stack, features, highlights, challenges (Gist-powered) |
 | `/contact` | 📬 Contact - EmailJS form + social links |
 | `/about` | 👤 About - bio, education, collapsible experience cards with tech stack icons |
+| `/guestbook` | 📖 Guestbook - Google sign-in and real-time visitor notes |
 | `*` | 🔍 404 Not Found |
 
 </div>
@@ -119,6 +122,7 @@ Portfolio/
     │   └── 🌗 useTheme.js              # Re-export of useTheme from context
     │
     ├── services/
+    │   ├── 🔥 firebase.js                  # Firebase Auth + Firestore client
     │   ├── 🐙 githubProjects.js             # Fetch + normalise portfolio repos
     │   ├── 📖 projectDetailsGist.js         # Fetch project details from Gist
     │   ├── 🔥 githubContributions.js        # Fetch contribution heatmap data
@@ -138,6 +142,7 @@ Portfolio/
     │   │   ├── 🛠️  Skills.jsx         # Ticker marquee tech stack
     │   │   ├── 🗂️  FeaturedProjects.jsx # Top 2 projects from GitHub
     │   │   ├── 🔥 GitHubHeatmap.jsx   # Canvas contribution heatmap
+    │   │   ├── 📖 GuestbookPreview.jsx # Real-time Home guestbook marquee
     │   │   └── 📱 BottomNav.jsx       # Floating pill nav (home page only)
     │   │
     │   └── projects/
@@ -149,6 +154,7 @@ Portfolio/
         ├── 🗂️  Projects.jsx           # Full grid - search, filter, sort, incremental mobile load
         ├── 📖 ProjectDetail.jsx      # Individual project page with Gist-powered details
         ├── 📬 Contact.jsx            # EmailJS form + toast
+        ├── 📖 Guestbook.jsx           # Google sign-in + Firestore notes
         └── 🔍 NotFound.jsx           # 404
 ```
 
@@ -176,7 +182,7 @@ npm run dev
 
 ## 🔐 Environment Variables
 
-> **No `.env` file is needed** to run or deploy this project.
+Create `.env.local` in the project root for local development. Keep this file out of Git; Vite exposes only variables prefixed with `VITE_` to the browser.
 
 <table>
 <tr>
@@ -194,7 +200,14 @@ npm run dev
 <td>Vercel Dashboard → Storage</td>
 <td>Auto-injected by Vercel when Upstash Redis is connected</td>
 </tr>
+<tr>
+<td><code>VITE_FIREBASE_API_KEY</code><br/><code>VITE_FIREBASE_AUTH_DOMAIN</code><br/><code>VITE_FIREBASE_PROJECT_ID</code><br/><code>VITE_FIREBASE_STORAGE_BUCKET</code><br/><code>VITE_FIREBASE_MESSAGING_SENDER_ID</code><br/><code>VITE_FIREBASE_APP_ID</code><br/><code>VITE_FIREBASE_MEASUREMENT_ID</code></td>
+<td>Firebase project settings → Your apps → Web</td>
+<td>Frontend Firebase configuration for Google Authentication and Cloud Firestore</td>
+</tr>
 </table>
+
+Firebase web configuration values are public client identifiers. Never add Firebase service-account JSON, private keys, or Admin SDK credentials to `.env.local` or frontend code.
 
 > 📌 **EmailJS keys** are public client-side keys (hardcoded intentionally). Security is handled via **domain whitelisting** in the EmailJS dashboard. Ensure only `harshx.in` is listed under **Account → Security**.
 
@@ -223,9 +236,39 @@ npm run preview    # → preview the production build locally
 | Output Directory | `dist` |
 
 4. Connect **Upstash Redis** from Vercel Dashboard → Storage (auto-injects env vars)
-5. **Deploy** 🎉
+5. Add the `VITE_FIREBASE_*` variables in Vercel → Project Settings → Environment Variables for the **Production**, **Preview**, and **Development** environments as needed.
+6. **Deploy** 🎉
 
 > The `vercel.json` handles SPA routing - all URLs serve `index.html` and React Router takes over client-side.
+
+---
+
+## 📖 Firebase Guestbook Setup
+
+The Guestbook uses **Google Authentication** for sign-in and **Cloud Firestore** for persistent notes. Firebase Storage is not required unless visitor file or image uploads are added later.
+
+### Firebase console setup
+
+1. Create or open the Firebase project.
+2. Enable **Authentication → Sign-in method → Google**.
+3. Add the deployed domains under **Authentication → Settings → Authorized domains**.
+4. Create a Cloud Firestore database.
+5. Create the `guestbook_entries` collection.
+6. Publish rules that allow public reads, authenticated creates for the signed-in user, and prevent untrusted updates.
+
+Expected note fields:
+
+| Field | Type | Purpose |
+|:------|:-----|:--------|
+| `userId` | string | Firebase Authentication user ID |
+| `displayName` | string | Google display name |
+| `photoURL` | string | Google profile image URL |
+| `message` | string | Visitor note, up to 500 characters |
+| `createdAt` | timestamp | Server-generated creation time |
+| `likes` | number | Reserved for future reactions |
+| `pinned` | boolean | Reserved for future pinned notes |
+
+The Home page subscribes to the latest notes in real time and displays them in a marquee. The full `/guestbook` page provides Google sign-in and note submission.
 
 ---
 
