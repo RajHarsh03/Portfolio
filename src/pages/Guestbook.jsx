@@ -36,6 +36,7 @@ function GuestbookCard({ entry }) {
 
 export default function Guestbook() {
   const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [entries, setEntries] = useState([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
@@ -44,10 +45,13 @@ export default function Guestbook() {
 
   useEffect(() => {
     if (!auth) {
-      setLoading(false);
+      setAuthLoading(false);
       return undefined;
     }
-    return onAuthStateChanged(auth, setUser);
+    return onAuthStateChanged(auth, nextUser => {
+      setUser(nextUser);
+      setAuthLoading(false);
+    });
   }, []);
 
   useEffect(() => {
@@ -118,6 +122,8 @@ export default function Guestbook() {
         <div className="guestbook-compose">
           {!firebaseReady ? (
             <p className="guestbook-muted">Firebase configuration is missing. Add the Vite Firebase variables to continue.</p>
+          ) : authLoading ? (
+            <p className="guestbook-muted">Checking your sign-in...</p>
           ) : user ? (
             <form className="guestbook-composer-form" onSubmit={handleSubmit}>
               <div className="guestbook-compose-user">
@@ -129,13 +135,6 @@ export default function Guestbook() {
                 const nextValue = event.target.value;
                 if (wordCount(nextValue) <= 100) setMessage(nextValue);
               }} maxLength={500} placeholder="Write a message, share your feedback, or just say hello..." rows="4" required />
-              <div className="guestbook-theme-row" aria-label="Card theme">
-                <span>Card Theme:</span>
-                <i className="guestbook-theme-dot guestbook-theme-red" />
-                <i className="guestbook-theme-dot guestbook-theme-green" />
-                <i className="guestbook-theme-dot guestbook-theme-gold selected" />
-                <i className="guestbook-theme-dot guestbook-theme-blue" />
-              </div>
               <div className="guestbook-compose-footer">
                 <small>{wordCount(message)}/100 words</small>
                 <button className="guestbook-submit" disabled={sending || !message.trim()}>{sending ? 'Posting...' : 'Post Note'}</button>
