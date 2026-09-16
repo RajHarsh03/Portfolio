@@ -4948,6 +4948,13 @@ footer {
     transform: translateY(-1px);
 }
 
+.guestbook-like-button:disabled {
+    cursor: default;
+    color: var(--like-accent);
+    opacity: .9;
+    transform: none;
+}
+
 /* Keep the full note cards close to the compact reference proportions. */
 .guestbook-card.guestbook-compact-card {
     min-height: 0;

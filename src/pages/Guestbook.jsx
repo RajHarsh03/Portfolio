@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { addDoc, arrayUnion, collection, deleteDoc, doc, increment, limit, onSnapshot, orderBy, query, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { addDoc, arrayUnion, collection, deleteDoc, doc, increment, limit, onSnapshot, orderBy, query, runTransaction, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { auth, db, firebaseReady, googleProvider } from '../services/firebase.js';
 
@@ -72,6 +72,7 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
     || entry.displayName?.trim().toLowerCase() === ADMIN_DISPLAY_NAME.toLowerCase()
     || entry.userId === ADMIN_UID
     || (entry.userId === user?.uid && isAdmin);
+  const hasLiked = Boolean(user?.uid && entry.likedUserIds?.includes(user.uid));
 
   async function handleLike() {
     if (!user) {
@@ -79,7 +80,7 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
       return;
     }
     try {
-      await onLike(entry);
+      if (!hasLiked) await onLike(entry);
     } catch { /* The live listener will keep the displayed count unchanged. */ }
   }
 
@@ -107,7 +108,7 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
             <span>{formatDate(entry.createdAt)}</span>
             <span className="guestbook-like-wrap">
           {entry.likedBy?.includes('HR') && <small className="guestbook-liked-by">Liked by HR</small>}
-          <button type="button" className="guestbook-like-button" onClick={handleLike} aria-label={user ? 'Like this note' : 'Sign in to like this note'} title={user ? 'Like this note' : 'Sign in to like this note'}>
+          <button type="button" className={`guestbook-like-button${hasLiked ? ' is-liked' : ''}`} onClick={handleLike} disabled={hasLiked} aria-label={!user ? 'Sign in to like this note' : hasLiked ? 'You already liked this note' : 'Like this note'} title={!user ? 'Sign in to like this note' : hasLiked ? 'You already liked this note' : 'Like this note'}>
             <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M7 10v10H4a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h3Z" />
               <path d="M7 20h9.4a2 2 0 0 0 1.9-1.4l2-6A2 2 0 0 0 18.4 10H14l.7-3.4A2.2 2.2 0 0 0 12.6 4L7 10v10Z" />
@@ -217,6 +218,7 @@ export default function Guestbook() {
         message: trimmedMessage,
         createdAt: serverTimestamp(),
         likes: 0,
+        likedUserIds: [],
         pinned: false,
       });
       setMessage('');
@@ -230,10 +232,20 @@ export default function Guestbook() {
 
   async function handleLike(entry) {
     if (!user || !db) return;
+    if (entry.likedUserIds?.includes(user.uid)) return;
     try {
-      await updateDoc(doc(db, 'guestbook_entries', entry.id), {
-        likes: increment(1),
-        ...(isAdmin ? { likedBy: arrayUnion('HR') } : {}),
+      await runTransaction(db, async transaction => {
+        const ref = doc(db, 'guestbook_entries', entry.id);
+        const snapshot = await transaction.get(ref);
+        if (!snapshot.exists()) return;
+        const data = snapshot.data();
+        const likedUserIds = Array.isArray(data.likedUserIds) ? data.likedUserIds : [];
+        if (likedUserIds.includes(user.uid)) return;
+        transaction.update(ref, {
+          likes: increment(1),
+          likedUserIds: arrayUnion(user.uid),
+          ...(isAdmin ? { likedBy: arrayUnion('HR') } : {}),
+        });
       });
     } catch (error) {
       showToast('Like could not be saved', 'Publish the Firestore rules to enable likes.', 'error');
