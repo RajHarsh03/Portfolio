@@ -1,8 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { addDoc, collection, limit, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
+import { addDoc, arrayUnion, collection, deleteDoc, doc, increment, limit, onSnapshot, orderBy, query, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { auth, db, firebaseReady, googleProvider } from '../services/firebase.js';
+
+const NOTES_CACHE_KEY = 'guestbook_entries_cache_v1';
+const TOAST_AVATAR_URL = 'https://github.com/RajHarsh03.png?size=96';
+const ADMIN_EMAIL = 'rajharsh.devx@gmail.com';
+
+function readCachedEntries() {
+  try {
+    const cached = JSON.parse(window.localStorage.getItem(NOTES_CACHE_KEY) || '[]');
+    return Array.isArray(cached) ? cached : [];
+  } catch {
+    return [];
+  }
+}
+
+function cacheEntries(entries) {
+  try {
+    window.localStorage.setItem(NOTES_CACHE_KEY, JSON.stringify(entries.map(entry => ({
+      ...entry,
+      createdAt: entry.createdAt?.toMillis ? entry.createdAt.toMillis() : entry.createdAt,
+    }))));
+  } catch {
+  }
+}
 
 function formatDate(value) {
   if (!value) return 'Just now';
@@ -14,21 +37,47 @@ function wordCount(value) {
   return value.trim() ? value.trim().split(/\s+/).length : 0;
 }
 
-function GuestbookCard({ entry }) {
+function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, onDelete }) {
   const initial = (entry.displayName || 'V').charAt(0).toUpperCase();
+
+  async function handleLike() {
+    if (!user) {
+      onRequireLogin();
+      return;
+    }
+    try {
+      await onLike(entry);
+    } catch { /* The live listener will keep the displayed count unchanged. */ }
+  }
+
   return (
     <article className="guestbook-card">
-      <div className="guestbook-card-author">
-        {entry.photoURL ? <img src={entry.photoURL} alt="" /> : <span className="guestbook-avatar-fallback">{initial}</span>}
-        <div>
-          <strong>{entry.displayName || 'Visitor'}</strong>
-          <small>Visitor</small>
+      <div className="guestbook-card-top">
+        <div className="guestbook-card-author">
+          {entry.photoURL ? <img src={entry.photoURL} alt="" /> : <span className="guestbook-avatar-fallback">{initial}</span>}
+          <div>
+            <strong>{entry.displayName || 'Visitor'}</strong>
+            <small>{entry.userId && entry.userId === user?.uid ? (isAdmin ? 'Admin' : 'Visitor') : 'Visitor'}</small>
+          </div>
         </div>
+        {isAdmin && <div className="guestbook-admin-actions">
+          <button type="button" onClick={() => onPin(entry)}>{entry.pinned ? 'Unpin' : 'Pin'}</button>
+          <button type="button" onClick={() => onDelete(entry)} className="is-danger">Delete</button>
+        </div>}
       </div>
       <p>{entry.message}</p>
       <div className="guestbook-card-footer">
-        <span>{formatDate(entry.createdAt)}</span>
-        <span>{entry.pinned ? 'Pri' : ''} <span className="guestbook-preview-heart" aria-hidden="true">♡</span> {entry.likes || 0}</span>
+            <span>{formatDate(entry.createdAt)}</span>
+            <span className="guestbook-like-wrap">
+          {entry.likedBy?.includes('HR') && <small className="guestbook-liked-by">Liked by HR</small>}
+          <button type="button" className="guestbook-like-button" onClick={handleLike} aria-label={user ? 'Like this note' : 'Sign in to like this note'} title={user ? 'Like this note' : 'Sign in to like this note'}>
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M7 10v10H4a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h3Z" />
+              <path d="M7 20h9.4a2 2 0 0 0 1.9-1.4l2-6A2 2 0 0 0 18.4 10H14l.7-3.4A2.2 2.2 0 0 0 12.6 4L7 10v10Z" />
+            </svg>
+            {entry.likes || 0}
+          </button>
+        </span>
       </div>
     </article>
   );
@@ -36,13 +85,22 @@ function GuestbookCard({ entry }) {
 
 export default function Guestbook() {
   const initialUser = auth?.currentUser || null;
+  const initialEntries = readCachedEntries();
   const [user, setUser] = useState(initialUser);
   const [authLoading, setAuthLoading] = useState(Boolean(auth && !initialUser));
-  const [entries, setEntries] = useState([]);
+  const [entries, setEntries] = useState(initialEntries);
+  const [visibleCount, setVisibleCount] = useState(3);
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(initialEntries.length === 0);
   const [sending, setSending] = useState(false);
-  const [error, setError] = useState('');
+  const [toast, setToast] = useState(null);
+  const toastTimer = useRef(null);
+  const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL;
+
+  useEffect(() => {
+    const avatar = new Image();
+    avatar.src = TOAST_AVATAR_URL;
+  }, []);
 
   useEffect(() => {
     if (!auth) {
@@ -66,20 +124,24 @@ export default function Guestbook() {
       limit(30),
     );
     return onSnapshot(entriesQuery, snapshot => {
-      setEntries(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      const nextEntries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setEntries(nextEntries);
+      cacheEntries(nextEntries);
       setLoading(false);
     }, () => {
-      setError('Guestbook entries could not be loaded yet. Check your Firestore rules.');
+      showToast('Guestbook unavailable', 'Notes could not be loaded right now.', 'error');
       setLoading(false);
     });
   }, []);
 
   async function handleSignIn() {
-    setError('');
     try {
       await signInWithPopup(auth, googleProvider);
+      showToast('Sign in successful', 'Signed in successfully! Now, leave a lovely note for me. 😊', 'success');
     } catch (err) {
-      setError(err.code === 'auth/popup-closed-by-user' ? '' : 'Google sign-in could not be completed.');
+      if (err.code !== 'auth/popup-closed-by-user') {
+        showToast('Sign in failed', 'Google sign-in could not be completed.', 'error');
+      }
     }
   }
 
@@ -88,7 +150,6 @@ export default function Guestbook() {
     const trimmedMessage = message.trim();
     if (!user || !trimmedMessage || wordCount(trimmedMessage) > 100 || trimmedMessage.length > 500) return;
     setSending(true);
-    setError('');
     try {
       await addDoc(collection(db, 'guestbook_entries'), {
         userId: user.uid,
@@ -100,11 +161,51 @@ export default function Guestbook() {
         pinned: false,
       });
       setMessage('');
+      showToast('Note posted', 'Thanks for leaving a note! 😊', 'success');
     } catch {
-      setError('Your note could not be posted. Please try again.');
+      showToast('Could not post note', 'Your note could not be posted. Please try again.', 'error');
     } finally {
       setSending(false);
     }
+  }
+
+  async function handleLike(entry) {
+    if (!user || !db) return;
+    await updateDoc(doc(db, 'guestbook_entries', entry.id), {
+      likes: increment(1),
+      ...(isAdmin ? { likedBy: arrayUnion('HR') } : {}),
+    });
+  }
+
+  async function handlePin(entry) {
+    if (!isAdmin || !db) return;
+    try {
+      await updateDoc(doc(db, 'guestbook_entries', entry.id), { pinned: !entry.pinned });
+      showToast(entry.pinned ? 'Note unpinned' : 'Note pinned', 'The guestbook note was updated.', 'success');
+    } catch {
+      showToast('Could not update note', 'Admin permissions are required for this action.', 'error');
+    }
+  }
+
+  async function handleDelete(entry) {
+    if (!isAdmin || !db || !window.confirm('Delete this guestbook note?')) return;
+    try {
+      await deleteDoc(doc(db, 'guestbook_entries', entry.id));
+      showToast('Note deleted', 'The guestbook note was removed.', 'success');
+    } catch {
+      showToast('Could not delete note', 'Admin permissions are required for this action.', 'error');
+    }
+  }
+
+  function handleRequireLogin() {
+    showToast('Sign in to like notes', 'Connect with Google to support visitor notes.', 'info');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showToast(title, message, tone = 'info') {
+    setToast({ title, message, tone });
+    window.clearTimeout(toastTimer.current);
+    toastTimer.current = window.setTimeout(() => setToast(null), 4500);
   }
 
   return (
@@ -113,6 +214,12 @@ export default function Guestbook() {
         <title>Guestbook - Harsh Raj</title>
         <meta name="description" content="Leave a note for Harsh Raj and browse messages from visitors." />
       </Helmet>
+      {toast && <div className={`guestbook-toast is-${toast.tone}`} role="status" aria-live="polite">
+        <img src={TOAST_AVATAR_URL} alt="Harsh Raj" loading="eager" fetchPriority="high" decoding="async" />
+        <strong>{toast.title}</strong>
+        <span>{toast.message}</span>
+        <button type="button" onClick={() => setToast(null)} aria-label="Dismiss notification">×</button>
+      </div>}
       <section className="guestbook-page">
         <div className="guestbook-page-header">
           <p className="section-label">// Leave a note </p>
@@ -122,14 +229,14 @@ export default function Guestbook() {
 
         <div className="guestbook-compose">
           {!firebaseReady ? (
-            <p className="guestbook-muted">Firebase configuration is missing. Add the Vite Firebase variables to continue.</p>
+            <p className="guestbook-muted">Firebase configuration is missing.</p>
           ) : authLoading ? (
             <p className="guestbook-muted">Checking your sign-in...</p>
           ) : user ? (
             <form className="guestbook-composer-form" onSubmit={handleSubmit}>
               <div className="guestbook-compose-user">
                 {user.photoURL ? <img src={user.photoURL} alt="" /> : <span>{(user.displayName || 'V').charAt(0)}</span>}
-                <div><strong>{user.displayName}</strong><small>Logged in as: Visitor</small></div>
+                <div><strong>{user.displayName}</strong><small>Logged in as: {isAdmin ? 'Admin' : 'Visitor'}</small></div>
                 <button type="button" className="guestbook-signout" onClick={() => signOut(auth)}>Disconnect</button>
               </div>
               <textarea value={message} onChange={event => {
@@ -153,15 +260,21 @@ export default function Guestbook() {
                 </svg>
                 Sign in with Google
               </button>
-              {error && <p className="guestbook-error guestbook-signin-error">{error}</p>}
             </div>
           )}
-          {error && user && <p className="guestbook-error">{error}</p>}
         </div>
 
+        {entries.some(entry => entry.pinned) && <section className="guestbook-pinned" aria-label="Pinned notes">
+          <div className="guestbook-notes-heading"><div><p className="section-label">// highlighted by the author</p><h2>Pinned Notes</h2><p className="guestbook-notes-subtitle">Notes worth keeping close.</p></div></div>
+          <div className="guestbook-grid">{entries.filter(entry => entry.pinned).slice(0, 3).map(entry => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={`pinned-${entry.id}`} />)}</div>
+        </section>}
+
         <div className="guestbook-notes">
-          <div className="guestbook-notes-heading"><div><p className="section-label">// recent notes</p><h2>Messages from visitors</h2></div><span>{entries.length} notes</span></div>
-          {loading ? <div className="guestbook-empty-state"><p className="guestbook-muted">Loading notes...</p></div> : entries.length === 0 ? <div className="guestbook-empty-state"><p>No notes yet.</p><small>Be the first to say hello.</small></div> : <div className="guestbook-grid">{entries.map(entry => <GuestbookCard entry={entry} key={entry.id} />)}</div>}
+          <div className="guestbook-notes-heading"><div><p className="section-label">// recent messages</p><h2>Voices From Visitors</h2></div></div>
+          {loading ? <div className="guestbook-empty-state"><p className="guestbook-muted">Loading notes...</p></div> : entries.length === 0 ? <div className="guestbook-empty-state"><p>No notes yet.</p><small>Be the first to say hello.</small></div> : <>
+            <div className="guestbook-grid">{entries.slice(0, visibleCount).map(entry => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={entry.id} />)}</div>
+            {visibleCount < entries.length && <button type="button" className="guestbook-load-more" onClick={() => setVisibleCount(count => count + 3)}>Load more notes <span aria-hidden="true">＋</span></button>}
+          </>}
         </div>
       </section>
     </>
