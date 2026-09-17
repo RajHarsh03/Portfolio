@@ -4734,6 +4734,16 @@ footer {
     transform: translateY(-1px);
 }
 
+[data-theme="light"] .guestbook-compose-user .guestbook-signout {
+    border-color: rgba(15, 23, 42, .22);
+    color: #475569;
+}
+
+[data-theme="light"] .guestbook-compose-user .guestbook-signout:hover {
+    border-color: rgba(15, 23, 42, .38);
+    color: #111827;
+}
+
 .guestbook-compose textarea {
     display: block;
     width: 100%;
@@ -4860,6 +4870,10 @@ footer {
     width: max-content;
     gap: 1rem;
     animation: guestbookPinnedRTL 42s linear infinite;
+}
+
+.guestbook-pinned-track.is-static {
+    animation: none;
 }
 
 .guestbook-pinned-track:hover {
