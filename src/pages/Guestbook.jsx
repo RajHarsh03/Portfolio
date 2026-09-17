@@ -6,8 +6,6 @@ import { auth, db, firebaseReady, googleProvider } from '../services/firebase.js
 
 const NOTES_CACHE_KEY = 'guestbook_entries_cache_v1';
 const AUTH_CACHE_KEY = 'guestbook_auth_user_v1';
-const LAST_GUESTBOOK_VISIT_KEY = 'guestbook_last_visit_at_v1';
-const GUESTBOOK_SESSION_MAX_AGE = 12 * 60 * 60 * 1000;
 const TOAST_AVATAR_URL = 'https://github.com/RajHarsh03.png?size=96';
 const ADMIN_EMAIL = 'rajharsh.devx@gmail.com';
 const ADMIN_DISPLAY_NAME = 'Harsh Raj';
@@ -55,15 +53,6 @@ function cacheUser(user) {
 
 function clearCachedUser() {
   try { window.localStorage.removeItem(AUTH_CACHE_KEY); } catch { /* no-op */ }
-}
-
-function guestbookSessionExpired() {
-  try {
-    const lastVisit = Number(window.localStorage.getItem(LAST_GUESTBOOK_VISIT_KEY));
-    return !lastVisit || Date.now() - lastVisit > GUESTBOOK_SESSION_MAX_AGE;
-  } catch {
-    return false;
-  }
 }
 
 function formatDate(value) {
@@ -133,11 +122,9 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
 }
 
 export default function Guestbook() {
-  const sessionExpired = guestbookSessionExpired();
-  const initialUser = sessionExpired ? null : (auth?.currentUser || readCachedUser());
+  const initialUser = auth?.currentUser || null;
   const initialEntries = readCachedEntries();
   const [user, setUser] = useState(initialUser);
-  const [authLoading, setAuthLoading] = useState(true);
   const [entries, setEntries] = useState(initialEntries);
   const [visibleCount, setVisibleCount] = useState(() => (
     typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches ? 2 : 3
@@ -152,15 +139,6 @@ export default function Guestbook() {
   useEffect(() => {
     const avatar = new Image();
     avatar.src = TOAST_AVATAR_URL;
-  }, []);
-
-  useEffect(() => {
-    try { window.localStorage.setItem(LAST_GUESTBOOK_VISIT_KEY, String(Date.now())); } catch { /* no-op */ }
-    if (sessionExpired) {
-      clearCachedUser();
-      if (auth?.currentUser) signOut(auth).catch(() => {});
-    }
-    if (!auth) setAuthLoading(false);
   }, []);
 
   // Backfill the role on older notes created by the admin before authorRole
@@ -182,14 +160,12 @@ export default function Guestbook() {
 
   useEffect(() => {
     if (!auth) {
-      setAuthLoading(false);
       return undefined;
     }
     return onAuthStateChanged(auth, nextUser => {
       setUser(nextUser);
       if (nextUser) cacheUser(nextUser);
       else clearCachedUser();
-      setAuthLoading(false);
     });
   }, []);
 
@@ -334,8 +310,6 @@ export default function Guestbook() {
         <div className="guestbook-compose">
           {!firebaseReady ? (
             <p className="guestbook-muted">This section is temporarily unavailable. Please try again later.</p>
-          ) : authLoading ? (
-            <p className="guestbook-muted">Checking your sign-in...</p>
           ) : user ? (
             <form className="guestbook-composer-form" onSubmit={handleSubmit}>
               <div className="guestbook-compose-user">
