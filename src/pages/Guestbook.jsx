@@ -186,7 +186,7 @@ export default function Guestbook() {
       cacheEntries(nextEntries);
       setLoading(false);
     }, () => {
-      showToast('Guestbook unavailable', 'Notes could not be loaded right now.', 'error');
+      showToast('Something went wrong', 'Please try again in a moment.', 'error');
       setLoading(false);
     });
   }, []);
@@ -248,7 +248,7 @@ export default function Guestbook() {
         });
       });
     } catch (error) {
-      showToast('Like could not be saved', 'Publish the Firestore rules to enable likes.', 'error');
+      showToast('Something went wrong', 'Your like could not be saved. Please try again.', 'error');
       throw error;
     }
   }
@@ -259,7 +259,7 @@ export default function Guestbook() {
       await updateDoc(doc(db, 'guestbook_entries', entry.id), { pinned: !entry.pinned });
       showToast(entry.pinned ? 'Note unpinned' : 'Note pinned', 'The guestbook note was updated.', 'success');
     } catch {
-      showToast('Could not update note', 'Admin permissions are required for this action.', 'error');
+      showToast('Something went wrong', 'That action could not be completed. Please try again.', 'error');
     }
   }
 
@@ -269,7 +269,7 @@ export default function Guestbook() {
       await deleteDoc(doc(db, 'guestbook_entries', entry.id));
       showToast('Note deleted', 'The guestbook note was removed.', 'success');
     } catch {
-      showToast('Could not delete note', 'Admin permissions are required for this action.', 'error');
+      showToast('Something went wrong', 'That action could not be completed. Please try again.', 'error');
     }
   }
 
@@ -305,7 +305,7 @@ export default function Guestbook() {
 
         <div className="guestbook-compose">
           {!firebaseReady ? (
-            <p className="guestbook-muted">Firebase configuration is missing.</p>
+            <p className="guestbook-muted">This section is temporarily unavailable. Please try again later.</p>
           ) : authLoading ? (
             <p className="guestbook-muted">Checking your sign-in...</p>
           ) : user ? (
