@@ -356,7 +356,7 @@ export default function Guestbook() {
           <div className="guestbook-notes-heading"><div><p className="section-label">// recent messages</p><h2>Voices From Visitors</h2></div></div>
           {loading ? <div className="guestbook-empty-state"><p className="guestbook-muted">Loading notes...</p></div> : entries.length === 0 ? <div className="guestbook-empty-state"><p>No notes yet.</p><small>Be the first to say hello.</small></div> : <>
             <div className="guestbook-grid">{entries.slice(0, visibleCount).map(entry => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={entry.id} />)}</div>
-            {visibleCount < entries.length && <button type="button" className="guestbook-load-more" onClick={() => setVisibleCount(count => count + 3)}>Load more notes <span aria-hidden="true">＋</span></button>}
+            {visibleCount < entries.length && <button type="button" className="guestbook-load-more" onClick={() => setVisibleCount(count => count + 3)}>View more</button>}
           </>}
         </div>
       </section>
