@@ -32,7 +32,7 @@ function cacheEntries(entries) {
 
 function readCachedUser() {
   try {
-    return JSON.parse(window.localStorage.getItem(AUTH_CACHE_KEY) || 'null');
+    return JSON.parse(window.sessionStorage.getItem(AUTH_CACHE_KEY) || 'null');
   } catch {
     return null;
   }
@@ -40,7 +40,7 @@ function readCachedUser() {
 
 function cacheUser(user) {
   try {
-    window.localStorage.setItem(AUTH_CACHE_KEY, JSON.stringify({
+    window.sessionStorage.setItem(AUTH_CACHE_KEY, JSON.stringify({
       uid: user.uid,
       email: user.email || '',
       displayName: user.displayName || 'Visitor',
@@ -52,7 +52,7 @@ function cacheUser(user) {
 }
 
 function clearCachedUser() {
-  try { window.localStorage.removeItem(AUTH_CACHE_KEY); } catch { /* no-op */ }
+  try { window.sessionStorage.removeItem(AUTH_CACHE_KEY); } catch { /* no-op */ }
 }
 
 function formatDate(value) {
@@ -122,7 +122,7 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
 }
 
 export default function Guestbook() {
-  const initialUser = auth?.currentUser || null;
+  const initialUser = auth?.currentUser || readCachedUser();
   const initialEntries = readCachedEntries();
   const [user, setUser] = useState(initialUser);
   const [entries, setEntries] = useState(initialEntries);
