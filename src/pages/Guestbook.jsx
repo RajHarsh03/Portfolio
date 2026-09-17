@@ -284,6 +284,11 @@ export default function Guestbook() {
     toastTimer.current = window.setTimeout(() => setToast(null), 4500);
   }
 
+  const pinnedEntries = entries.filter(entry => entry.pinned).slice(0, 5);
+  const marqueePinnedEntries = pinnedEntries.length > 1
+    ? [...pinnedEntries, ...pinnedEntries]
+    : pinnedEntries;
+
   return (
     <>
       <Helmet>
@@ -343,7 +348,7 @@ export default function Guestbook() {
         {entries.some(entry => entry.pinned) && <section className="guestbook-pinned" aria-label="Pinned notes">
           <div className="guestbook-notes-heading"><div><p className="section-label">// highlights</p><h2>Pinned Notes</h2></div></div>
           <div className="guestbook-pinned-marquee"><div className="guestbook-pinned-track">
-            {[...entries.filter(entry => entry.pinned).slice(0, 5), ...entries.filter(entry => entry.pinned).slice(0, 5)].map((entry, index) => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={`pinned-${entry.id}-${index}`} />)}
+            {marqueePinnedEntries.map((entry, index) => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={`pinned-${entry.id}-${index}`} />)}
           </div></div>
         </section>}
 
