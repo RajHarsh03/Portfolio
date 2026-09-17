@@ -65,7 +65,7 @@ function wordCount(value) {
   return value.trim() ? value.trim().split(/\s+/).length : 0;
 }
 
-function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, onDelete }) {
+function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, onDelete, showDelete = true }) {
   const initial = (entry.displayName || 'V').charAt(0).toUpperCase();
   const entryIsAdmin = entry.authorRole === 'Admin'
     || entry.authorEmail?.toLowerCase() === ADMIN_EMAIL
@@ -98,9 +98,9 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
           <button type="button" onClick={() => onPin(entry)} aria-label={entry.pinned ? 'Unpin note' : 'Pin note'} title={entry.pinned ? 'Unpin note' : 'Pin note'}>
             <svg aria-hidden="true" viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><g transform="rotate(35 12 12)"><path d="M7 2h10v3l-2 2v4l3 3v2h-5v6h-2v-6H6v-2l3-3V7L7 5V2Z" /></g></svg>
           </button>
-          <button type="button" onClick={() => onDelete(entry)} className="is-danger" aria-label="Delete note" title="Delete note">
+          {showDelete && <button type="button" onClick={() => onDelete(entry)} className="is-danger" aria-label="Delete note" title="Delete note">
             <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h16" /><path d="M10 11v6m4-6v6" /><path d="m6 7 1 13h10l1-13M9 7V4h6v3" /></svg>
-          </button>
+          </button>}
         </div>}
       </div>
       <p>{entry.message}</p>
@@ -345,7 +345,7 @@ export default function Guestbook() {
         {entries.some(entry => entry.pinned) && <section className="guestbook-pinned" aria-label="Pinned notes">
           <div className="guestbook-notes-heading"><div><p className="section-label">// highlights</p><h2>Pinned Notes</h2></div></div>
           <div className="guestbook-pinned-marquee"><div className={`guestbook-pinned-track${pinnedEntries.length < 2 ? ' is-static' : ''}`}>
-            {marqueePinnedEntries.map((entry, index) => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={`pinned-${entry.id}-${index}`} />)}
+            {marqueePinnedEntries.map((entry, index) => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} showDelete={false} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={`pinned-${entry.id}-${index}`} />)}
           </div></div>
         </section>}
 
