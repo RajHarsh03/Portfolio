@@ -14,7 +14,7 @@
     --warm-accent: #f4d6a0;
     --like-accent: #fbbf24;
     --like-bg: rgba(251, 191, 36, .12);
-    --visitor-role: #9fb1c2;
+    --visitor-role: #f1f5f9;
     --admin-role: #f4c76b;
     --text: #f0f0f0;
     --text-secondary: #a0aec0;
@@ -46,7 +46,7 @@
     --warm-accent: #0f766e;
     --like-accent: #0f766e;
     --like-bg: rgba(15, 118, 110, .1);
-    --visitor-role: #64748b;
+    --visitor-role: #334155;
     --admin-role: #b45309;
     --text: #111111;
     --text-secondary: #555555;
@@ -4895,13 +4895,14 @@ footer {
 .guestbook-load-more {
     display: flex;
     align-items: center;
-    gap: .65rem;
-    margin: 2rem auto 0;
-    padding: .8rem 1.2rem;
+    gap: .35rem;
+    margin: 1.35rem auto 0;
+    padding: .52rem .9rem;
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 10px;
     background: var(--card);
     color: var(--text);
+    font-size: .78rem;
     font-weight: 700;
     cursor: pointer;
     transition: border-color .2s ease, background .2s ease, transform .2s ease;
@@ -4974,6 +4975,8 @@ footer {
 /* Keep the full note cards close to the compact reference proportions. */
 .guestbook-card.guestbook-compact-card {
     min-height: 0;
+    display: flex;
+    flex-direction: column;
     padding: .85rem 1rem .75rem;
     border-radius: 18px;
 }
@@ -4985,8 +4988,15 @@ footer {
 }
 
 .guestbook-card.guestbook-compact-card .guestbook-card-author strong {
+    font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
     font-size: .86rem;
+    letter-spacing: -.01em;
     line-height: 1.15;
+}
+
+.guestbook-author strong,
+.guestbook-compose-user strong {
+    font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
 }
 
 .guestbook-card.guestbook-compact-card .guestbook-card-author small {
@@ -5005,8 +5015,24 @@ footer {
     line-height: 1.35;
 }
 
+.guestbook-card.guestbook-compact-card.role-visitor > p {
+    font-family: 'Nunito', 'Plus Jakarta Sans', sans-serif;
+    font-size: .86rem;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: .005em;
+    line-height: 1.4;
+}
+
+.guestbook-card.guestbook-compact-card.role-admin > p {
+    font-family: 'DM Mono', monospace;
+    font-size: .78rem;
+    font-style: normal;
+    letter-spacing: .015em;
+}
+
 .guestbook-card.guestbook-compact-card .guestbook-card-footer {
-    margin-top: .45rem;
+    margin-top: auto;
     padding-top: .45rem;
     gap: .45rem;
     font-size: .6rem;

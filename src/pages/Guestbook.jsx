@@ -6,6 +6,8 @@ import { auth, db, firebaseReady, googleProvider } from '../services/firebase.js
 
 const NOTES_CACHE_KEY = 'guestbook_entries_cache_v1';
 const AUTH_CACHE_KEY = 'guestbook_auth_user_v1';
+const LAST_GUESTBOOK_VISIT_KEY = 'guestbook_last_visit_at_v1';
+const GUESTBOOK_SESSION_MAX_AGE = 12 * 60 * 60 * 1000;
 const TOAST_AVATAR_URL = 'https://github.com/RajHarsh03.png?size=96';
 const ADMIN_EMAIL = 'rajharsh.devx@gmail.com';
 const ADMIN_DISPLAY_NAME = 'Harsh Raj';
@@ -55,6 +57,15 @@ function clearCachedUser() {
   try { window.localStorage.removeItem(AUTH_CACHE_KEY); } catch { /* no-op */ }
 }
 
+function guestbookSessionExpired() {
+  try {
+    const lastVisit = Number(window.localStorage.getItem(LAST_GUESTBOOK_VISIT_KEY));
+    return !lastVisit || Date.now() - lastVisit > GUESTBOOK_SESSION_MAX_AGE;
+  } catch {
+    return false;
+  }
+}
+
 function formatDate(value) {
   if (!value) return 'Just now';
   const date = value.toDate ? value.toDate() : new Date(value);
@@ -85,7 +96,7 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
   }
 
   return (
-    <article className="guestbook-card guestbook-compact-card">
+    <article className={`guestbook-card guestbook-compact-card ${entryIsAdmin ? 'role-admin' : 'role-visitor'}`}>
       <div className="guestbook-card-top">
         <div className="guestbook-card-author">
           {entry.photoURL ? <img src={entry.photoURL} alt="" /> : <span className="guestbook-avatar-fallback">{initial}</span>}
@@ -122,12 +133,15 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
 }
 
 export default function Guestbook() {
-  const initialUser = auth?.currentUser || readCachedUser();
+  const sessionExpired = guestbookSessionExpired();
+  const initialUser = sessionExpired ? null : (auth?.currentUser || readCachedUser());
   const initialEntries = readCachedEntries();
   const [user, setUser] = useState(initialUser);
-  const [authLoading, setAuthLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
   const [entries, setEntries] = useState(initialEntries);
-  const [visibleCount, setVisibleCount] = useState(3);
+  const [visibleCount, setVisibleCount] = useState(() => (
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches ? 2 : 3
+  ));
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(initialEntries.length === 0);
   const [sending, setSending] = useState(false);
@@ -138,6 +152,15 @@ export default function Guestbook() {
   useEffect(() => {
     const avatar = new Image();
     avatar.src = TOAST_AVATAR_URL;
+  }, []);
+
+  useEffect(() => {
+    try { window.localStorage.setItem(LAST_GUESTBOOK_VISIT_KEY, String(Date.now())); } catch { /* no-op */ }
+    if (sessionExpired) {
+      clearCachedUser();
+      if (auth?.currentUser) signOut(auth).catch(() => {});
+    }
+    if (!auth) setAuthLoading(false);
   }, []);
 
   // Backfill the role on older notes created by the admin before authorRole
@@ -356,7 +379,7 @@ export default function Guestbook() {
           <div className="guestbook-notes-heading"><div><p className="section-label">// recent messages</p><h2>Voices From Visitors</h2></div></div>
           {loading ? <div className="guestbook-empty-state"><p className="guestbook-muted">Loading notes...</p></div> : entries.length === 0 ? <div className="guestbook-empty-state"><p>No notes yet.</p><small>Be the first to say hello.</small></div> : <>
             <div className="guestbook-grid">{entries.slice(0, visibleCount).map(entry => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={entry.id} />)}</div>
-            {visibleCount < entries.length && <button type="button" className="guestbook-load-more" onClick={() => setVisibleCount(count => count + 3)}>View more</button>}
+            {visibleCount < entries.length && <button type="button" className="guestbook-load-more" onClick={() => setVisibleCount(count => count + (window.matchMedia('(max-width: 640px)').matches ? 2 : 3))}>View more</button>}
           </>}
         </div>
       </section>
