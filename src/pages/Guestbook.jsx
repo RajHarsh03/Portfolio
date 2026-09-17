@@ -347,7 +347,7 @@ export default function Guestbook() {
 
         {entries.some(entry => entry.pinned) && <section className="guestbook-pinned" aria-label="Pinned notes">
           <div className="guestbook-notes-heading"><div><p className="section-label">// highlights</p><h2>Pinned Notes</h2></div></div>
-          <div className="guestbook-pinned-marquee"><div className="guestbook-pinned-track">
+          <div className="guestbook-pinned-marquee"><div className={`guestbook-pinned-track${pinnedEntries.length < 2 ? ' is-static' : ''}`}>
             {marqueePinnedEntries.map((entry, index) => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={`pinned-${entry.id}-${index}`} />)}
           </div></div>
         </section>}
