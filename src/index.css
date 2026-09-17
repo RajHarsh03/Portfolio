@@ -4867,6 +4867,12 @@ footer {
     mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
 }
 
+/* Pinned cards use the same plain surface as recent note cards. */
+.guestbook-pinned .guestbook-card.guestbook-compact-card {
+    background: var(--surface) !important;
+    background-image: none !important;
+}
+
 .guestbook-pinned-track {
     display: flex;
     width: max-content;
