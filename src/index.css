@@ -998,6 +998,7 @@ section {
 .hero-mini-spotify {
     display: inline-flex;
     align-items: center;
+    flex-wrap: nowrap;
     gap: .4rem;
     margin-top: 1.25rem;
     text-decoration: none;
@@ -1006,13 +1007,28 @@ section {
     font-family: 'Inter', 'DM Sans', sans-serif;
     animation: fadeUp .6s .28s ease both;
     transition: color .2s;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .hero-mini-spotify:hover { color: var(--text); }
 
-.hero-mini-label { color: var(--muted); }
+.hero-mini-spotify:hover .hero-mini-track {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
 
-.hero-mini-sep { color: var(--muted); opacity: .5; }
+.hero-mini-label {
+    color: var(--muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.hero-mini-sep {
+    color: var(--muted);
+    opacity: .5;
+    flex-shrink: 0;
+}
 
 .hero-mini-track {
     color: var(--text);
@@ -1020,7 +1036,8 @@ section {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 260px;
+    min-width: 0;
+    flex: 1;
 }
 
 .hero-action-btn {
