@@ -164,11 +164,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="hero-scroll" aria-hidden="true">
-        <div className="scroll-line" />
-        Scroll
-      </div>
     </section>
   );
 }
@@ -223,7 +218,7 @@ function MiniSpotify() {
       </svg>
       <span className="hero-mini-label">Last played</span>
       <span className="hero-mini-sep"> - </span>
-      <span className="hero-mini-track">{track.title} · {track.artist}</span>
+      <span className="hero-mini-track">{track.title.replace(/\s*[\(\[]-?\s*from[^)\]]*[\)\]]/gi, '').replace(/\s*-\s*from\s+.*/gi, '').trim()} · {track.artist}</span>
     </a>
   );
 }

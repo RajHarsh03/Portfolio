@@ -759,7 +759,7 @@ section {
         display: flex;
         align-items: flex-start;
         gap: .85rem;
-        padding: 2.5rem 0 .75rem;
+        padding: 3.2rem 0 .75rem;
     }
 
     .hero-mobile-avatar {
@@ -906,7 +906,6 @@ section {
 
     .hero-mini-track {
         font-size: .6rem;
-        max-width: 140px;
     }
 }
 
@@ -1176,7 +1175,7 @@ section {
 
 /* Minimal one-line Spotify player in hero */
 .hero-mini-spotify {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     flex-wrap: nowrap;
     gap: .4rem;
@@ -1187,8 +1186,8 @@ section {
     font-family: 'Inter', 'DM Sans', sans-serif;
     animation: fadeUp .6s .28s ease both;
     transition: color .2s;
-    min-width: 0;
-    max-width: 100%;
+    overflow: hidden;
+    width: 100%;
 }
 
 .hero-mini-spotify:hover { color: var(--text); }
@@ -1272,51 +1271,6 @@ section {
     transform: translateX(-50%) translateY(0);
 }
 
-/* Hero scroll indicator */
-.hero-scroll {
-    position: absolute;
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .5rem;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    font-size: .7rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    animation: fadeUp .6s .5s ease both;
-}
-
-.scroll-line {
-    width: 1px;
-    height: 50px;
-    background: linear-gradient(to bottom, var(--accent), transparent);
-    animation: scrollLine 2s ease-in-out infinite;
-}
-
-@keyframes scrollLine {
-    0% {
-        transform: scaleY(0);
-        transform-origin: top;
-    }
-
-    50% {
-        transform: scaleY(1);
-        transform-origin: top;
-    }
-
-    51% {
-        transform-origin: bottom;
-    }
-
-    100% {
-        transform: scaleY(0);
-        transform-origin: bottom;
-    }
-}
 
 @keyframes fadeUp {
     from {
@@ -3631,10 +3585,6 @@ footer {
    RESPONSIVE — Tablet (900px)
    ============================ */
 @media (max-width: 900px) {
-    .hero-scroll {
-        display: none;
-    }
-
     section {
         padding: 2rem 0;
     }
