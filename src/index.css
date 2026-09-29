@@ -998,11 +998,11 @@ section {
 .hero-mini-spotify {
     display: inline-flex;
     align-items: center;
-    gap: .45rem;
+    gap: .4rem;
     margin-top: 1.25rem;
     text-decoration: none;
     color: var(--muted);
-    font-size: .85rem;
+    font-size: .78rem;
     font-family: 'Inter', 'DM Sans', sans-serif;
     animation: fadeUp .6s .28s ease both;
     transition: color .2s;
@@ -1016,6 +1016,7 @@ section {
 
 .hero-mini-track {
     color: var(--text);
+    font-size: .78rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
