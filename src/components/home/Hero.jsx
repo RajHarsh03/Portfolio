@@ -1,5 +1,4 @@
-import React from 'react';
-import { useGistContent } from '../../hooks/useGistContent.js';
+import React, { useEffect, useRef, useState } from 'react';
 import TypingEffect from './TypingEffect.jsx';
 
 const GH_USER = 'RajHarsh03';
@@ -13,7 +12,6 @@ export default function Hero() {
         <div className="hero-banner">
           <div className="hero-banner-placeholder" aria-hidden="true" />
 
-          {/* Corner notes */}
           <aside className="hb-note hb-note-lt" aria-hidden="true">
             <span className="hb-note-rule" />
             <span>Somewhere<br />between<br />ideas and<br />reality</span>
@@ -22,16 +20,7 @@ export default function Hero() {
             <span className="hb-note-rule" style={{marginLeft:'auto'}} />
             <span>GOOD IDEAS TAKE TIME</span>
           </aside>
-          {/* <aside className="hb-note hb-note-lb" aria-hidden="true">
-            <span>Ver. 1.0<br />Est. 2026</span>
-            <span className="hb-note-rule" />
-          </aside>
-          <aside className="hb-note hb-note-rb" aria-hidden="true">
-            <span className="hb-note-rule" style={{marginLeft:'auto'}} />
-            <span>Same<br />sky<br />different<br />dreams</span>
-          </aside> */}
 
-          {/* Centered availability text */}
           <div className="hero-banner-center-text">
             Open for full-time<br />&amp; freelance work
           </div>
@@ -45,7 +34,7 @@ export default function Hero() {
         {/* ── Profile row: avatar + body ── */}
         <div className="hero-profile-body">
 
-          {/* Avatar overlapping banner */}
+          {/* Avatar */}
           <div className="hero-avatar-wrap">
             <div className="hero-avatar-ring">
               <img
@@ -69,13 +58,11 @@ export default function Hero() {
           {/* Text content */}
           <div className="hero-profile-text">
 
-            {/* Name */}
             <h1 className="hero-name">
               <span className="gradient-text">Harsh Raj</span>
             </h1>
 
             <TypingEffect />
-
 
             {/* CTA buttons */}
             <div className="hero-cta-row">
@@ -98,6 +85,15 @@ export default function Hero() {
                 Email me
               </a>
             </div>
+
+            {/* Short desc */}
+            <p className="hero-short-desc">
+              Full-stack engineer who turns ideas into real products. I care about clean architecture,
+              sharp UI, and shipping things that actually work — with <strong>React</strong>, <strong>Node.js</strong>, <strong>TypeScript</strong>, and <strong>Python</strong>.
+            </p>
+
+            {/* Minimal Spotify one-liner */}
+            <MiniSpotify />
 
             {/* Social icon buttons */}
             <div className="hero-actions">
@@ -148,37 +144,82 @@ export default function Hero() {
   );
 }
 
-/* Live clock — updates every second */
+/* ── Minimal one-line Spotify: 🟢 Last played — Song · Artist ── */
+function MiniSpotify() {
+  const [track, setTrack] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('sp_last_track') || 'null'); } catch { return null; }
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname.startsWith('127.');
+        let json = await fetch('/api/now-playing').then(r => r.ok ? r.json() : null).catch(() => null);
+        if (isLocal && !json?.track) {
+          json = await fetch('https://harshx.in/api/now-playing').then(r => r.ok ? r.json() : null).catch(() => null);
+        }
+        if (!cancelled && json?.track) {
+          setTrack(json.track);
+          try { localStorage.setItem('sp_last_track', JSON.stringify(json.track)); } catch {}
+        }
+      } catch {}
+    }
+    load();
+    const id = setInterval(load, 30000);
+    return () => { cancelled = true; clearInterval(id); };
+  }, []);
+
+  if (!track) return (
+    <div className="hero-mini-spotify" style={{ pointerEvents: 'none' }}>
+      <svg viewBox="0 0 24 24" fill="#1DB954" width="14" height="14" aria-hidden="true" style={{ flexShrink: 0 }}>
+        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z"/>
+      </svg>
+      <span className="hero-mini-label">Last played</span>
+      <span className="hero-mini-sep"> — </span>
+      <span className="hero-mini-track" style={{ opacity: .4 }}>—</span>
+    </div>
+  );
+
+  return (
+    <a
+      href={track.url || 'https://open.spotify.com'}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="hero-mini-spotify"
+      aria-label={`Last played: ${track.title} by ${track.artist}`}
+    >
+      <svg viewBox="0 0 24 24" fill="#1DB954" width="14" height="14" aria-hidden="true" style={{ flexShrink: 0 }}>
+        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z"/>
+      </svg>
+      <span className="hero-mini-label">Last played</span>
+      <span className="hero-mini-sep"> — </span>
+      <span className="hero-mini-track">{track.title} · {track.artist}</span>
+    </a>
+  );
+}
+
 function LiveClock() {
   const [time, setTime] = React.useState(getTime());
-
   React.useEffect(() => {
     const id = setInterval(() => setTime(getTime()), 1000);
     return () => clearInterval(id);
   }, []);
-
   return <span>{time}</span>;
 }
 
 function getTime() {
-  return new Date().toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  });
+  return new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
 
-/* Live temperature — Kolkata, fixed coords, no permission needed */
 function LiveTemp() {
   const [temp, setTemp] = React.useState(null);
-
   React.useEffect(() => {
     fetch('https://api.open-meteo.com/v1/forecast?latitude=22.5726&longitude=88.3639&current_weather=true')
       .then(r => r.json())
       .then(d => setTemp(Math.round(d.current_weather.temperature)))
       .catch(() => {});
   }, []);
-
   if (temp === null) return null;
   return <span>{temp}°C</span>;
 }

@@ -19,7 +19,7 @@ export default function InfoStrip() {
   );
 }
 
-function SpotifyNowPlaying() {
+export function SpotifyNowPlaying() {
   const [data, setData] = useState(null);
   // Seed from localStorage immediately so there's no null flash on reload
   const lastTrackRef = useRef((() => {
