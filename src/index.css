@@ -1084,7 +1084,7 @@ section {
     margin: 0 auto;
     padding: 0 24px;
     display: flex;
-    align-items: stretch;
+    flex-direction: column;
     gap: 12px;
     position: relative;
     z-index: 2;
@@ -1122,14 +1122,14 @@ section {
 }
 
 .info-strip-player {
-    width: 210px;
+    width: 100%;
     flex-shrink: 0;
     position: relative;
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: .75rem;
-    padding: .75rem;
+    padding: .75rem 1rem;
     text-decoration: none;
     color: inherit;
     overflow: hidden;
@@ -1149,18 +1149,18 @@ section {
 /* Blurred album art as background */
 .np-bg-blur {
     position: absolute;
-    inset: -10px;
+    inset: 0;
     background-size: cover;
     background-position: center;
-    filter: blur(22px) saturate(1.4);
+    filter: blur(18px) saturate(1.4);
     opacity: .18;
     z-index: 0;
-    border-radius: 28px;
+    border-radius: 18px;
     transition: opacity .4s;
 }
 
 .is-playing .np-bg-blur {
-    opacity: .28;
+    opacity: .22;
 }
 
 .np-bg-overlay {
