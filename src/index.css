@@ -754,9 +754,9 @@ section {
     }
 
     .hero-mobile-avatar {
-        width: 72px !important;
-        height: 72px !important;
-        min-width: 72px !important;
+        width: 90px !important;
+        height: 90px !important;
+        min-width: 90px !important;
         flex-shrink: 0;
         border-radius: 50% !important;
         overflow: hidden !important;
@@ -766,8 +766,8 @@ section {
     }
 
     .hero-mobile-avatar img {
-        width: 72px !important;
-        height: 72px !important;
+        width: 90px !important;
+        height: 90px !important;
         border-radius: 50% !important;
         object-fit: cover;
     }
@@ -807,7 +807,7 @@ section {
     }
 
     .hero-mobile-location-label {
-        font-size: .6rem;
+        font-size: .75rem;
         font-weight: 700;
         letter-spacing: .1em;
         color: var(--text);
@@ -882,12 +882,12 @@ section {
     }
 
     .hero-cta-btn {
-        font-size: .65rem !important;
-        padding: .35rem .75rem !important;
+        font-size: .7rem ;
+        padding: .35rem .75rem ;
     }
 
     .hero-short-desc {
-        font-size: .76rem !important;
+        font-size: .76rem ;
         line-height: 1.55;
     }
 
