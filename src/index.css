@@ -94,6 +94,11 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:focus:not(:focus-visible) {
+    outline: none;
 }
 
 html {
@@ -549,6 +554,13 @@ section {
     margin-bottom: 1.5rem;
 }
 
+.section-title:focus,
+h1:focus,
+h2:focus,
+#main-content:focus {
+    outline: none;
+}
+
 /* Accent underline on section titles */
 .section-title::after {
     content: '';
@@ -569,7 +581,7 @@ section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 5rem 0 var(--home-section-y);
+    padding: 5rem 0 1.1rem;
     position: relative;
 }
 
@@ -1234,6 +1246,28 @@ section {
     transition: color .2s ease, transform .2s ease;
     flex-shrink: 0;
     position: relative;
+}
+
+.hero-action-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+@media (min-width: 901px) {
+    .hero-actions {
+        gap: .7rem;
+    }
+
+    .hero-action-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+    }
+
+    .hero-action-btn svg {
+        width: 22px;
+        height: 22px;
+    }
 }
 
 [data-theme="light"] .hero-action-btn {
@@ -2229,6 +2263,8 @@ section {
 #skills {
     background: transparent;
     overflow: hidden;
+    padding-top: 1rem;
+    padding-bottom: var(--home-section-y);
 }
 
 /* Constrain skills section label and title to 760px */
@@ -3572,7 +3608,12 @@ footer {
     }
 
     #hero {
-        padding: 5rem 0 var(--home-section-y);
+        padding: 5rem 0 1.1rem;
+    }
+
+    #skills {
+        padding-top: 1rem;
+        padding-bottom: var(--home-section-y);
     }
 }
 
@@ -3619,8 +3660,13 @@ footer {
     }
 
     #hero {
-        padding: 4.5rem 0 2rem;
+        padding: 4.5rem 0 .9rem;
         min-height: auto;
+    }
+
+    #skills {
+        padding-top: .85rem;
+        padding-bottom: 2rem;
     }
 
     .info-strip-row {
@@ -3756,8 +3802,13 @@ footer {
     }
 
     #hero {
-        padding: 4rem 0 1.5rem;
+        padding: 4rem 0 .75rem;
         min-height: auto;
+    }
+
+    #skills {
+        padding-top: .7rem;
+        padding-bottom: 1.5rem;
     }
 
     .hero-name {
@@ -4017,7 +4068,7 @@ footer {
    ============================================= */
 .skills-ticker-section {
   max-width: 860px;
-  margin: 1.2rem auto 0;
+  margin: 0 auto;
   padding: 0 24px;
   display: flex;
   flex-direction: column;
@@ -5293,7 +5344,21 @@ footer {
   background: none;
   border: none;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  -webkit-user-select: none;
+  user-select: none;
   transition: color .2s ease, background .2s ease;
+}
+
+.bnav-link:focus,
+.bnav-link:focus-visible,
+.bnav-link:active,
+.bnav-drop-item:focus,
+.bnav-drop-item:focus-visible,
+.bnav-drop-item:active {
+  outline: none;
+  box-shadow: none;
 }
 
 .bnav-link:hover {
@@ -5359,6 +5424,8 @@ footer {
   color: var(--text-secondary);
   text-decoration: none;
   white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
   transition: color .2s, background .2s;
 }
 

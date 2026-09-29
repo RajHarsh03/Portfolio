@@ -29,7 +29,12 @@ export default function BottomNav() {
   }, []);
 
   // Close dropdown on route change
-  useEffect(() => { setMoreOpen(false); }, [pathname]);
+  useEffect(() => {
+    setMoreOpen(false);
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+  }, [pathname]);
 
   const moreActive = MORE_LINKS.some(l => pathname === l.to);
 
