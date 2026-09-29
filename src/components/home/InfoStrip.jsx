@@ -96,8 +96,6 @@ function SpotifyNowPlaying() {
               </svg>
             </div>
         }
-        {/* Pulse ring when playing */}
-        {isPlaying && <div className="np-pulse-ring" aria-hidden="true" />}
       </div>
 
       {/* Right: text */}

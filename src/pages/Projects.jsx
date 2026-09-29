@@ -46,7 +46,7 @@ export default function Projects() {
   // Detect mobile view
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 480);
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
