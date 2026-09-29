@@ -214,7 +214,7 @@ nav {
     border: 1px solid transparent;
     border-radius: 999px;
     width: calc(100% - 3rem);
-    max-width: 740px;
+    max-width: 840px;
     box-shadow: none;
     transition: top .4s cubic-bezier(.4,0,.2,1),
                 background .35s,
@@ -499,7 +499,7 @@ nav.floating {
    CONTAINER SYSTEM
    =============== */
 .container {
-    max-width: 760px;
+    max-width: 860px;
     margin: 0 auto;
     padding: 0 24px;
 }
@@ -567,7 +567,7 @@ section {
 /* Outer card — single border wrapping everything */
 .hero-profile-card {
     width: 100%;
-    max-width: 760px;
+    max-width: 860px;
     margin: 0 auto;
     padding: 0 24px;
     position: relative;
@@ -728,6 +728,133 @@ section {
     border-radius: 0 0 12px 12px;
     padding: 0 1.25rem 1.25rem;
     position: relative;
+}
+
+/* Mobile top row — hidden on desktop */
+.hero-mobile-top {
+    display: none;
+}
+
+.hero-mobile-location {
+    display: none;
+}
+
+@media (max-width: 430px) {
+    /* Hide banner */
+    .hero-banner {
+        display: none;
+    }
+
+    /* Show mobile top row */
+    .hero-mobile-top {
+        display: flex;
+        align-items: flex-start;
+        gap: .85rem;
+        padding: 1.25rem 0 .75rem;
+    }
+
+    .hero-mobile-avatar {
+        width: 72px !important;
+        height: 72px !important;
+        min-width: 72px !important;
+        flex-shrink: 0;
+        border-radius: 50% !important;
+        overflow: hidden !important;
+        outline: none !important;
+        padding: 0 !important;
+        background: none !important;
+    }
+
+    .hero-mobile-avatar img {
+        width: 72px !important;
+        height: 72px !important;
+        border-radius: 50% !important;
+        object-fit: cover;
+    }
+
+    .hero-mobile-identity {
+        display: flex;
+        flex-direction: column;
+        gap: .2rem;
+        min-width: 0;
+        padding-top: .1rem;
+    }
+
+    .hero-mobile-identity .hero-name {
+        font-size: 1.25rem;
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .hero-mobile-identity .hero-role-wrap {
+        display: block !important;
+    }
+
+    .hero-mobile-identity .hero-role {
+        font-size: .82rem;
+    }
+
+    .hero-mobile-identity .hero-role-quote {
+        font-size: .72rem;
+    }
+
+    /* Show mobile location */
+    .hero-mobile-location {
+        display: flex;
+        flex-direction: column;
+        gap: .35rem;
+        padding: .75rem 1.25rem .5rem;
+    }
+
+    .hero-mobile-location-label {
+        font-size: .6rem;
+        font-weight: 700;
+        letter-spacing: .1em;
+        color: var(--text);
+        font-family: 'DM Mono', monospace;
+        text-transform: uppercase;
+    }
+
+    .hero-mobile-location .hero-location {
+        margin-left: 0;
+        margin-bottom: 0;
+        animation: none;
+        font-size: .78rem;
+        font-weight: 400;
+    }
+
+    /* Hide desktop avatar, name and typing on mobile — shown in mobile-top row */
+    .hero-profile-body .hero-avatar-wrap,
+    .hero-profile-body .hero-name,
+    .hero-profile-body .hero-role-wrap {
+        display: none !important;
+    }
+
+    /* Remove desktop negative margin */
+    .hero-profile-body {
+        padding-top: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .hero-mobile-top,
+    .hero-mobile-location {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .hero-profile-card {
+        padding: 0;
+    }
+
+    .hero-cta-btn {
+        font-size: .76rem;
+        padding: .4rem .8rem;
+    }
+
+    .hero-short-desc {
+        font-size: .82rem;
+    }
 }
 
 /* ── Avatar overlapping the banner bottom-left ── */
@@ -1158,7 +1285,7 @@ section {
 }
 
 .info-strip-row {
-    max-width: 760px;
+    max-width: 860px;
     margin: 0 auto;
     padding: 0 24px;
     display: flex;
@@ -2097,7 +2224,7 @@ section {
 /* Constrain skills section label and title to 760px */
 #skills > .section-label,
 #skills > h2.section-title {
-    max-width: 760px;
+    max-width: 860px;
     margin-left: auto;
     margin-right: auto;
     padding-left: 24px;
@@ -2114,7 +2241,7 @@ section {
 
 #projects > .section-label,
 #projects > h2.section-title {
-    max-width: 760px;
+    max-width: 860px;
     margin-left: auto;
     margin-right: auto;
     padding-left: 24px;
@@ -2130,7 +2257,7 @@ section {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    max-width: 760px;
+    max-width: 860px;
     margin: 0 auto;
     padding: 0 24px;
 }
@@ -2727,7 +2854,7 @@ section {
 .gh-activity-section {
     background: transparent;
     padding-bottom: 2rem;
-    max-width: 760px;
+    max-width: 860px;
     margin: 0 auto;
     padding-left: 24px;
     padding-right: 24px;
@@ -2907,7 +3034,7 @@ section {
 }
 
 .quote-strip-inner {
-    max-width: 760px;
+    max-width: 860px;
     margin: 0 auto;
     padding: 1.25rem 24px;
     display: flex;
@@ -2967,7 +3094,7 @@ footer {
 }
 
 .footer-simple {
-    max-width: 760px;
+    max-width: 860px;
     margin: 0 auto;
     padding: 1.75rem 24px 1.5rem;
 }
@@ -3633,17 +3760,17 @@ footer {
     }
 
     .hero-name {
-        font-size: clamp(1.3rem, 8.5vw, 1.7rem);
+        font-size: clamp(1.1rem, 6vw, 1.4rem);
     }
 
     /* Smaller avatar so it doesn't cover banner content */
     .hero-avatar-ring {
-        width: 80px;
-        height: 80px;
+        width: 70px;
+        height: 70px;
     }
 
     .hero-avatar-wrap {
-        margin-top: -40px;
+        margin-top: -35px;
     }
 
     /* Taller banner so center text + time pill stay visible */
@@ -3892,7 +4019,7 @@ footer {
    SKILLS TICKER (inline styles from index.html)
    ============================================= */
 .skills-ticker-section {
-  max-width: 760px;
+  max-width: 860px;
   margin: 1.2rem auto 0;
   padding: 0 24px;
   display: flex;
@@ -4060,7 +4187,7 @@ footer {
    GUESTBOOK
    ==================== */
 .guestbook-home-cta {
-    max-width: 760px;
+    max-width: 860px;
     margin: 2.5rem auto 3rem;
     padding: 1rem 24px;
     display: flex;
@@ -4190,7 +4317,7 @@ footer {
 
 .guestbook-preview,
 .guestbook-page {
-    max-width: 760px;
+    max-width: 860px;
     margin: 0 auto;
     padding: 2.5rem 24px 4rem;
 }
@@ -5290,7 +5417,7 @@ footer {
     grid-template-columns: 220px 1fr;
     gap: 3rem;
     align-items: start;
-    max-width: 760px;
+    max-width: 860px;
     margin: 2rem auto 0;
     padding: 0 24px 1rem;
 }
@@ -5413,7 +5540,7 @@ footer {
 
 /* Quote block */
 .about-quote-block {
-    max-width: 760px;
+    max-width: 860px;
     margin: 0.5rem auto 0;
     padding: 1.5rem 24px 1rem;
     text-align: center;
@@ -5438,7 +5565,7 @@ footer {
 
 /* ── Certifications section ── */
 .about-certs-section {
-    max-width: 760px;
+    max-width: 860px;
     margin: 0 auto;
     padding: 0 24px;
 }
@@ -6265,7 +6392,7 @@ footer {
 
 
 .projects-page-header {
-  max-width: 760px;
+  max-width: 860px;
   margin: 0 auto 1.5rem;
   padding: 0 24px;
 }
@@ -6321,7 +6448,7 @@ footer {
   border-color: #374151;
 }
 #allProjects {
-  max-width: 760px;
+  max-width: 860px;
   margin: 0 auto;
   padding: 0 24px 2.5rem;
 }
@@ -6403,10 +6530,10 @@ footer {
 }
 
 /* --- Journey page --- */
-.journey-page-header { max-width: 760px; margin: 0 auto 1.5rem; padding: 0 24px; }
+.journey-page-header { max-width: 860px; margin: 0 auto 1.5rem; padding: 0 24px; }
 .journey-page-header h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: .35rem; }
 .journey-page-header p { color: var(--muted); font-size: .88rem; }
-.journey-content { max-width: 760px; margin: 0 auto; padding: 0 24px 4rem; }
+.journey-content { max-width: 860px; margin: 0 auto; padding: 0 24px 4rem; }
 .journey-section-label { font-family: 'DM Mono', monospace; font-size: .85rem; color: var(--accent); margin-bottom: .5rem; letter-spacing: .5px; }
 .journey-section-title { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 700; margin-bottom: 2rem; }
 .journey-block { margin-bottom: 4rem; }
@@ -6764,10 +6891,10 @@ footer {
 }
 
 /* --- Certificates page --- */
-.certs-page-header { max-width: 760px; margin: 0 auto 1.5rem; padding: 0 24px; padding-top: 1.5rem; }
+.certs-page-header { max-width: 860px; margin: 0 auto 1.5rem; padding: 0 24px; padding-top: 1.5rem; }
 .certs-page-header h1 { margin-bottom: .35rem; }
 .certs-page-header p { color: var(--muted); font-size: .88rem; }
-#allCerts { max-width: 760px; margin: 0 auto; padding: 0 24px 4rem; }
+#allCerts { max-width: 860px; margin: 0 auto; padding: 0 24px 4rem; }
 
 /* Cert card description */
 .exp-card-desc-text {
@@ -6803,13 +6930,13 @@ footer {
 }
 
 /* --- Contact page --- */
-.contact-page-header { max-width: 760px; margin: 0 auto 1.5rem; padding: 0 24px; }
+.contact-page-header { max-width: 860px; margin: 0 auto 1.5rem; padding: 0 24px; }
 .contact-page-header h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: .35rem; }
 .contact-page-header p { color: var(--muted); font-size: .88rem; }
-#contactSection { max-width: 760px; margin: 0 auto; padding: 0 24px 2.5rem; }
+#contactSection { max-width: 860px; margin: 0 auto; padding: 0 24px 2.5rem; }
 
 /* --- ProjectDetail page --- */
-.pd-wrap { max-width: 760px; margin: 0 auto; padding: 0 24px 6rem; }
+.pd-wrap { max-width: 860px; margin: 0 auto; padding: 0 24px 6rem; }
 .pd-back {
   display: inline-flex; align-items: center; gap: .45rem;
   font-family: 'DM Mono', monospace; font-size: .78rem; font-weight: 600;
@@ -6870,7 +6997,7 @@ footer {
 .pd-error-title { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--text); display: block; margin-bottom: .5rem; }
 
 /* --- Responsive overrides --- */
-@media (max-width: 760px) {
+@media (max-width: 860px) {
   .projects-page-header, .journey-page-header, .certs-page-header, .contact-page-header { padding: 0 24px; }
   #allProjects { padding: 0 24px 5rem; }
   #allProjects .projects-grid { grid-template-columns: 1fr; gap: 1rem; }
@@ -7684,7 +7811,7 @@ footer {
 }
 
 .pd-hero-section .container {
-    max-width: 760px;
+    max-width: 860px;
     margin: 0 auto;
     padding: 0 24px;
 }
@@ -8072,3 +8199,5 @@ footer {
         align-items: flex-start;
     }
 }
+
+

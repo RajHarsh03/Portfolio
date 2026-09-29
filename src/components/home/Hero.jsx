@@ -8,7 +8,7 @@ export default function Hero() {
     <section id="hero">
       <div className="hero-profile-card">
 
-        {/* ── Banner ── */}
+        {/* ── Banner (hidden on mobile) ── */}
         <div className="hero-banner">
           <div className="hero-banner-placeholder" aria-hidden="true" />
 
@@ -31,7 +31,37 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* ── Profile row: avatar + body ── */}
+        {/* ── Mobile top row: avatar + name (shown only ≤430px) ── */}
+        <div className="hero-mobile-top">
+          <div className="hero-avatar-ring hero-mobile-avatar">
+            <img
+              src={`https://github.com/${GH_USER}.png?size=400`}
+              alt="Harsh Raj"
+              className="hero-avatar-img"
+              loading="eager"
+              fetchPriority="high"
+            />
+          </div>
+          <div className="hero-mobile-identity">
+            <h1 className="hero-name"><span className="gradient-text">Harsh Raj</span></h1>
+            <TypingEffect />
+          </div>
+        </div>
+
+        {/* ── Mobile location (shown only ≤430px) ── */}
+        <div className="hero-mobile-location">
+          <span className="hero-mobile-location-label">LOCATION</span>
+          <div className="hero-location">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+              strokeLinecap="round" strokeLinejoin="round" width="13" height="13">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+              <circle cx="12" cy="9" r="2.5" />
+            </svg>
+            Kolkata, India
+          </div>
+        </div>
+
+        {/* ── Profile row: avatar + body (desktop) ── */}
         <div className="hero-profile-body">
 
           {/* Avatar */}
