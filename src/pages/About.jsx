@@ -207,7 +207,7 @@ export default function About() {
   return (
     <>
       <Helmet>
-        <title>About - Harsh Raj</title>
+        <title>About | Harsh Raj | Full-Stack Developer</title>
         <meta name="description" content="A full-stack developer and aspiring AI/ML engineer. Discover who I am, what I build, and what drives me." />
       </Helmet>
 

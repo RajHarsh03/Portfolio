@@ -291,7 +291,7 @@ export default function Guestbook() {
   return (
     <>
       <Helmet>
-        <title>Guestbook - Harsh Raj</title>
+        <title>Guestbook | Harsh Raj | Full-Stack Developer</title>
         <meta name="description" content="Leave a note for Harsh Raj and browse messages from visitors." />
       </Helmet>
       {toast && <div className={`guestbook-toast is-${toast.tone}`} role="status" aria-live="polite">

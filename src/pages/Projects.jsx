@@ -119,7 +119,7 @@ export default function Projects() {
   return (
     <>
       <Helmet>
-        <title>Projects</title>
+        <title>Projects | Harsh Raj | Full-Stack Developer</title>
         <meta name="description" content="A complete collection of everything I've built - filtered by category." />
       </Helmet>
 
