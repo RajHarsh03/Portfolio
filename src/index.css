@@ -514,14 +514,23 @@ nav.floating {
 /* ===============
    SECTION SPACING
    =============== */
+:root {
+    --home-section-y: 2.5rem;
+}
+
 section {
     padding: 2.5rem 0;
 }
 
-/* Home page sections — tighter spacing */
-#hero, #about, #skills, #edu-certs, #projects, #ghActivity, #journey, #home-contact {
-    padding-top: 1.2rem;
-    padding-bottom: 1.2rem;
+/* Home page sections — equal gap between each block */
+#skills,
+#edu-certs,
+#projects,
+#ghActivity,
+#about,
+#journey,
+#home-contact {
+    padding: var(--home-section-y) 0;
 }
 
 .section-label {
@@ -560,7 +569,7 @@ section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 5rem 0 2rem;
+    padding: 5rem 0 var(--home-section-y);
     position: relative;
 }
 
@@ -750,13 +759,13 @@ section {
         display: flex;
         align-items: flex-start;
         gap: .85rem;
-        padding: .6rem 0 .4rem;
+        padding: 2.5rem 0 .4rem;
     }
 
     .hero-mobile-avatar {
-        width: 90px !important;
-        height: 90px !important;
-        min-width: 90px !important;
+        width: 100px !important;
+        height: 100px !important;
+        min-width: 100px !important;
         flex-shrink: 0;
         border-radius: 50% !important;
         overflow: hidden !important;
@@ -1325,7 +1334,7 @@ section {
    ABOUT / INFO STRIP
    ================ */
 #about {
-    padding: 0 0 2rem;
+    padding: var(--home-section-y) 0;
 }
 
 .info-strip-row {
@@ -1918,11 +1927,15 @@ section {
    EDUCATION & CERTS SECTION
    ======================== */
 #edu-certs {
-    padding: 40px 0;
+    padding: var(--home-section-y) 0;
 }
 
 .edu-certs-group {
     margin-bottom: 2rem;
+}
+
+.edu-certs-group:last-child {
+    margin-bottom: 0;
 }
 
 .edu-certs-group-title {
@@ -2253,7 +2266,7 @@ section {
    JOURNEY SECTION
    =============== */
 #journey {
-    padding: 40px 0;
+    padding: var(--home-section-y) 0;
 }
 
 /* ==============
@@ -2261,7 +2274,6 @@ section {
    ============== */
 #skills {
     background: transparent;
-    padding-top: 0;
     overflow: hidden;
 }
 
@@ -2280,11 +2292,12 @@ section {
    =============== */
 #projects {
     background: transparent;
-    padding-bottom: 2.5rem;
 }
 
 #projects > .section-label,
-#projects > h2.section-title {
+#projects > h2.section-title,
+#ghActivity > .section-label,
+#ghActivity > h2.section-title {
     max-width: 860px;
     margin-left: auto;
     margin-right: auto;
@@ -2897,11 +2910,12 @@ section {
    =========================== */
 .gh-activity-section {
     background: transparent;
-    padding-bottom: 2rem;
+}
+
+.gh-heatmap-wrap {
     max-width: 860px;
     margin: 0 auto;
-    padding-left: 24px;
-    padding-right: 24px;
+    padding: 0 24px;
 }
 
 .gh-heatmap-card {
@@ -3593,18 +3607,18 @@ footer {
         padding: 3.5rem 6rem;
     }
 
-    /* Home sections — tighter on large desktop */
-    #hero, #about, #skills, #edu-certs, #projects, #ghActivity, #journey, #home-contact {
-        padding-top: 1.5rem;
-        padding-bottom: 1.5rem;
+    #skills,
+    #edu-certs,
+    #projects,
+    #ghActivity,
+    #about,
+    #journey,
+    #home-contact {
+        padding: var(--home-section-y) 0;
     }
 
     #hero {
-        padding: 5rem 6rem 6rem;
-    }
-
-    #journey {
-        padding: 80px 0;
+        padding: 5rem 0 var(--home-section-y);
     }
 }
 
@@ -3625,10 +3639,14 @@ footer {
         padding: 2rem 0;
     }
 
-    /* Home sections — tighter on tablet */
-    #hero, #about, #skills, #edu-certs, #projects, #ghActivity, #journey, #home-contact {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
+    #skills,
+    #edu-certs,
+    #projects,
+    #ghActivity,
+    #about,
+    #journey,
+    #home-contact {
+        padding: 2rem 0;
     }
 
     .gh-activity-section,
@@ -3651,11 +3669,8 @@ footer {
     }
 
     #hero {
-        padding: 4.5rem 0 3rem;
-        min-height: auto;    }
-
-    #about {
-        padding-bottom: 2rem;
+        padding: 4.5rem 0 2rem;
+        min-height: auto;
     }
 
     .info-strip-row {
@@ -3666,10 +3681,6 @@ footer {
 
     .info-strip-player {
         width: 100%;
-    }
-
-    #journey {
-        padding: 4rem 0;
     }
 
     .hero-profile-card {
@@ -3765,10 +3776,14 @@ footer {
         padding: 1.5rem 0;
     }
 
-    /* Home sections — tight on mobile */
-    #hero, #about, #skills, #edu-certs, #projects, #ghActivity, #journey, #home-contact {
-        padding-top: 0.8rem;
-        padding-bottom: 0.8rem;
+    #skills,
+    #edu-certs,
+    #projects,
+    #ghActivity,
+    #about,
+    #journey,
+    #home-contact {
+        padding: 1.5rem 0;
     }
 
     .gh-activity-section,
@@ -3791,16 +3806,8 @@ footer {
     }
 
     #hero {
-        padding: 4rem 0 2rem;
+        padding: 4rem 0 1.5rem;
         min-height: auto;
-    }
-
-    #about {
-        padding-bottom: 2rem;
-    }
-
-    #journey {
-        padding: 3rem 0;
     }
 
     .hero-name {
@@ -3852,12 +3859,8 @@ footer {
 
     /* GitHub activity */
     .gh-activity-section {
-        padding-bottom: 2rem;
-    }
-
-    /* Projects */
-    #projects {
-        padding-bottom: 2rem;
+        padding-left: 24px;
+        padding-right: 24px;
     }
 
     /* Blog */
@@ -4232,8 +4235,8 @@ footer {
    ==================== */
 .guestbook-home-cta {
     max-width: 860px;
-    margin: 2.5rem auto 3rem;
-    padding: 1rem 24px;
+    margin: 0 auto;
+    padding: var(--home-section-y) 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;

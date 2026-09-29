@@ -103,6 +103,7 @@ export default function GitHubHeatmap() {
       <div className="section-label">// contribution</div>
       <h2 className="section-title reveal">GitHub Activity</h2>
 
+      <div className="gh-heatmap-wrap">
       <div className="gh-heatmap-card">
         {/* Top */}
         <div className="gh-heatmap-top">
@@ -172,6 +173,7 @@ export default function GitHubHeatmap() {
             <span>More</span>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );
