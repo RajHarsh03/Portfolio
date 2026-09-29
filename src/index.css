@@ -759,13 +759,13 @@ section {
         display: flex;
         align-items: flex-start;
         gap: .85rem;
-        padding: 2.5rem 0 .4rem;
+        padding: 2.5rem 0 .75rem;
     }
 
     .hero-mobile-avatar {
-        width: 100px !important;
-        height: 100px !important;
-        min-width: 100px !important;
+        width: 90px !important;
+        height: 90px !important;
+        min-width: 90px !important;
         flex-shrink: 0;
         border-radius: 50% !important;
         overflow: hidden !important;
@@ -880,14 +880,14 @@ section {
     }
 
     .hero-mobile-avatar {
-        width: 58px !important;
-        height: 58px !important;
-        min-width: 58px !important;
+        width: 75px !important;
+        height: 75px !important;
+        min-width: 75px !important;
     }
 
     .hero-mobile-avatar img {
-        width: 58px !important;
-        height: 58px !important;
+        width: 75px !important;
+        height: 75px !important;
     }
 
     .hero-cta-btn {

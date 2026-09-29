@@ -50,7 +50,6 @@ export default function Hero() {
 
         {/* ── Mobile location (shown only ≤430px) ── */}
         <div className="hero-mobile-location">
-          <span className="hero-mobile-location-label">LOCATION</span>
           <div className="hero-location">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
               strokeLinecap="round" strokeLinejoin="round" width="13" height="13">
