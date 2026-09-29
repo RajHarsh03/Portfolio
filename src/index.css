@@ -882,12 +882,12 @@ section {
     }
 
     .hero-cta-btn {
-        font-size: .6rem !important;
-        padding: .28rem .55rem !important;
+        font-size: .65rem !important;
+        padding: .35rem .75rem !important;
     }
 
     .hero-short-desc {
-        font-size: .72rem !important;
+        font-size: .76rem !important;
         line-height: 1.55;
     }
 
