@@ -750,7 +750,7 @@ section {
         display: flex;
         align-items: flex-start;
         gap: .85rem;
-        padding: 1.25rem 0 .75rem;
+        padding: .6rem 0 .4rem;
     }
 
     .hero-mobile-avatar {
@@ -803,7 +803,7 @@ section {
         display: flex;
         flex-direction: column;
         gap: .35rem;
-        padding: .75rem 1.25rem .5rem;
+        padding: .3rem 0 .5rem;
     }
 
     .hero-mobile-location-label {
@@ -854,6 +854,50 @@ section {
 
     .hero-short-desc {
         font-size: .82rem;
+    }
+}
+
+@media (max-width: 350px) {
+    .hero-mobile-identity .hero-name {
+        font-size: 1rem;
+    }
+
+    .hero-mobile-identity .hero-role {
+        font-size: .72rem;
+    }
+
+    .hero-mobile-identity .hero-role-quote {
+        font-size: .62rem;
+    }
+
+    .hero-mobile-avatar {
+        width: 58px !important;
+        height: 58px !important;
+        min-width: 58px !important;
+    }
+
+    .hero-mobile-avatar img {
+        width: 58px !important;
+        height: 58px !important;
+    }
+
+    .hero-cta-btn {
+        font-size: .6rem !important;
+        padding: .28rem .55rem !important;
+    }
+
+    .hero-short-desc {
+        font-size: .72rem !important;
+        line-height: 1.55;
+    }
+
+    .hero-mini-spotify {
+        font-size: .6rem;
+    }
+
+    .hero-mini-track {
+        font-size: .6rem;
+        max-width: 140px;
     }
 }
 
