@@ -52,53 +52,40 @@ export default function HomeContact() {
               <h3 className="hc-card-title">Get in touch</h3>
               <p className="hc-card-sub">Choose your preferred method to connect and let's discuss your project.</p>
 
-              <div className="hc-links">
-                <a href="https://cal.com/rajharsh03/one-to-one" target="_blank" rel="noopener noreferrer" className="hc-link-row">
-                  <span className="hc-link-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                      strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-                      <rect x="3" y="4" width="18" height="18" rx="2"/>
-                      <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
-                      <line x1="3" y1="10" x2="21" y2="10"/>
-                    </svg>
-                  </span>
-                  <div className="hc-link-text">
-                    <div className="hc-link-title">Book a quick chat</div>
-                    <div className="hc-link-desc">Discuss code, projects, or just say hello</div>
+              {/* Stats box */}
+              <div className="hc-stats">
+                <div className="hc-stat-item">
+                  <div className="hc-stat-text">
+                    <span className="hc-stat-value">24h</span>
+                    <span className="hc-stat-label">Response time</span>
                   </div>
-                  <span className="hc-link-arrow">↗</span>
-                </a>
-
-                <a href="mailto:rajharsh.devx@gmail.com" className="hc-link-row">
-                  <span className="hc-link-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                      strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-                      <rect x="2" y="4" width="20" height="16" rx="2"/>
-                      <polyline points="2,4 12,13 22,4"/>
-                    </svg>
-                  </span>
-                  <div className="hc-link-text">
-                    <div className="hc-link-title">Write an email</div>
-                    <div className="hc-link-desc">For collaborations or quick questions</div>
+                </div>
+                <div className="hc-stat-divider" />
+                <div className="hc-stat-item">
+                  <div className="hc-stat-text">
+                    <span className="hc-stat-value">Open</span>
+                    <span className="hc-stat-label">For opportunities</span>
                   </div>
-                  <span className="hc-link-arrow">↗</span>
-                </a>
-
-                <a href="https://x.com/RajHarsh03" target="_blank" rel="noopener noreferrer" className="hc-link-row">
-                  <span className="hc-link-icon">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                    </svg>
-                  </span>
-                  <div className="hc-link-text">
-                    <div className="hc-link-title">Follow on X</div>
-                    <div className="hc-link-desc">Code experiments &amp; daily learning</div>
-                  </div>
-                  <span className="hc-link-arrow">↗</span>
-                </a>
+                </div>
               </div>
 
-              <div className="hc-card-footer">Response within 24 hours &bull; Available for hire</div>
+              {/* Simple info rows */}
+              <div className="hc-info-rows">
+                <div className="hc-info-row">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                    strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  Replies within 24 hours
+                </div>
+                <div className="hc-info-row">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                    strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Open to remote, freelance &amp; full-time
+                </div>
+              </div>
             </div>
           </div>
 

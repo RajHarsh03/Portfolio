@@ -1638,8 +1638,9 @@ h2:focus,
 .hc-links {
     display: flex;
     flex-direction: column;
-    gap: .35rem;
+    gap: .5rem;
     flex: 1;
+    margin-top: .75rem;
 }
 
 .hc-link-row {
@@ -1705,6 +1706,94 @@ h2:focus,
     color: var(--text);
 }
 
+/* Contact page — flat Get in Touch list */
+.hc-card--connect {
+    justify-content: flex-start;
+    padding: 1.6rem 1.5rem 1.35rem;
+    background: var(--surface);
+}
+
+.hc-card--connect:hover {
+    border-color: var(--border);
+    box-shadow: none;
+    transform: none;
+}
+
+.hc-card--connect .hc-card-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    margin-bottom: .45rem;
+}
+
+.hc-card--connect .hc-card-sub {
+    font-size: .88rem;
+    line-height: 1.55;
+    margin-bottom: 1.15rem;
+}
+
+.hc-card--connect .hc-links {
+    gap: 0;
+    flex: 0;
+    border-top: 1px solid var(--border);
+}
+
+.hc-card--connect .hc-link-row {
+    gap: .85rem;
+    padding: 1rem 0;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    background: transparent;
+}
+
+.hc-card--connect .hc-link-row:hover {
+    background: transparent;
+    border-color: var(--border);
+    transform: none;
+}
+
+.hc-card--connect .hc-link-icon {
+    width: auto;
+    height: auto;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    color: var(--muted);
+}
+
+.hc-card--connect .hc-link-row:hover .hc-link-icon,
+.hc-card--connect .hc-link-row:hover .hc-link-title {
+    color: var(--text);
+}
+
+.hc-card--connect .hc-link-title {
+    font-size: .92rem;
+    font-weight: 700;
+}
+
+.hc-card--connect .hc-link-desc {
+    font-size: .78rem;
+    margin-top: .15rem;
+    white-space: normal;
+}
+
+.hc-card--connect .hc-info-rows {
+    margin-top: 1.15rem;
+    gap: .7rem;
+}
+
+.hc-card--connect .hc-info-row {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: .82rem;
+    color: var(--muted);
+}
+
+.hc-card--connect .hc-info-row svg {
+    flex-shrink: 0;
+    color: var(--muted);
+}
+
 .hc-card-footer {
     margin-top: 1.25rem;
     padding-top: .85rem;
@@ -1729,8 +1818,31 @@ h2:focus,
 .hc-stat-item {
     display: flex;
     align-items: center;
-    gap: .65rem;
+    gap: .75rem;
     flex: 1;
+}
+
+.hc-stat-divider {
+    width: 1px;
+    align-self: stretch;
+    background: var(--border);
+    flex-shrink: 0;
+}
+
+.hc-info-rows {
+    display: flex;
+    flex-direction: column;
+    gap: .55rem;
+    margin-top: 1rem;
+}
+
+.hc-info-row {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .78rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
 }
 
 .hc-stat-icon {
@@ -1907,7 +2019,7 @@ h2:focus,
         grid-template-columns: 1fr;
         gap: 1rem;
     }
-    .hc-left  { display: none; }
+    .hc-left  { display: block; }
     .hc-right { padding: 1.25rem; }
 }
 
@@ -3076,15 +3188,18 @@ h2:focus,
 
 /* Quote strip — sits between contact section and footer */
 .quote-strip {
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
     background: transparent;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px;
 }
 
 .quote-strip-inner {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 1.25rem 24px;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--card);
+    margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -3100,6 +3215,12 @@ h2:focus,
     min-width: 0;
 }
 
+.quote-strip-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
 .quote-strip-icon {
     color: #f59e0b;
     flex-shrink: 0;
@@ -3112,14 +3233,23 @@ h2:focus,
     font-size: .82rem;
     color: var(--text);
     line-height: 1.5;
-    margin: 0 0 .2rem;
+    margin: 0 0 .35rem;
 }
 
 .quote-strip-author {
     font-family: 'DM Mono', monospace;
     font-size: .62rem;
     color: #f59e0b;
-    letter-spacing: .08em;
+    letter-spacing: .04em;
+    text-align: right;
+}
+
+.quote-strip-divider {
+    width: 1px;
+    align-self: stretch;
+    background: var(--border);
+    flex-shrink: 0;
+    margin: 0 .5rem;
 }
 
 .quote-strip-visitors {
