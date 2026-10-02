@@ -141,16 +141,16 @@ body::before {
     z-index: 0;
     pointer-events: none;
     background-image:
-        linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
-    background-size: 41px 41px;
+        linear-gradient(rgba(255,255,255,.020) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.020) 1px, transparent 1px);
+    background-size: 70px 70px;
 }
 
 [data-theme="light"] body::before {
     background-image:
-        linear-gradient(rgba(0,0,0,.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,0,0,.08) 1px, transparent 1px);
-    background-size: 41px 41px;
+        linear-gradient(rgba(0,0,0,.050) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,.050) 1px, transparent 1px);
+    background-size: 70px 70px;
 }
 
 /* Dot grid overlay on top of line grid */
@@ -160,12 +160,11 @@ body::after {
     inset: 0;
     z-index: 1;
     pointer-events: none;
-    background-image: radial-gradient(circle, rgba(255,255,255,.18) 1px, transparent 1px);
-    background-size: 28px 28px;
+    background-image: none;
 }
 
 [data-theme="light"] body::after {
-    background-image: radial-gradient(circle, rgba(0,0,0,.18) 1px, transparent 1px);
+    background-image: none;
 }
 
 /* SKIP TO CONTENT */
@@ -209,7 +208,7 @@ nav {
     left: 50%;
     transform: translateX(-50%);
     z-index: 9998;
-    padding: .5rem .8rem .5rem 1.1rem;
+    padding: .45rem .8rem .45rem 1.1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
