@@ -1,32 +1,40 @@
 import { useEffect, useState } from 'react';
 
-const QUOTES = [
+const SHORT_QUOTES = [
   { text: 'Talk is cheap. Show me the code.', author: 'Linus Torvalds' },
   { text: 'Make it work, make it right, make it fast.', author: 'Kent Beck' },
-  { text: 'Code is like humor. When you have to explain it, it\'s bad.', author: 'Cory House' },
-  { text: 'First, solve the problem. Then, write the code.', author: 'John Johnson' },
-  { text: 'Simplicity is prerequisite for reliability.', author: 'Edsger Dijkstra' },
-  { text: 'Programs must be written for people to read.', author: 'Harold Abelson' },
-  { text: 'The best error message is the one that never shows up.', author: 'Thomas Fuchs' },
-  { text: 'It always seems impossible until it\'s done.', author: 'Nelson Mandela' },
-  { text: 'You miss 100% of the shots you don\'t take.', author: 'Wayne Gretzky' },
   { text: 'Stay hungry, stay foolish.', author: 'Steve Jobs' },
   { text: 'Move fast and break things.', author: 'Mark Zuckerberg' },
   { text: 'Build something people want.', author: 'Paul Graham' },
   { text: 'Done is better than perfect.', author: 'Sheryl Sandberg' },
   { text: 'Simplicity is the soul of efficiency.', author: 'Austin Freeman' },
-  { text: 'The function of good software is to make the complex appear simple.', author: 'Grady Booch' },
-  { text: 'Most good programmers do programming not because of pay but because it\'s fun.', author: 'Linus Torvalds' },
-  { text: 'An investment in knowledge pays the best interest.', author: 'Benjamin Franklin' },
-  { text: 'Innovation distinguishes between a leader and a follower.', author: 'Steve Jobs' },
+  { text: 'It always seems impossible until it\'s done.', author: 'Nelson Mandela' },
+  { text: 'You miss 100% of the shots you don\'t take.', author: 'Wayne Gretzky' },
+  { text: 'First, solve the problem. Then, write the code.', author: 'John Johnson' },
+  { text: 'Simplicity is prerequisite for reliability.', author: 'Edsger Dijkstra' },
+  { text: 'Code is like humor. When you have to explain it, it\'s bad.', author: 'Cory House' },
 ];
 
-function getInitialQuoteIndex() {
-  const previousIndex = Number(sessionStorage.getItem('quoteIndex'));
-  let nextIndex = Math.floor(Math.random() * QUOTES.length);
+const LONG_QUOTES = [
+  { text: 'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.', author: 'Martin Fowler' },
+  { text: 'Walking on water and developing software from a specification are easy if both are frozen.', author: 'Edward V. Berard' },
+  { text: 'Programs must be written for people to read, and only incidentally for machines to execute.', author: 'Harold Abelson' },
+  { text: 'Measuring programming progress by lines of code is like measuring aircraft building progress by weight.', author: 'Bill Gates' },
+  { text: 'The function of good software is to make the complex appear simple and easy to understand.', author: 'Grady Booch' },
+  { text: 'Most good programmers do programming not because they expect to get paid, but because it is fun to program.', author: 'Linus Torvalds' },
+  { text: 'If debugging is the process of removing bugs, then programming must be the process of putting them in.', author: 'Edsger Dijkstra' },
+  { text: 'Perfection is achieved not when there is nothing more to add, but when there is nothing more to take away.', author: 'Antoine de Saint-Exupery' },
+  { text: 'Testing leads to failure, and failure leads to understanding. Embrace bugs as learning opportunities.', author: 'Burt Rutan' },
+  { text: 'Software is a great combination between artistry and engineering that creates meaningful solutions.', author: 'Bill Gates' },
+];
 
-  if (QUOTES.length > 1 && nextIndex === previousIndex) {
-    nextIndex = (nextIndex + 1) % QUOTES.length;
+function getInitialQuoteIndex(isMobile) {
+  const quotes = isMobile ? SHORT_QUOTES : LONG_QUOTES;
+  const previousIndex = Number(sessionStorage.getItem('quoteIndex'));
+  let nextIndex = Math.floor(Math.random() * quotes.length);
+
+  if (quotes.length > 1 && nextIndex === previousIndex) {
+    nextIndex = (nextIndex + 1) % quotes.length;
   }
 
   sessionStorage.setItem('quoteIndex', String(nextIndex));
@@ -34,22 +42,36 @@ function getInitialQuoteIndex() {
 }
 
 export default function QuoteStrip() {
-  const [quoteIndex, setQuoteIndex] = useState(getInitialQuoteIndex);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
+  const [quoteIndex, setQuoteIndex] = useState(() => getInitialQuoteIndex(isMobile));
   const [visitors, setVisitors] = useState(null);
 
-  const quote = QUOTES[quoteIndex];
+  const quotes = isMobile ? SHORT_QUOTES : LONG_QUOTES;
+  const quote = quotes[quoteIndex];
+
+  useEffect(() => {
+    function handleResize() {
+      const mobile = window.innerWidth <= 640;
+      if (mobile !== isMobile) {
+        setIsMobile(mobile);
+        setQuoteIndex(getInitialQuoteIndex(mobile));
+      }
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isMobile]);
 
   useEffect(() => {
     const quoteTimer = window.setInterval(() => {
       setQuoteIndex(currentIndex => {
-        const nextIndex = (currentIndex + 1) % QUOTES.length;
+        const nextIndex = (currentIndex + 1) % quotes.length;
         sessionStorage.setItem('quoteIndex', String(nextIndex));
         return nextIndex;
       });
     }, 15000);
 
     return () => window.clearInterval(quoteTimer);
-  }, []);
+  }, [quotes.length]);
 
   useEffect(() => {
     const isProd = window.location.hostname !== 'localhost'

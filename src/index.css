@@ -1832,8 +1832,10 @@ h2:focus,
 .hc-info-rows {
     display: flex;
     flex-direction: column;
-    gap: .55rem;
+    gap: .65rem;
     margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
 }
 
 .hc-info-row {
@@ -1843,6 +1845,12 @@ h2:focus,
     font-size: .78rem;
     color: var(--muted);
     font-family: 'DM Mono', monospace;
+}
+
+.hc-info-row svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
 }
 
 .hc-stat-icon {
@@ -2021,6 +2029,32 @@ h2:focus,
     }
     .hc-left  { display: block; }
     .hc-right { padding: 1.25rem; }
+    .hc-left .hc-right { padding: 1.25rem; }
+}
+
+@media (max-width: 360px) {
+    .hc-right { padding: .85rem; }
+    .hc-left .hc-right { padding: .85rem; }
+    .container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+    .hc-grid {
+        min-width: 0;
+    }
+    .hc-right, .hc-left {
+        min-width: 0;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .hc-link-row {
+        padding: .6rem .65rem;
+    }
+    .hc-link-icon {
+        width: 30px;
+        height: 30px;
+        flex-shrink: 0;
+    }
 }
 
 /* ========================
@@ -3195,7 +3229,7 @@ h2:focus,
 }
 
 .quote-strip-inner {
-    padding: 1.25rem 1.5rem;
+    padding: 1.75rem 1.5rem;
     border: 1px solid var(--border);
     border-radius: 14px;
     background: var(--card);
@@ -6850,7 +6884,6 @@ footer {
 .exp-card:hover {
     border-color: var(--accent);
     background: var(--card);
-    box-shadow: 0 0 0 1px rgba(59,130,246,.18), 0 0 14px 4px rgba(59,130,246,.07);
 }
 
 /* Top row: label + badge */
@@ -7340,7 +7373,7 @@ footer {
   border-style: solid !important;
 }
 
-[data-theme="dark"] .exp-card,
+[data-theme="dark"] .exp-card:not(:hover),
 [data-theme="dark"] .skill-box,
 [data-theme="dark"] .social-link,
 [data-theme="dark"] .pd-btn,
@@ -7349,7 +7382,7 @@ footer {
   border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-[data-theme="light"] .exp-card,
+[data-theme="light"] .exp-card:not(:hover),
 [data-theme="light"] .skill-box,
 [data-theme="light"] .social-link,
 [data-theme="light"] .pd-btn,
