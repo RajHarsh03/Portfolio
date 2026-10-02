@@ -1,13 +1,24 @@
 import { useEffect, useState } from 'react';
 
 const QUOTES = [
-  { text: 'To understand recursion, you must first understand recursion.', author: 'Anonymous' },
-  { text: 'First, solve the problem. Then, write the code.', author: 'John Johnson' },
-  { text: 'The function of good software is to make the complex appear simple.', author: 'Grady Booch' },
-  { text: 'Code is like humor. When you have to explain it, it\'s bad.', author: 'Cory House' },
+  { text: 'Talk is cheap. Show me the code.', author: 'Linus Torvalds' },
   { text: 'Make it work, make it right, make it fast.', author: 'Kent Beck' },
-  { text: 'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.', author: 'Martin Fowler' },
+  { text: 'Code is like humor. When you have to explain it, it\'s bad.', author: 'Cory House' },
+  { text: 'First, solve the problem. Then, write the code.', author: 'John Johnson' },
+  { text: 'Simplicity is prerequisite for reliability.', author: 'Edsger Dijkstra' },
+  { text: 'Programs must be written for people to read.', author: 'Harold Abelson' },
+  { text: 'The best error message is the one that never shows up.', author: 'Thomas Fuchs' },
+  { text: 'It always seems impossible until it\'s done.', author: 'Nelson Mandela' },
+  { text: 'You miss 100% of the shots you don\'t take.', author: 'Wayne Gretzky' },
+  { text: 'Stay hungry, stay foolish.', author: 'Steve Jobs' },
+  { text: 'Move fast and break things.', author: 'Mark Zuckerberg' },
+  { text: 'Build something people want.', author: 'Paul Graham' },
+  { text: 'Done is better than perfect.', author: 'Sheryl Sandberg' },
   { text: 'Simplicity is the soul of efficiency.', author: 'Austin Freeman' },
+  { text: 'The function of good software is to make the complex appear simple.', author: 'Grady Booch' },
+  { text: 'Most good programmers do programming not because of pay but because it\'s fun.', author: 'Linus Torvalds' },
+  { text: 'An investment in knowledge pays the best interest.', author: 'Benjamin Franklin' },
+  { text: 'Innovation distinguishes between a leader and a follower.', author: 'Steve Jobs' },
 ];
 
 function getInitialQuoteIndex() {
@@ -74,16 +85,19 @@ export default function QuoteStrip() {
             className="quote-strip-icon" aria-hidden="true">
             <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
           </svg>
-          <div>
+          <div className="quote-strip-body">
             <p className="quote-strip-text">{quote.text}</p>
-            <span className="quote-strip-author">- {quote.author.toUpperCase()}</span>
+            <span className="quote-strip-author">— {quote.author}</span>
           </div>
         </div>
 
         {visitors && (
-          <div className="quote-strip-visitors">
-            You are the <strong>{visitors}</strong><sup>th</sup> visitor
-          </div>
+          <>
+            <div className="quote-strip-divider" aria-hidden="true" />
+            <div className="quote-strip-visitors">
+              You are the <strong>{visitors}</strong><sup>th</sup> visitor
+            </div>
+          </>
         )}
       </div>
     </div>
