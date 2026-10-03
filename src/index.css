@@ -1885,7 +1885,6 @@ h2:focus,
     transition: border-color .2s, box-shadow .2s;
     display: flex;
     flex-direction: column;
-    min-height: 100%;
 }
 
 .hc-right:hover {
