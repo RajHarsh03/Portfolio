@@ -105,15 +105,6 @@ export default function GitHubHeatmap() {
 
       <div className="gh-heatmap-wrap">
       <div className="gh-heatmap-card">
-        {/* Top */}
-        <div className="gh-heatmap-top">
-          <span className="gh-contrib-count">
-            {contribTotal != null
-              ? `${Number(contribTotal).toLocaleString()} contributions in ${year}`
-              : failed ? '' : 'Loading…'}
-          </span>
-        </div>
-
         {/* Grid */}
         <div className="gh-canvas-wrap" style={{ position: 'relative' }}
           onMouseLeave={() => setTooltip(null)}
@@ -163,6 +154,11 @@ export default function GitHubHeatmap() {
 
         {/* Legend */}
         <div className="gh-heatmap-footer">
+          <span className="gh-contrib-count">
+            {contribTotal != null
+              ? <><strong>{Number(contribTotal).toLocaleString()}</strong> CONTRIBUTIONS</>
+              : failed ? '' : '…'}
+          </span>
           <div className="gh-legend">
             <span>Less</span>
             <div className="gh-legend-squares">

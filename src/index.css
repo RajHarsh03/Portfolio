@@ -2,9 +2,9 @@
    DESIGN SYSTEM: COLORS
    ===================== */
 [data-theme="dark"] {
-    --bg: #111111;
-    --bg-secondary: #1a1a1a;
-    --surface: #1a1a1a;
+    --bg: #0a0a0a;
+    --bg-secondary: #111111;
+    --surface: #111111;
     --border: rgba(255, 255, 255, 0.1);
     --accent: #e2e8f0;
     --accent-hover: #ffffff;
@@ -26,11 +26,11 @@
     --gradient-text: linear-gradient(135deg, #ffffff 0%, #a0aec0 100%);
     --gradient-btn: linear-gradient(135deg, #e2e8f0, #a0aec0);
     --gradient-cta: linear-gradient(135deg, #e2e8f0, #a0aec0);
-    --hm-0: #2d333b;
-    --hm-1: #0e4429;
-    --hm-2: #006d32;
-    --hm-3: #26a641;
-    --hm-4: #39d353;
+    --hm-0: #1a1a1a;
+    --hm-1: #2d2d2d;
+    --hm-2: #444444;
+    --hm-3: #666666;
+    --hm-4: #999999;
 }
 
 [data-theme="light"] {
@@ -58,11 +58,11 @@
     --gradient-text: linear-gradient(135deg, #111111 0%, #555555 100%);
     --gradient-btn: linear-gradient(135deg, #111111, #333333);
     --gradient-cta: linear-gradient(135deg, #111111, #333333);
-    --hm-0: #c8d0d8;
-    --hm-1: #9be9a8;
-    --hm-2: #40c463;
-    --hm-3: #30a14e;
-    --hm-4: #216e39;
+    --hm-0: #d0d6dc;
+    --hm-1: #a0abb5;
+    --hm-2: #717d88;
+    --hm-3: #454f5a;
+    --hm-4: #1e262e;
 }
 
 /* ========================
@@ -1100,7 +1100,7 @@ h2:focus,
     position: fixed;
     width: 700px;
     height: 700px;
-    background: radial-gradient(circle, rgba(59, 130, 246, .11) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(59, 130, 246, .04) 0%, transparent 70%);
     top: -100px;
     right: -150px;
     border-radius: 50%;
@@ -1113,7 +1113,7 @@ h2:focus,
     position: fixed;
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(20, 184, 166, .09) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(20, 184, 166, .03) 0%, transparent 70%);
     bottom: -100px;
     left: -100px;
     border-radius: 50%;
@@ -1126,7 +1126,7 @@ h2:focus,
     position: fixed;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(245, 158, 11, .06) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(245, 158, 11, .02) 0%, transparent 70%);
     top: 50%;
     left: 40%;
     border-radius: 50%;
@@ -2555,11 +2555,10 @@ h2:focus,
     height: 100%;
     object-fit: cover;
     object-position: center top;
-    transition: transform .3s;
 }
 
 .compact-project-card:hover .cpc-thumbnail img {
-    transform: scale(1.05);
+    transform: none;
 }
 
 .cpc-arrow svg {
@@ -3040,32 +3039,24 @@ h2:focus,
     border-radius: 12px;
     overflow: visible;
     background: transparent;
-    transition: border-color .25s, box-shadow .25s, transform .25s;
+    transition: border-color .25s, box-shadow .25s;
     position: relative;
 }
 
 .gh-heatmap-card:hover {
     border-color: var(--accent);
     box-shadow: 0 0 0 1px rgba(59,130,246,.2), 0 0 18px 5px rgba(59,130,246,.07);
-    transform: translateY(-2px);
 }
 
-/* Top — contribution count */
+/* Top — hidden, contribution count moved to footer */
 .gh-heatmap-top {
-    padding: .85rem 1.2rem .4rem;
-}
-
-.gh-contrib-count {
-    font-family: 'DM Mono', monospace;
-    font-size: .82rem;
-    font-weight: 600;
-    color: var(--text);
+    display: none;
 }
 
 /* Grid wrap */
 .gh-canvas-wrap {
     width: 100%;
-    padding: .3rem 1rem .4rem;
+    padding: 1.1rem 1rem .4rem;
     overflow: visible;
     box-sizing: border-box;
 }
@@ -3100,12 +3091,14 @@ h2:focus,
     flex: 1;
     min-width: 0;
     font-family: 'DM Mono', monospace;
-    font-size: 10px;
+    font-size: 9px;
     color: var(--muted);
     white-space: nowrap;
     overflow: visible;
     line-height: 1;
     pointer-events: none;
+    text-transform: uppercase;
+    letter-spacing: .04em;
 }
 
 .gh-cell {
@@ -3152,16 +3145,30 @@ h2:focus,
     border-top-color: var(--border);
 }
 
+.gh-contrib-count {
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.gh-contrib-count strong {
+    color: var(--text);
+    font-weight: 700;
+}
+
 /* Footer */
 .gh-heatmap-footer {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    padding: .45rem 1.2rem;
+    justify-content: space-between;
+    padding: .55rem 1.2rem;
     border-top: 1px solid var(--border);
     font-family: 'DM Mono', monospace;
     font-size: .68rem;
     color: var(--muted);
+
 }
 
 .gh-username-link {
@@ -3195,6 +3202,27 @@ h2:focus,
     height: 11px;
     border-radius: 2px;
     flex-shrink: 0;
+}
+
+@media (max-width: 380px) {
+    .gh-heatmap-footer {
+        padding: .45rem .75rem;
+        font-size: .58rem;
+    }
+    .gh-contrib-count {
+        font-size: .58rem;
+    }
+    .gh-legend {
+        font-size: .58rem;
+        gap: .25rem;
+    }
+    .gh-legend-sq {
+        width: 8px;
+        height: 8px;
+    }
+    .gh-legend-squares {
+        gap: .18rem;
+    }
 }
 
 /* ======
@@ -4262,25 +4290,24 @@ footer {
   display: inline-flex;
   align-items: center;
   gap: .55rem;
-  border: 1px solid var(--border);
-  background: var(--card);
+  border: none;
+  background: transparent;
   border-radius: 8px;
-  padding: .5rem 1.1rem;
+  padding: .5rem .6rem;
   cursor: default;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: border-color .2s ease, box-shadow .2s ease;
+  transition: transform .2s ease;
+  position: relative;
 }
 
 .skill-box:hover {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 1px rgba(59,130,246,.18), 0 0 12px 3px rgba(59,130,246,.07);
-    transform: translateY(-2px);
+    transform: none;
 }
 
 .skill-box img {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   display: block;
   flex-shrink: 0;
 }
@@ -4292,6 +4319,44 @@ footer {
   font-family: 'DM Mono', monospace;
   font-weight: 600;
   color: var(--text);
+}
+
+/* Tooltip on hover */
+.skill-box[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: .62rem;
+    font-family: 'DM Mono', monospace;
+    white-space: nowrap;
+    padding: .2rem .45rem;
+    border-radius: 4px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s;
+    z-index: 100;
+}
+
+.skill-box[data-tooltip]:hover::after {
+    opacity: 1;
+}
+
+/* Fixed skill tooltip (used for ticker rows) */
+.skill-tooltip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: .62rem;
+    font-family: 'DM Mono', monospace;
+    white-space: nowrap;
+    padding: .2rem .45rem;
+    border-radius: 4px;
+    pointer-events: none;
 }
 
 /* =========================================
@@ -5611,7 +5676,8 @@ footer {
 }
 
 /* GitHub icon in dark-mode light-invert fix */
-[data-theme="dark"] .skill-box img[alt="GitHub"] {
+[data-theme="dark"] .skill-box img[alt="GitHub"],
+[data-theme="dark"] .skill-box img[alt="Express"] {
   filter: brightness(0) invert(1);
 }
 
@@ -7394,7 +7460,6 @@ footer {
    SOLID BORDER — global card style (replaces dashed)
    ================================ */
 .exp-card,
-.skill-box,
 .social-link,
 .pd-btn,
 .pd-img-wrap,
@@ -7403,7 +7468,6 @@ footer {
 }
 
 [data-theme="dark"] .exp-card:not(:hover),
-[data-theme="dark"] .skill-box,
 [data-theme="dark"] .social-link,
 [data-theme="dark"] .pd-btn,
 [data-theme="dark"] .pd-img-wrap,
@@ -7412,7 +7476,6 @@ footer {
 }
 
 [data-theme="light"] .exp-card:not(:hover),
-[data-theme="light"] .skill-box,
 [data-theme="light"] .social-link,
 [data-theme="light"] .pd-btn,
 [data-theme="light"] .pd-img-wrap,

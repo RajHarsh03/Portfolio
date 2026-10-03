@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 const DEVICON = 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons';
 
 const ROW1 = [
@@ -30,13 +32,18 @@ const ROW2 = [
   { icon: `${DEVICON}/vscode/vscode-original.svg`,           label: 'VS Code' },
 ];
 
-function TickerRow({ items, direction = 'rtl' }) {
-  const doubled = [...items, ...items];
+function TickerRow({ items, direction = 'rtl', onHover, onLeave }) {
+  const doubled = [...items, ...items, ...items];
   return (
     <div className="ticker-wrap">
       <div className={`ticker-track ${direction}`}>
         {doubled.map((item, i) => (
-          <div className="skill-box icon-only" key={i}>
+          <div
+            className="skill-box icon-only"
+            key={i}
+            onMouseEnter={e => onHover(e, item.label)}
+            onMouseLeave={onLeave}
+          >
             <img src={item.icon} alt={item.label} loading="lazy" />
           </div>
         ))}
@@ -46,12 +53,43 @@ function TickerRow({ items, direction = 'rtl' }) {
 }
 
 export default function Skills() {
+  const [tooltip, setTooltip] = useState(null);
+
+  function handleHover(e, label) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setTooltip({
+      label,
+      x: rect.left + rect.width / 2,
+      y: rect.top - 8,
+    });
+  }
+
+  function handleLeave() {
+    setTooltip(null);
+  }
+
   return (
     <section id="skills" aria-label="Tech stack">
       <div className="skills-ticker-section icon-strip">
-        <TickerRow items={ROW1} direction="rtl" />
-        <TickerRow items={ROW2} direction="ltr" />
+        <TickerRow items={ROW1} direction="rtl" onHover={handleHover} onLeave={handleLeave} />
+        <TickerRow items={ROW2} direction="ltr" onHover={handleHover} onLeave={handleLeave} />
       </div>
+
+      {/* Fixed tooltip — outside overflow:hidden containers */}
+      {tooltip && (
+        <div
+          className="skill-tooltip"
+          style={{
+            position: 'fixed',
+            left: tooltip.x,
+            top: tooltip.y,
+            transform: 'translate(-50%, -100%)',
+            zIndex: 9999,
+          }}
+        >
+          {tooltip.label}
+        </div>
+      )}
     </section>
   );
 }
