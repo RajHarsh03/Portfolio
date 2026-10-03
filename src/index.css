@@ -6143,7 +6143,7 @@ footer {
     font-size: .78rem;
     color: var(--muted);
     line-height: 1.6;
-    margin: 0;
+    margin: .4rem 0 0;
 }
 
 .about-achiev-year {
@@ -6263,8 +6263,8 @@ footer {
     /* ── QuoteStrip: vertical + centered on mobile ── */
     .quote-strip-inner {
         flex-direction: column;
-        align-items: center;
-        text-align: center;
+        align-items: flex-start;
+        text-align: left;
         gap: .5rem;
         padding: .85rem 20px;
     }
@@ -6364,7 +6364,7 @@ footer {
 
     /* ── Achievement desc: visible but smaller on mobile ── */
     .about-achiev-desc {
-        font-size: .72rem;
+        font-size: .78rem;
         line-height: 1.5;
         margin-top: .35rem;
     }
@@ -6485,15 +6485,15 @@ footer {
         padding: .65rem .85rem;
     }
     .about-achiev-title {
-        font-size: .65rem;
+        font-size: .82rem;
         font-weight: 600;
     }
     .about-achiev-org {
-        font-size: .6rem;
+        font-size: .72rem;
         margin-bottom: .1rem;
     }
     .about-achiev-year {
-        font-size: .58rem;
+        font-size: .64rem;
         white-space: nowrap;
         flex-shrink: 0;
     }

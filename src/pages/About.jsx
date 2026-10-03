@@ -80,10 +80,10 @@ function AchievCard({ a }) {
         <div className="about-achiev-info">
           <div className="about-achiev-title">{a.title}</div>
           {a.org && <div className="about-achiev-org">{a.org}</div>}
-          {a.desc && <p className="about-achiev-desc">{a.desc}</p>}
         </div>
         {a.year && <span className="about-achiev-year">{a.year}</span>}
       </div>
+      {a.desc && <p className="about-achiev-desc">{a.desc}</p>}
     </div>
   );
 }
