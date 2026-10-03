@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
 
 const SHORT_QUOTES = [
-  { text: 'Talk is cheap. Show me the code.', author: 'Linus Torvalds' },
-  { text: 'Make it work, make it right, make it fast.', author: 'Kent Beck' },
-  { text: 'Stay hungry, stay foolish.', author: 'Steve Jobs' },
-  { text: 'Move fast and break things.', author: 'Mark Zuckerberg' },
-  { text: 'Build something people want.', author: 'Paul Graham' },
-  { text: 'Done is better than perfect.', author: 'Sheryl Sandberg' },
-  { text: 'Simplicity is the soul of efficiency.', author: 'Austin Freeman' },
-  { text: 'It always seems impossible until it\'s done.', author: 'Nelson Mandela' },
-  { text: 'You miss 100% of the shots you don\'t take.', author: 'Wayne Gretzky' },
   { text: 'First, solve the problem. Then, write the code.', author: 'John Johnson' },
   { text: 'Simplicity is prerequisite for reliability.', author: 'Edsger Dijkstra' },
   { text: 'Code is like humor. When you have to explain it, it\'s bad.', author: 'Cory House' },
+  { text: 'Talk is cheap. Show me the code. Every line counts.', author: 'Linus Torvalds' },
+  { text: 'Make it work, make it right, then make it fast enough.', author: 'Kent Beck' },
+  { text: 'Stay hungry, stay foolish, and keep building every day.', author: 'Steve Jobs' },
+  { text: 'Move fast, break things, learn faster, and ship again.', author: 'Mark Zuckerberg' },
+  { text: 'Build something people want and the rest will follow.', author: 'Paul Graham' },
+  { text: 'Done is better than perfect. Ship it and improve later.', author: 'Sheryl Sandberg' },
+  { text: 'Simplicity is the soul of efficiency in every system.', author: 'Austin Freeman' },
+  { text: 'It always seems impossible until someone actually does it.', author: 'Nelson Mandela' },
+  { text: 'You miss every single shot you never even dare to take.', author: 'Wayne Gretzky' },
+  { text: 'First, solve the problem clearly. Then, write the code.', author: 'John Johnson' },
+  { text: 'Simplicity is the true prerequisite for reliability in code.', author: 'Edsger Dijkstra' },
+  { text: 'Code is like humor - if you have to explain it, it\'s bad.', author: 'Cory House' },
 ];
 
 const LONG_QUOTES = [
