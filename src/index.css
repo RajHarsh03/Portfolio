@@ -2488,7 +2488,7 @@ h2:focus,
     border-radius: 12px;
     transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 
 /* Reveal animation for cards */
@@ -2562,43 +2562,17 @@ h2:focus,
     transform: scale(1.05);
 }
 
-.cpc-live-badge {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    display: flex;
-    align-items: center;
-    gap: .3rem;
-    padding: .25rem .5rem;
-    background: rgba(34, 197, 94, 0.9);
-    backdrop-filter: blur(4px);
-    border-radius: 6px;
-    font-size: .65rem;
-    font-weight: 600;
-    color: #fff;
-    font-family: 'DM Mono', monospace;
-    text-transform: uppercase;
-    letter-spacing: .02em;
+.cpc-arrow svg {
+    transition: transform .2s;
 }
 
-.cpc-live-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #fff;
+.cpc-arrow:hover {
+    transform: translate(2px, -2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-@keyframes pulse {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
-    }
-}
-
-.cpc-live-dot {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.cpc-arrow:hover svg {
+    transform: translateY(-2px);
 }
 
 /* Content below image */
@@ -2651,28 +2625,6 @@ h2:focus,
     cursor: pointer;
 }
 
-.cpc-arrow svg {
-    transition: transform .2s;
-}
-
-.cpc-arrow:hover {
-    transform: translate(2px, -2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.cpc-arrow:hover svg {
-    transform: translateY(-2px);
-}
-
-.cpc-type {
-    font-size: .67rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    font-family: 'DM Mono', monospace;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-}
-
 .cpc-description {
     font-size: .85rem;
     line-height: 1.6;
@@ -2685,32 +2637,63 @@ h2:focus,
     overflow: hidden;
 }
 
-.cpc-tech-tags {
+/* Tech icons row */
+.cpc-tech-icons {
     display: flex;
     flex-wrap: wrap;
-    gap: .35rem;
-    overflow: visible;
+    gap: .75rem;
     padding-top: .25rem;
+    margin-top: auto;
 }
 
-.cpc-tech-tag {
-    display: inline-flex;
+.cpc-tech-icon-wrap {
+    position: relative;
+    width: 21px;
+    height: 21px;
+    display: flex;
     align-items: center;
-    padding: .22rem .55rem;
+    justify-content: center;
+    transition: transform .2s;
+}
+
+.cpc-tech-icon-wrap img {
+    width: 21px;
+    height: 21px;
+    object-fit: contain;
+}
+
+.cpc-tech-icon-wrap:hover {
+    transform: translateY(-2px);
+}
+
+/* Tooltip */
+.cpc-tech-icon-wrap::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 5px;
-    font-size: .68rem;
-    font-weight: 500;
-    color: var(--muted);
+    color: var(--text);
+    font-size: .62rem;
     font-family: 'DM Mono', monospace;
     white-space: nowrap;
-    transition: all .2s;
+    padding: .2rem .45rem;
+    border-radius: 4px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s;
+    z-index: 100;
 }
 
-.compact-project-card:hover .cpc-tech-tag {
-    border-color: rgba(59, 130, 246, 0.3);
-    background: rgba(59, 130, 246, 0.06);
+.cpc-tech-icon-wrap:hover::after {
+    opacity: 1;
+}
+
+[data-theme="dark"] .cpc-tech-icon-wrap img[src*="express"],
+[data-theme="dark"] .cpc-tech-icon-wrap img[src*="flask"] {
+    filter: invert(1);
 }
 
 /* Responsive - Tablet (900px and below): shrink thumbnail height only */
@@ -7211,6 +7194,53 @@ footer {
 [data-theme="dark"] .pd-tech-icon[src*="express"], [data-theme="dark"] .pd-tech-icon[src*="flask"] { filter: invert(1); }
 .pd-tags { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: 2rem; }
 .pd-tag { font-family: 'DM Mono', monospace; font-size: .67rem; font-weight: 600; padding: .28rem .7rem; border-radius: 999px; background: rgba(59,130,246,.07); color: var(--accent); border: 1px solid rgba(59,130,246,.18); }
+
+/* Tech icons row in project detail */
+.pd-tech-icons-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    align-items: center;
+}
+.pd-tech-icon-wrap {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform .2s;
+}
+.pd-tech-icon-wrap img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+.pd-tech-icon-wrap:hover {
+    transform: translateY(-2px);
+}
+.pd-tech-icon-wrap::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: .62rem;
+    font-family: 'DM Mono', monospace;
+    white-space: nowrap;
+    padding: .2rem .45rem;
+    border-radius: 4px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s;
+    z-index: 100;
+}
+.pd-tech-icon-wrap:hover::after { opacity: 1; }
+[data-theme="dark"] .pd-tech-icon-wrap img[src*="express"],
+[data-theme="dark"] .pd-tech-icon-wrap img[src*="flask"] { filter: invert(1); }
 .pd-actions { display: flex; gap: .85rem; flex-wrap: wrap; }
 .pd-btn { display: inline-flex; align-items: center; gap: .5rem; text-decoration: none; font-family: 'DM Mono', monospace; font-size: .8rem; font-weight: 700; padding: .65rem 1.3rem; border-radius: 10px; border: 1px solid var(--border); color: var(--text); transition: border-color .25s, color .25s, background .25s, transform .2s; }
 .pd-btn:hover { transform: translateY(-2px); }
@@ -8179,7 +8209,7 @@ footer {
 /* Content Section */
 .pd-content-section {
     background: var(--bg);
-    padding: 1.5rem 0 1rem;
+    padding: 1.5rem 0 2.3rem;
 }
 
 /* Content Blocks */
@@ -8354,12 +8384,12 @@ footer {
     }
 
     .pd-preview-image img {
-        object-fit: contain;
-        max-height: 300px;
+        object-fit: cover;
+        max-height: none;
     }
 
     .pd-content-section {
-        padding: 1.5rem 0 1rem;
+        padding: 1.5rem 0 2.3rem;
     }
 
     .pd-block {

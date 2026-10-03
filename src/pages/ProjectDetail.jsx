@@ -1,7 +1,7 @@
 import { useParams, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useProjects } from '../hooks/useProjects.js';
-import { GH_USER } from '../services/githubProjects.js';
+import { GH_USER, TECH_ICON_MAP } from '../services/githubProjects.js';
 import { useReveal } from '../hooks/useReveal.js';
 import { useProjectDetails } from '../hooks/useProjectDetails.js';
 
@@ -57,9 +57,20 @@ export default function ProjectDetail() {
   const isLive = project.completed;
   const ghImgUrl = `https://raw.githubusercontent.com/${GH_USER}/${project.repoName}/HEAD/preview.png`;
   const ghImgFallback = `https://opengraph.githubassets.com/1/${GH_USER}/${project.repoName}`;
-  const techTags = (project.rawTopics || []).filter(t => 
-    !['portfolio', 'featured', 'completed', 'rank-1', 'rank1', 'personal', 'rank-2', 'rank2', 'rank-3', 'rank3'].includes(t.toLowerCase())
+  const techTags = (project.rawTopics || []).filter(t =>
+    !['portfolio', 'featured', 'completed', 'rank-1', 'rank1', 'personal', 'rank-2', 'rank2', 'rank-3', 'rank3', 'in-progress', 'live', 'client', 'client-project', 'personal-project', 'freelance', 'open-source', 'hackathon', 'fullstack', 'full-stack', 'ai', 'machine-learning', 'ml', 'deep-learning', 'frontend'].includes(t.toLowerCase())
+    && !/^rank-?\d+$/i.test(t)
   );
+
+  // Split into icon tags and text-only tags
+  const iconTags = techTags.filter(t => {
+    const key = t.toLowerCase().replace(/[\s.-]/g, '');
+    return TECH_ICON_MAP[key] || TECH_ICON_MAP[t.toLowerCase()];
+  });
+  const textTags = techTags.filter(t => {
+    const key = t.toLowerCase().replace(/[\s.-]/g, '');
+    return !(TECH_ICON_MAP[key] || TECH_ICON_MAP[t.toLowerCase()]);
+  });
 
   // Get additional details from Gist
   const projectDetails = projectDetailsMap[project.repoName] || {};
@@ -139,9 +150,30 @@ export default function ProjectDetail() {
             {techTags.length > 0 && (
               <div className="pd-block reveal">
                 <h2 className="pd-block-title">TECHNOLOGIES USED</h2>
-                <div className="pd-tech-tags">
-                  {techTags.map(tag => (
-                    <span key={tag} className="pd-tech-tag">{tag}</span>
+                {iconTags.length > 0 && (
+                  <div className="pd-tech-icons-row">
+                    {iconTags.map(t => {
+                      const key = t.toLowerCase().replace(/[\s.-]/g, '');
+                      const url = TECH_ICON_MAP[key] || TECH_ICON_MAP[t.toLowerCase()];
+                      const name = t.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ');
+                      return (
+                        <div key={t} className="pd-tech-icon-wrap" data-tooltip={name}>
+                          <img src={url} alt={name} width="28" height="28" />
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Topics / extra tags */}
+            {textTags.length > 0 && (
+              <div className="pd-block reveal">
+                <h2 className="pd-block-title">TOPICS</h2>
+                <div className="pd-tags">
+                  {textTags.map(tag => (
+                    <span key={tag} className="pd-tag">{tag}</span>
                   ))}
                 </div>
               </div>

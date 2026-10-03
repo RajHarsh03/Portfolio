@@ -66,20 +66,11 @@ const CATEGORY_MAP = {
   'machine-learning': 'ai', ml: 'ai', 'deep-learning': 'ai',
 };
 
-export const TYPE_MAP = {
-  client:           { label: 'Client Project',   cls: 'type-client'   },
-  'client-project': { label: 'Client Project',   cls: 'type-client'   },
-  personal:         { label: 'Personal Project',  cls: 'type-personal' },
-  'personal-project':{ label: 'Personal Project', cls: 'type-personal' },
-  freelance:        { label: 'Freelance',         cls: 'type-client'   },
-  'open-source':    { label: 'Open Source',       cls: 'type-oss'      },
-  hackathon:        { label: 'Hackathon',         cls: 'type-hack'     },
-};
-
 const META_TOPICS = new Set([
   'portfolio', 'completed', 'in-progress', 'live',
+  'client', 'client-project', 'personal', 'personal-project',
+  'freelance', 'open-source', 'hackathon',
   ...Object.keys(CATEGORY_MAP),
-  ...Object.keys(TYPE_MAP),
 ]);
 
 function parseRank(topics) {
@@ -99,11 +90,6 @@ function mapRepos(repos) {
       let category = 'fullstack';
       for (const t of topics) {
         if (CATEGORY_MAP[t]) { category = CATEGORY_MAP[t]; break; }
-      }
-
-      let projectType = null;
-      for (const t of topics) {
-        if (TYPE_MAP[t]) { projectType = TYPE_MAP[t]; break; }
       }
 
       const stack = topics
@@ -129,7 +115,6 @@ function mapRepos(repos) {
         updatedAt: r.updated_at,
         repoName: r.name,
         rawTopics: topics,
-        projectType,
       };
     })
     .sort((a, b) => a.rank - b.rank || new Date(b.updatedAt) - new Date(a.updatedAt));
