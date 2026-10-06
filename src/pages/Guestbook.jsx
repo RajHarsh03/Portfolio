@@ -191,11 +191,38 @@ export default function Guestbook() {
   }, []);
 
   async function handleSignIn() {
+    let popupWindow = null;
+    let resolved = false;
+
+    // Poll every 500ms to detect if user closed popup manually
+    const pollTimer = setInterval(() => {
+      if (resolved) { clearInterval(pollTimer); return; }
+      if (popupWindow && popupWindow.closed) {
+        clearInterval(pollTimer);
+        if (!resolved) {
+          resolved = true;
+          showToast('Sign in cancelled', 'Google sign-in was cancelled.', 'error');
+        }
+      }
+    }, 500);
+
     try {
+      // Monkey-patch window.open once to capture popup reference
+      const origOpen = window.open.bind(window);
+      window.open = (...args) => {
+        popupWindow = origOpen(...args);
+        window.open = origOpen; // restore immediately
+        return popupWindow;
+      };
+
       await signInWithPopup(auth, googleProvider);
+      resolved = true;
+      clearInterval(pollTimer);
       if (auth.currentUser) cacheUser(auth.currentUser);
       showToast('Sign in successful', "You're signed in. Leave a note whenever you're ready. 😊", 'success');
     } catch (err) {
+      resolved = true;
+      clearInterval(pollTimer);
       if (
         err.code === 'auth/popup-closed-by-user' ||
         err.code === 'auth/cancelled-popup-request'
@@ -285,7 +312,7 @@ export default function Guestbook() {
   function showToast(title, message, tone = 'info') {
     setToast({ title, message, tone });
     window.clearTimeout(toastTimer.current);
-    toastTimer.current = window.setTimeout(() => setToast(null), 4500);
+    toastTimer.current = window.setTimeout(() => setToast(null), 2500);
   }
 
   const pinnedEntries = entries.filter(entry => entry.pinned).slice(0, 5);
@@ -320,7 +347,7 @@ export default function Guestbook() {
               <div className="guestbook-compose-user">
                 {user.photoURL ? <img src={user.photoURL} alt="" /> : <span>{(user.displayName || 'V').charAt(0)}</span>}
                 <div><strong>{user.displayName}</strong><small className={isAdmin ? 'guestbook-role role-admin' : 'guestbook-role role-visitor'}>Logged in as: {isAdmin ? 'Admin' : 'Visitor'}</small></div>
-                <button type="button" className="guestbook-signout" onClick={() => signOut(auth)}>Disconnect</button>
+                <button type="button" className="guestbook-signout" onClick={() => { signOut(auth); showToast('Signed out', 'You have been disconnected.', 'success'); }}>Disconnect</button>
               </div>
               <textarea value={message} onChange={event => {
                 const nextValue = event.target.value;
