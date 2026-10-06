@@ -1,9 +1,8 @@
-import { lazy } from 'react';
-import Home from '../pages/Home.jsx'; // eager — it's the entry route, no lazy flash
+import Home from '../pages/Home.jsx';
+import Projects from '../pages/Projects.jsx';
+import ProjectDetail from '../pages/ProjectDetail.jsx';
+import Contact from '../pages/Contact.jsx';
+import About from '../pages/About.jsx';
+import Guestbook from '../pages/Guestbook.jsx';
 
-export const Projects      = lazy(() => import('../pages/Projects.jsx'));
-export const ProjectDetail = lazy(() => import('../pages/ProjectDetail.jsx'));
-export const Contact       = lazy(() => import('../pages/Contact.jsx'));
-export const About         = lazy(() => import('../pages/About.jsx'));
-export const Guestbook     = lazy(() => import('../pages/Guestbook.jsx'));
-export { Home };
+export { Home, Projects, ProjectDetail, Contact, About, Guestbook };
