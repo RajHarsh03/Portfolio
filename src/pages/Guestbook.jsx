@@ -196,7 +196,12 @@ export default function Guestbook() {
       if (auth.currentUser) cacheUser(auth.currentUser);
       showToast('Sign in successful', "You're signed in. Leave a note whenever you're ready. 😊", 'success');
     } catch (err) {
-      if (err.code !== 'auth/popup-closed-by-user') {
+      if (
+        err.code === 'auth/popup-closed-by-user' ||
+        err.code === 'auth/cancelled-popup-request'
+      ) {
+        showToast('Sign in cancelled', 'Google sign-in was cancelled.', 'error');
+      } else {
         showToast('Sign in failed', 'Google sign-in could not be completed.', 'error');
       }
     }
