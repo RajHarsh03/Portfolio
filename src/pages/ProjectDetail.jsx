@@ -127,6 +127,8 @@ export default function ProjectDetail() {
               <img
                 src={ghImgUrl}
                 alt={`${project.name} preview`}
+                loading="eager"
+                fetchPriority="high"
                 onError={e => {
                   if (e.currentTarget.src !== ghImgFallback) {
                     e.currentTarget.src = ghImgFallback;
@@ -158,7 +160,7 @@ export default function ProjectDetail() {
                       const name = t.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ');
                       return (
                         <div key={t} className="pd-tech-icon-wrap" data-tooltip={name}>
-                          <img src={url} alt={name} width="28" height="28" />
+                <img src={url} alt={name} width="28" height="28" loading="eager" />
                         </div>
                       );
                     })}

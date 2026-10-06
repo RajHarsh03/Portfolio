@@ -77,7 +77,7 @@ export default function JourneyPreview() {
                     const icon = stackIcon(s);
                     return (
                       <span key={j} className="exp-stack-badge">
-                        {icon && <img src={icon} alt={s} width="13" height="13" />}
+                {icon && <img src={icon} alt={s} width="13" height="13" loading="eager" />}
                         <span className="stack-label">{s}</span>
                       </span>
                     );

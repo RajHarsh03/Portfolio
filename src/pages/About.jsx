@@ -188,7 +188,7 @@ function ExpCard({ item }) {
             const icon = stackIcon(s);
             return (
               <span key={i} className="exp-stack-badge">
-                {icon && <img src={icon} alt={s} width="13" height="13" />}
+                {icon && <img src={icon} alt={s} width="13" height="13" loading="eager" />}
                 <span className="stack-label">{s}</span>
               </span>
             );
@@ -229,7 +229,7 @@ export default function About() {
         <div className="about-body">
           <div className="about-photo-col reveal">
             <div className="about-photo-wrap">
-              <img src={`https://github.com/${GH_USER}.png?size=600`} alt="Harsh Raj" className="about-photo" />
+              <img src={`https://github.com/${GH_USER}.png?size=600`} alt="Harsh Raj" className="about-photo" loading="eager" fetchPriority="high" />
             </div>
             <div className="about-photo-meta">
               <span className="about-photo-name">Harsh Raj</span>

@@ -43,7 +43,8 @@ export default function CompactProjectCard({ project }) {
         <img
           src={ghImgUrl}
           alt={`${project.name} preview`}
-          loading="lazy"
+          loading="eager"
+          fetchPriority="high"
           onError={e => {
             if (e.currentTarget.src !== ghImgFallback) {
               e.currentTarget.src = ghImgFallback;
@@ -72,7 +73,7 @@ export default function CompactProjectCard({ project }) {
           <div className="cpc-tech-icons">
             {techIcons.map(({ name, url }) => (
               <div key={name} className="cpc-tech-icon-wrap" data-tooltip={name}>
-                <img src={url} alt={name} width="18" height="18" />
+                <img src={url} alt={name} width="18" height="18" loading="eager" />
               </div>
             ))}
           </div>

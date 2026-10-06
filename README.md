@@ -28,9 +28,9 @@
 🎨 **Dark / Light Theme** - circular wipe via View Transition API\
 📡 **Live GitHub Projects** - fetched, filtered & sorted by topics\
 📖 **Project Detail Pages** - route-based with Gist-powered content\
-🔥 **GitHub Heatmap** - canvas-rendered contribution graph\
+🔥 **GitHub Heatmap** - DOM-rendered contribution graph, monochrome style, contribution count + less/more legend\
 📬 **Contact Form** - EmailJS + toast feedback + `Ctrl+Enter`\
-🎵 **Spotify Widget** - live now-playing / last-played with artwork
+🎵 **Spotify Widget** - live now-playing / last-played, "Currently playing" or "Last played" label updates every 5 seconds
 📖 **Firebase Guestbook** - Google sign-in, real-time visitor notes, and Home preview
 
 </td>
@@ -108,7 +108,7 @@ Portfolio/
     │   └── 🏗️  AppShell.jsx       # Persistent shell - Nav, Footer, Cursor, Glows
     │
     ├── router/
-    │   ├── 🔀 routes.jsx          # Lazy imports for all pages
+    │   ├── 🔀 routes.jsx          # Eager imports for all pages (no lazy loading)
     │   └── ⬆️  ScrollToTop.jsx    # Scrolls to top on every route change
     │
     ├── context/
@@ -282,9 +282,9 @@ To show a repo on the portfolio, add these **topics** to it on GitHub:
 |:------|:-------|
 | `portfolio` | ✅ **Required** - makes it appear on the portfolio |
 | `rank-1`, `rank-2`, … | 📊 Controls display order (lower = higher priority) |
-| `completed` | 🟢 Shows green "Completed" badge |
+| `completed` | 🟢 Shows "Live" status on project detail page |
 | `frontend` / `fullstack` / `ai` | 🔍 Sets the filter category |
-| `personal` / `client` / `open-source` / `hackathon` | 🏷️ Sets the type pill label |
+| `personal` / `client` / `open-source` / `hackathon` | 🏷️ These are filtered out — not shown on cards |
 
 </div>
 

@@ -44,7 +44,7 @@ function TickerRow({ items, direction = 'rtl', onHover, onLeave }) {
             onMouseEnter={e => onHover(e, item.label)}
             onMouseLeave={onLeave}
           >
-            <img src={item.icon} alt={item.label} loading="lazy" />
+            <img src={item.icon} alt={item.label} loading="eager" />
           </div>
         ))}
       </div>
