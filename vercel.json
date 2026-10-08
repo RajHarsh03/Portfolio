@@ -3,6 +3,7 @@
   "outputDirectory": "dist",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/__/auth/(.*)", "destination": "https://harshx-guestbook.firebaseapp.com/__/auth/$1" },
     { "source": "/((?!api/|Resume\\.pdf).+)", "destination": "/index.html" }
   ]
 }
