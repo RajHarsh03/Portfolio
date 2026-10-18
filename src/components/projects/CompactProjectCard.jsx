@@ -13,7 +13,7 @@ export default function CompactProjectCard({ project }) {
     ? project.description.substring(0, 100) + '...'
     : project.description;
 
-  const ghImgUrl = `https://raw.githubusercontent.com/${GH_USER}/${project.repoName}/HEAD/preview.png`;
+  const ghImgUrl = `https://ik.imagekit.io/harshxdotin/portfolio/projects/${project.repoName}.png`;
   const ghImgFallback = `https://opengraph.githubassets.com/1/${GH_USER}/${project.repoName}`;
 
   const handleArrowClick = (e) => {

@@ -55,7 +55,7 @@ export default function ProjectDetail() {
   }
 
   const isLive = project.completed;
-  const ghImgUrl = `https://raw.githubusercontent.com/${GH_USER}/${project.repoName}/HEAD/preview.png`;
+  const ghImgUrl = `https://ik.imagekit.io/harshxdotin/portfolio/projects/${project.repoName}.png`;  
   const ghImgFallback = `https://opengraph.githubassets.com/1/${GH_USER}/${project.repoName}`;
   const techTags = (project.rawTopics || []).filter(t =>
     !['portfolio', 'featured', 'completed', 'rank-1', 'rank1', 'personal', 'rank-2', 'rank2', 'rank-3', 'rank3', 'in-progress', 'live', 'client', 'client-project', 'personal-project', 'freelance', 'open-source', 'hackathon', 'fullstack', 'full-stack', 'ai', 'machine-learning', 'ml', 'deep-learning', 'frontend'].includes(t.toLowerCase())
