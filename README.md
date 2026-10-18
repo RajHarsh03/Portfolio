@@ -12,37 +12,41 @@
 
 <br/>
 
-> **Personal portfolio of Harsh Raj** - a fast, fully-featured React SPA with dark/light theme, live GitHub data, animated custom cursor, canvas contribution heatmap, live Spotify now-playing widget, and a Gist-powered CMS for experiences, internships, and certificates.
+> **Personal portfolio of Harsh Raj** - a fast, fully-featured React SPA with dark/light theme, live GitHub data, animated custom cursor, canvas contribution heatmap, live Spotify now-playing widget, oneko.js cat companion, circular GitHub favicon, and a Gist-powered CMS for experiences, internships, and certificates.
 
 </div>
 
 ---
 
-## ✨ Features
+## Features
 
 <table>
 <tr>
 <td width="50%">
 
-🚀 **SPA Navigation** - zero full-page reloads\
-🎨 **Dark / Light Theme** - circular wipe via View Transition API\
-📡 **Live GitHub Projects** - fetched, filtered & sorted by topics\
-📖 **Project Detail Pages** - route-based with Gist-powered content\
-🔥 **GitHub Heatmap** - DOM-rendered contribution graph, monochrome style, contribution count + less/more legend\
-📬 **Contact Form** - EmailJS + toast feedback + `Ctrl+Enter`\
-🎵 **Spotify Widget** - live now-playing / last-played, "Currently playing" or "Last played" label updates every 5 seconds
-📖 **Firebase Guestbook** - Google sign-in, real-time visitor notes, and Home preview
+**SPA Navigation** - zero full-page reloads\
+**Dark / Light Theme** - circular wipe via View Transition API\
+**Live GitHub Projects** - fetched, filtered & sorted by topics\
+**Project Detail Pages** - route-based with Gist-powered content\
+**GitHub Heatmap** - DOM-rendered contribution graph, monochrome style, contribution count + less/more legend\
+**Contact Form** - EmailJS + toast feedback + `Ctrl+Enter`\
+**Spotify Widget** - live now-playing / last-played, polls every 5 seconds\
+**Firebase Guestbook** - Google sign-in, real-time visitor notes, and Home preview
 
 </td>
 <td width="50%">
 
-👁️ **Scroll Reveal** - IntersectionObserver fade-up animations\
-🖱️ **Custom Cursor** - dual-ring, hover-expand (desktop only)\
-📊 **Visit Counter** - Upstash Redis via Vercel serverless\
-🧭 **Persistent Layout** - Nav, Footer, Cursor mount once\
-📱 **Fully Responsive** - mobile-first, incremental load on mobile\
-💼 **Experience Cards** - collapsible cards with tech stack icons\
-🗂️ **Gist CMS** - manage content without redeployment
+**Scroll Reveal** - IntersectionObserver fade-up animations\
+**Custom Cursor** - dual-ring, hover-expand (desktop only)\
+**Oneko Cat** - nekojs cat companion that follows your cursor\
+**Circular Favicon** - live GitHub avatar rendered as circular favicon\
+**Visit Counter** - Upstash Redis via Vercel serverless\
+**Persistent Layout** - Nav, Footer, Cursor mount once\
+**Fully Responsive** - mobile-first, incremental load on mobile\
+**Experience Cards** - collapsible cards with tech stack icons\
+**Gist CMS** - manage content without redeployment\
+**Quote Strip** - rotating developer quotes in hero section\
+**Typing Effect** - animated typing in hero section
 
 </td>
 </tr>
@@ -50,117 +54,134 @@
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 <div align="center">
 
 | Layer | Choice |
 |:------|:-------|
-| ⚡ Build Tool | **Vite 6** |
-| ⚛️ UI Framework | **React 19** |
-| 🔀 Routing | **React Router v7** |
-| 🪖 Meta / SEO | **react-helmet-async** |
-| 🎨 Styling | Single global CSS (`src/index.css`) |
-| 📡 Data | **GitHub REST API** + **EmailJS** |
-| 🎵 Spotify | **Custom `/api/now-playing`** serverless endpoint |
-| 📊 Visit Counter | **Upstash Redis** via Vercel serverless |
-| 📖 Guestbook | **Firebase Authentication** + **Cloud Firestore** |
-| 🚀 Deployment | **Vercel** |
+| Build Tool | **Vite 6** |
+| UI Framework | **React 19** |
+| Routing | **React Router v7** |
+| Meta / SEO | **react-helmet-async** |
+| Styling | Single global CSS (`src/index.css`) |
+| Data | **GitHub REST API** + **EmailJS** |
+| Spotify | **Custom `/api/now-playing`** serverless endpoint |
+| Visit Counter | **Upstash Redis** via Vercel serverless |
+| Guestbook | **Firebase Authentication** + **Cloud Firestore** |
+| Deployment | **Vercel** |
 
 </div>
 
 ---
 
-## 📄 Routes
+## Routes
 
 <div align="center">
 
 | URL | Page |
 |:----|:-----|
-| `/` | 🏠 Home - hero, bio + Spotify strip, experience preview, skills ticker, featured projects, heatmap |
-| `/projects` | 🗂️ All Projects - search, filter (frontend / fullstack / AI), sort, incremental mobile load |
-| `/projects/:id` | 📖 Project Detail - full overview, tech stack, features, highlights, challenges (Gist-powered) |
-| `/contact` | 📬 Contact - EmailJS form + social links |
-| `/about` | 👤 About - bio, education, collapsible experience cards with tech stack icons |
-| `/guestbook` | 📖 Guestbook - Google sign-in and real-time visitor notes |
-| `*` | 🔍 404 Not Found |
+| `/` | Home - hero, bio + Spotify strip, experience preview, skills ticker, featured projects, heatmap, guestbook preview, quote strip |
+| `/projects` | All Projects - search, filter (frontend / fullstack / AI), sort, incremental mobile load |
+| `/projects/:id` | Project Detail - full overview, tech stack, features, highlights, challenges (Gist-powered) |
+| `/contact` | Contact - EmailJS form + social links |
+| `/about` | About - bio, education, collapsible experience cards with tech stack icons, certificates |
+| `/guestbook` | Guestbook - Google sign-in and real-time visitor notes |
+| `*` | Redirect to Home |
 
 </div>
 
 ---
 
-## 📁 File Structure
+## File Structure
 
 ```
 Portfolio/
-├── 📄 index.html                  # SPA shell - single HTML entry point
-├── ⚙️  vite.config.js
-├── 🚀 vercel.json                 # SPA rewrites + /api route
-├── 📦 package.json
-├── 📋 Resume.pdf                  # Served from /Resume.pdf
-│
-└── src/
-    ├── 🚀 main.jsx                # BrowserRouter + HelmetProvider + ThemeProvider
-    ├── 🗺️  App.jsx                # Route definitions + AppShell wrapper
-    ├── 🎨 index.css               # Full design system + all component styles
-    │
-    ├── layouts/
-    │   └── 🏗️  AppShell.jsx       # Persistent shell - Nav, Footer, Cursor, Glows
-    │
-    ├── router/
-    │   ├── 🔀 routes.jsx          # Eager imports for all pages (no lazy loading)
-    │   └── ⬆️  ScrollToTop.jsx    # Scrolls to top on every route change
-    │
-    ├── context/
-    │   └── 🌗 ThemeContext.jsx    # Theme state + View Transition toggle
-    │
-    ├── hooks/
-    │   ├── 📡 useProjects.js           # GitHub projects fetch + cache + auto-refresh
-    │   ├── � useProjectDetails.js     # Gist project details fetch + 5min cache
-    │   ├── �🗂️  useGistContent.js       # Gist CMS hook - experiences, internships, certs
-    │   ├── 👁️  useReveal.js            # IntersectionObserver scroll reveal
-    │   └── 🌗 useTheme.js              # Re-export of useTheme from context
-    │
-    ├── services/
-    │   ├── 🔥 firebase.js                  # Firebase Auth + Firestore client
-    │   ├── 🐙 githubProjects.js             # Fetch + normalise portfolio repos
-    │   ├── 📖 projectDetailsGist.js         # Fetch project details from Gist
-    │   ├── 🔥 githubContributions.js        # Fetch contribution heatmap data
-    │   └── 📝 gistContent.js                # Gist CMS - fetch + fallback + spotify field
-    │
-    ├── components/
-    │   ├── layout/
-    │   │   ├── 🧭 Navbar.jsx          # Pill nav - tabs, GitHub icon, theme toggle
-    │   │   ├── 🦶 Footer.jsx          # Footer + visit counter
-    │   │   ├── 🖱️  CustomCursor.jsx   # Dual-ring cursor (desktop only)
-    │   │   └── 📊 ScrollProgress.jsx  # Top gradient progress bar
-    │   │
-    │   ├── home/
-    │   │   ├── 🦸 Hero.jsx            # Hero section - avatar, name, CTA, socials
-    │   │   ├── ℹ️  InfoStrip.jsx       # Bio card + live Spotify now-playing widget
-    │   │   ├── 💼 JourneyPreview.jsx  # Experience card preview (static, home only)
-    │   │   ├── 🛠️  Skills.jsx         # Ticker marquee tech stack
-    │   │   ├── 🗂️  FeaturedProjects.jsx # Top 2 projects from GitHub
-    │   │   ├── 🔥 GitHubHeatmap.jsx   # Canvas contribution heatmap
-    │   │   ├── 📖 GuestbookPreview.jsx # Real-time Home guestbook marquee
-    │   │   └── 📱 BottomNav.jsx       # Floating pill nav (home page only)
-    │   │
-    │   └── projects/
-    │       └── 💳 CompactProjectCard.jsx # Compact project card with arrow navigation
-    │
-    └── pages/
-        ├── 🏠 Home.jsx
-        ├── 👤 About.jsx              # Education + collapsible ExpCard with stacks
-        ├── 🗂️  Projects.jsx           # Full grid - search, filter, sort, incremental mobile load
-        ├── 📖 ProjectDetail.jsx      # Individual project page with Gist-powered details
-        ├── 📬 Contact.jsx            # EmailJS form + toast
-        ├── 📖 Guestbook.jsx           # Google sign-in + Firestore notes
-        └── 🔍 NotFound.jsx           # 404
+|-- index.html                  # SPA shell - single HTML entry point
+|-- vite.config.js
+|-- vercel.json                 # SPA rewrites + /api route
+|-- package.json
+|
+|-- public/
+|   |-- favicon.png             # Default favicon
+|   +-- Resume.pdf              # Served from /Resume.pdf
+|
+|-- api/                        # Vercel serverless functions
+|   |-- now-playing.js          # Spotify currently playing / last played
+|   |-- spotify-auth.js         # Spotify OAuth token refresh
+|   +-- visits.js               # Upstash Redis visit counter
+|
++-- src/
+    |-- main.jsx                # BrowserRouter + HelmetProvider + ThemeProvider
+    |-- App.jsx                 # Route definitions + AppShell wrapper
+    |-- index.css               # Full design system + all component styles
+    |
+    |-- layouts/
+    |   +-- AppShell.jsx        # Persistent shell - Nav, Footer, Cursor, Glows
+    |
+    |-- router/
+    |   |-- routes.jsx          # Eager imports for all pages (no lazy loading)
+    |   +-- ScrollToTop.jsx     # Scrolls to top on every route change
+    |
+    |-- context/
+    |   +-- ThemeContext.jsx    # Theme state + View Transition toggle
+    |
+    |-- hooks/
+    |   |-- useProjects.js           # GitHub projects fetch + cache + auto-refresh
+    |   |-- useProjectDetails.js     # Gist project details fetch + 5min cache
+    |   |-- useGistContent.js        # Gist CMS hook - experiences, internships, certs
+    |   |-- useReveal.js             # IntersectionObserver scroll reveal
+    |   |-- useTheme.js              # Re-export of useTheme from context
+    |   +-- useNeko.js               # Oneko cat companion cursor follower
+    |
+    |-- lib/
+    |   +-- circularFavicon.js       # Fetches GitHub avatar, renders as circular favicon
+    |
+    |-- services/
+    |   |-- firebase.js                  # Firebase Auth + Firestore client
+    |   |-- githubProjects.js            # Fetch + normalise portfolio repos
+    |   |-- projectDetailsGist.js        # Fetch project details from Gist
+    |   |-- githubContributions.js       # Fetch contribution heatmap data
+    |   +-- gistContent.js               # Gist CMS - fetch + fallback + spotify field
+    |
+    |-- components/
+    |   |-- layout/
+    |   |   |-- Navbar.jsx          # Pill nav - tabs, GitHub icon, theme toggle
+    |   |   |-- Footer.jsx          # Footer + visit counter
+    |   |   |-- CustomCursor.jsx    # Dual-ring cursor (desktop only)
+    |   |   +-- ScrollProgress.jsx  # Top gradient progress bar
+    |   |
+    |   |-- home/
+    |   |   |-- Hero.jsx            # Hero section - avatar, name, CTA, socials
+    |   |   |-- TypingEffect.jsx    # Animated typing text in hero
+    |   |   |-- InfoStrip.jsx       # Bio card + live Spotify now-playing widget
+    |   |   |-- JourneyPreview.jsx  # Experience card preview (static, home only)
+    |   |   |-- EducationCerts.jsx  # Education timeline + certificates section
+    |   |   |-- CertModal.jsx       # Certificate detail modal overlay
+    |   |   |-- Skills.jsx          # Ticker marquee tech stack
+    |   |   |-- FeaturedProjects.jsx # Top 2 projects from GitHub
+    |   |   |-- GitHubHeatmap.jsx   # Canvas contribution heatmap
+    |   |   |-- GuestbookPreview.jsx # Real-time Home guestbook marquee
+    |   |   |-- HomeContact.jsx     # Inline contact form on home page
+    |   |   |-- QuoteStrip.jsx      # Rotating developer quotes
+    |   |   +-- BottomNav.jsx       # Floating pill nav (home page only)
+    |   |
+    |   +-- projects/
+    |       |-- CompactProjectCard.jsx     # Compact project card with arrow navigation
+    |       +-- ProjectDetailModal.jsx     # Project detail modal overlay
+    |
+    +-- pages/
+        |-- Home.jsx
+        |-- About.jsx              # Education + collapsible ExpCard with stacks
+        |-- Projects.jsx           # Full grid - search, filter, sort, incremental mobile load
+        |-- ProjectDetail.jsx      # Individual project page with Gist-powered details
+        |-- Contact.jsx            # EmailJS form + toast
+        +-- Guestbook.jsx          # Google sign-in + Firestore notes
 ```
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
 
 **Requirements:** Node.js 18+
 
@@ -172,86 +193,59 @@ cd Portfolio
 # Install dependencies
 npm install
 
+# Create .env.local (see Environment Variables below)
+
 # Start dev server
 npm run dev
 ```
 
-> Dev server runs at **`http://localhost:5173`**
-
 ---
 
-## 🔐 Environment Variables
+## Environment Variables
 
-Create `.env.local` in the project root for local development. Keep this file out of Git; Vite exposes only variables prefixed with `VITE_` to the browser.
+Create a `.env.local` in the project root:
 
-<table>
-<tr>
-<th>Variable</th>
-<th>Where</th>
-<th>Notes</th>
-</tr>
-<tr>
-<td><code>KV_REST_API_URL</code></td>
-<td>Vercel Dashboard → Storage</td>
-<td>Auto-injected by Vercel when Upstash Redis is connected</td>
-</tr>
-<tr>
-<td><code>KV_REST_API_TOKEN</code></td>
-<td>Vercel Dashboard → Storage</td>
-<td>Auto-injected by Vercel when Upstash Redis is connected</td>
-</tr>
-<tr>
-<td><code>VITE_FIREBASE_API_KEY</code><br/><code>VITE_FIREBASE_AUTH_DOMAIN</code><br/><code>VITE_FIREBASE_PROJECT_ID</code><br/><code>VITE_FIREBASE_STORAGE_BUCKET</code><br/><code>VITE_FIREBASE_MESSAGING_SENDER_ID</code><br/><code>VITE_FIREBASE_APP_ID</code><br/><code>VITE_FIREBASE_MEASUREMENT_ID</code></td>
-<td>Firebase project settings → Your apps → Web</td>
-<td>Frontend Firebase configuration for Google Authentication and Cloud Firestore</td>
-</tr>
-</table>
+```env
+# Spotify (serverless API)
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+SPOTIFY_REDIRECT_URI=http://127.0.0.1:8888/callback
+SPOTIFY_REFRESH_TOKEN=your_spotify_refresh_token
 
-Firebase web configuration values are public client identifiers. Never add Firebase service-account JSON, private keys, or Admin SDK credentials to `.env.local` or frontend code.
-
-> 📌 **EmailJS keys** are public client-side keys (hardcoded intentionally). Security is handled via **domain whitelisting** in the EmailJS dashboard. Ensure only `harshx.in` is listed under **Account → Security**.
-
----
-
-## 📦 Build & Preview
-
-```bash
-npm run build      # → outputs production bundle to dist/
-npm run preview    # → preview the production build locally
+# Firebase (client-side, VITE_ prefix required)
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
 ```
 
 ---
 
-## 🚀 Deployment (Vercel)
+## Deployment
 
-1. Push to GitHub
-2. Import the repo on [vercel.com](https://vercel.com)
-3. Set the following options:
-
-| Setting | Value |
-|:--------|:------|
-| Framework Preset | **Vite** |
-| Root Directory | `/` |
-| Build Command | `npm run build` |
-| Output Directory | `dist` |
-
-4. Connect **Upstash Redis** from Vercel Dashboard → Storage (auto-injects env vars)
-5. Add the `VITE_FIREBASE_*` variables in Vercel → Project Settings → Environment Variables for the **Production**, **Preview**, and **Development** environments as needed.
-6. **Deploy** 🎉
+1. **Push** to GitHub
+2. **Connect** the repo in [Vercel](https://vercel.com)
+3. **Set** all environment variables in Vercel Project Settings Environment Variables
+4. **Build command:** `npm run build`
+5. **Output directory:** `dist`
+6. **Deploy**
 
 > The `vercel.json` handles SPA routing - all URLs serve `index.html` and React Router takes over client-side.
 
 ---
 
-## 📖 Firebase Guestbook Setup
+## Firebase Guestbook Setup
 
 The Guestbook uses **Google Authentication** for sign-in and **Cloud Firestore** for persistent notes. Firebase Storage is not required unless visitor file or image uploads are added later.
 
 ### Firebase console setup
 
 1. Create or open the Firebase project.
-2. Enable **Authentication → Sign-in method → Google**.
-3. Add the deployed domains under **Authentication → Settings → Authorized domains**.
+2. Enable **Authentication > Sign-in method > Google**.
+3. Add the deployed domains under **Authentication > Settings > Authorized domains**.
 4. Create a Cloud Firestore database.
 5. Create the `guestbook_entries` collection.
 6. Publish rules that allow public reads, authenticated creates for the signed-in user, and prevent untrusted updates.
@@ -272,7 +266,7 @@ The Home page subscribes to the latest notes in real time and displays them in a
 
 ---
 
-## 🐙 GitHub Projects Setup
+## GitHub Projects Setup
 
 To show a repo on the portfolio, add these **topics** to it on GitHub:
 
@@ -280,29 +274,48 @@ To show a repo on the portfolio, add these **topics** to it on GitHub:
 
 | Topic | Effect |
 |:------|:-------|
-| `portfolio` | ✅ **Required** - makes it appear on the portfolio |
-| `rank-1`, `rank-2`, … | 📊 Controls display order (lower = higher priority) |
-| `completed` | 🟢 Shows "Live" status on project detail page |
-| `frontend` / `fullstack` / `ai` | 🔍 Sets the filter category |
-| `personal` / `client` / `open-source` / `hackathon` | 🏷️ These are filtered out — not shown on cards |
+| `portfolio` | **Required** - makes it appear on the portfolio |
+| `rank-1`, `rank-2`, etc. | Controls display order (lower = higher priority) |
+| `completed` | Shows "Live" status on project detail page |
+| `frontend` / `fullstack` / `ai` | Sets the filter category |
+| `personal` / `client` / `open-source` / `hackathon` | These are filtered out - not shown on cards |
 
 </div>
 
 Tech icon topics (auto-mapped to devicons): `react`, `nodejs`, `python`, `typescript`, `mongodb`, `tailwindcss`, and more.
 
+### Project Card Images
+
+Each project card and detail page displays a preview image fetched from **ImageKit**. If the ImageKit image is not found, it falls back to GitHub's auto-generated OpenGraph image.
+
+```
+1. ImageKit image  (custom screenshot you upload)
+   https://ik.imagekit.io/username/foldername/{repoName}.png
+
+2. GitHub OpenGraph image  (auto-generated fallback)
+   https://opengraph.githubassets.com/1/username/{repo}
+```
+
+**To add a project preview image:**
+
+1. Take a screenshot of your project
+2. Name the file exactly as the **GitHub repo name** (e.g. `Library-Management-System.png`)
+3. Upload to ImageKit under your folder
+4. The card will automatically display the image - no code push needed
+
 ---
 
-## 🗂️ Gist CMS — Experiences & Certificates
+## Gist CMS - Experiences and Certificates
 
-Content for the **About** page (experience cards, education, certificates) is managed via a **GitHub Gist** — no code push needed to add or edit cards.
+Content for the **About** page (experience cards, education, certificates) is managed via a **GitHub Gist** - no code push needed to add or edit cards.
 
 ### How it works
 
 The app fetches a single JSON file from a private Gist at runtime. If the Gist is unreachable, it automatically falls back to hardcoded data so the site never breaks.
 
 ```
-Gist URL → fetched on every page visit (cached 5 min)
-         ↓ fails?
+Gist URL > fetched on every page visit (cached 5 min)
+         > fails?
 Fallback data in gistContent.js (always shown instantly)
 ```
 
@@ -311,8 +324,8 @@ Fallback data in gistContent.js (always shown instantly)
 1. Go to your Gist: [https://gist.github.com/](https://gist.github.com/)
 2. Open and **edit the existing gist** (do NOT create a new one)
 3. Update the JSON for `experiences`, `certificates`, or `education`
-4. Save — changes are live within **5 minutes**, no deploy needed
-5. To update the offline fallback, also edit `FALLBACK_DATA` in [`src/services/gistContent.js`](./src/services/gistContent.js) and push
+4. Save - changes are live within **5 minutes**, no deploy needed
+5. To update the offline fallback, also edit `FALLBACK_DATA` in `src/services/gistContent.js` and push
 
 ### JSON structure
 
@@ -335,9 +348,9 @@ Fallback data in gistContent.js (always shown instantly)
 ```
 
 > **Fields:**
-> - `duration` — short label shown next to date (e.g. `"2m"`, `"6m"`)
-> - `stacks` — array of tech names; icons auto-resolved via Devicons CDN v2.16
-> - `bullets` — shown only when the card is expanded (chevron toggle)
+> - `duration` - short label shown next to date (e.g. `"2m"`, `"6m"`)
+> - `stacks` - array of tech names; icons auto-resolved via Devicons CDN v2.16
+> - `bullets` - shown only when the card is expanded (chevron toggle)
 
 **Certificate card:**
 ```json
@@ -361,16 +374,16 @@ Fallback data in gistContent.js (always shown instantly)
 
 ---
 
-## 📖 Project Details — Gist CMS
+## Project Details - Gist CMS
 
 Each project can have additional details (features, highlights, challenges) managed through a **separate Gist** without redeployment.
 
 ### How it works
 
 ```
-/projects/:repoName  →  fetches project-details.json from Gist
-                     →  displays Overview, Tech, Features, Highlights, Challenges
-                     →  cached 5 minutes
+/projects/:repoName  >  fetches project-details.json from Gist
+                     >  displays Overview, Tech, Features, Highlights, Challenges
+                     >  cached 5 minutes
 ```
 
 **Gist URL:** `https://gist.githubusercontent.com/RajHarsh03/d9dafa7d57b7af090604cc06f0e69c9f/raw/project-details.json`
@@ -384,7 +397,7 @@ Each project can have additional details (features, highlights, challenges) mana
       "AI-powered crop disease detection using MobileNetV2",
       "Upload leaf images to identify 18 different plant diseases",
       "Treatment recommendations for identified diseases",
-      "Built with React, FastAPI & TensorFlow"
+      "Built with React, FastAPI and TensorFlow"
     ],
     "highlights": [
       "Achieved 95% accuracy in disease classification",
@@ -397,9 +410,9 @@ Each project can have additional details (features, highlights, challenges) mana
     ]
   },
   "Library-Management-System": {
-    "features": [...],
-    "highlights": [...],
-    "challenges": [...]
+    "features": ["..."],
+    "highlights": ["..."],
+    "challenges": ["..."]
   }
 }
 ```
@@ -419,47 +432,49 @@ Each project can have additional details (features, highlights, challenges) mana
 
 ---
 
-## 🎵 Spotify Now Playing Widget
+## Spotify Now Playing Widget
 
 The **InfoStrip** section on the home page displays a live Spotify widget showing the currently playing song (or last-played if nothing is active).
 
 ### How it works
 
 ```
-GET /api/now-playing  →  { track: { title, artist, artwork, url }, isPlaying }
+GET /api/now-playing  >  { track: { title, artist, artwork, url }, isPlaying }
 ```
 
 - Polls every **5 seconds** for near-real-time updates
-- **Last played persisted in `localStorage`** — no blank flash on page reload
+- **Last played persisted in `localStorage`** - no blank flash on page reload
 - Falls back to production endpoint (`harshx.in/api/now-playing`) in local dev
 - Glows green on hover; clicking opens the track on Spotify
 
-### Widget layout
-
-```
-┌──────────────────────────────────────────┐
-│ 🎵 Last Played          [Album Artwork]  │
-│ Song Title (bold)                        │
-│ Artist Name (muted)                      │
-└──────────────────────────────────────────┘
-```
-
 ---
 
-## 📊 Visit Counter
+## Visit Counter
 
 Uses a Vercel serverless function at `/api/visits`:
 
 ```
-POST /api/visits  →  Records unique daily visit (hashed IP + UA + date), returns total
-GET  /api/visits  →  Returns total count without incrementing
+POST /api/visits  >  Records unique daily visit (hashed IP + UA + date), returns total
+GET  /api/visits  >  Returns total count without incrementing
 ```
 
 Backed by **Upstash Redis** (Vercel KV). In local dev it reads from the live production endpoint so the counter is always visible.
 
 ---
 
-## 📜 License
+## Oneko Cat Companion
+
+A playful cat sprite that follows your cursor around the page, powered by [nekojs](https://louisabraham.github.io/nekojs/). Loads lazily from CDN and automatically resumes after tab visibility changes or device sleep.
+
+---
+
+## Circular Favicon
+
+The favicon is dynamically generated from your GitHub avatar - fetched, drawn as a circle on a canvas, and applied as the page favicon. Cached in `localStorage` to avoid re-fetching on every page load.
+
+---
+
+## License
 
 ```
 MIT License - feel free to use as a reference or template.
