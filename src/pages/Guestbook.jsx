@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { addDoc, arrayUnion, collection, deleteDoc, doc, increment, limit, onSnapshot, orderBy, query, runTransaction, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import { getRedirectResult, onAuthStateChanged, signInWithRedirect, signOut } from 'firebase/auth';
 import { auth, db, firebaseReady, googleProvider } from '../services/firebase.js';
 
 const NOTES_CACHE_KEY = 'guestbook_entries_cache_v1';
@@ -10,6 +10,17 @@ const TOAST_AVATAR_URL = 'https://github.com/RajHarsh03.png?size=96';
 const ADMIN_EMAIL = 'rajharsh.devx@gmail.com';
 const ADMIN_DISPLAY_NAME = 'Harsh Raj';
 const ADMIN_UID = 'VqE9wVvuIZXMoMjOlPtw8J3V6Go2';
+
+/* Google reports a bail-out from the consent screen under a few different codes
+   depending on where the redirect was dropped. All of them mean "cancelled",
+   not "broken", and the popup flow used to say so. */
+const CANCELLED_CODES = new Set([
+  'auth/user-cancelled',
+  'auth/cancelled-popup-request',
+  'auth/popup-closed-by-user',
+  'auth/redirect-interrupted',
+]);
+const wasCancelled = (err) => CANCELLED_CODES.has(err?.code);
 
 function readCachedEntries() {
   try {
@@ -134,6 +145,7 @@ export default function Guestbook() {
   const [sending, setSending] = useState(false);
   const [toast, setToast] = useState(null);
   const toastTimer = useRef(null);
+  const redirectResultRead = useRef(false);
   const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL;
 
   useEffect(() => {
@@ -141,8 +153,6 @@ export default function Guestbook() {
     avatar.src = TOAST_AVATAR_URL;
   }, []);
 
-  // Backfill the role on older notes created by the admin before authorRole
-  // was stored. The realtime listener then shares that role with every viewer.
   useEffect(() => {
     if (!isAdmin || !db || !user?.uid || !entries.length) return;
     entries
@@ -170,6 +180,30 @@ export default function Guestbook() {
   }, []);
 
   useEffect(() => {
+    // StrictMode runs this effect twice in dev and getRedirectResult consumes the
+    // stored result, so guard it or the success toast can fire twice.
+    if (!auth || redirectResultRead.current) {
+      return undefined;
+    }
+    redirectResultRead.current = true;
+    getRedirectResult(auth)
+      .then(result => {
+        if (result?.user) {
+          cacheUser(result.user);
+          showToast('Sign in successful', "You're signed in. Leave a note whenever you're ready. 😊", 'success');
+        }
+      })
+      .catch(err => {
+        if (wasCancelled(err)) {
+          showToast('Sign in cancelled', 'Google sign-in was cancelled.', 'error');
+        } else {
+          showToast('Sign in failed', 'Google sign-in could not be completed.', 'error');
+        }
+      });
+    return undefined;
+  }, []);
+
+  useEffect(() => {
     if (!db) {
       setLoading(false);
       return undefined;
@@ -191,46 +225,12 @@ export default function Guestbook() {
   }, []);
 
   async function handleSignIn() {
-    let popupWindow = null;
-    let resolved = false;
-
-    // Poll every 500ms to detect if user closed popup manually
-    const pollTimer = setInterval(() => {
-      if (resolved) { clearInterval(pollTimer); return; }
-      if (popupWindow && popupWindow.closed) {
-        clearInterval(pollTimer);
-        if (!resolved) {
-          resolved = true;
-          showToast('Sign in cancelled', 'Google sign-in was cancelled.', 'error');
-        }
-      }
-    }, 500);
-
     try {
-      // Monkey-patch window.open once to capture popup reference
-      const origOpen = window.open.bind(window);
-      window.open = (...args) => {
-        popupWindow = origOpen(...args);
-        window.open = origOpen; // restore immediately
-        return popupWindow;
-      };
-
-      await signInWithPopup(auth, googleProvider);
-      resolved = true;
-      clearInterval(pollTimer);
-      if (auth.currentUser) cacheUser(auth.currentUser);
-      showToast('Sign in successful', "You're signed in. Leave a note whenever you're ready. 😊", 'success');
-    } catch (err) {
-      resolved = true;
-      clearInterval(pollTimer);
-      if (
-        err.code === 'auth/popup-closed-by-user' ||
-        err.code === 'auth/cancelled-popup-request'
-      ) {
-        showToast('Sign in cancelled', 'Google sign-in was cancelled.', 'error');
-      } else {
-        showToast('Sign in failed', 'Google sign-in could not be completed.', 'error');
-      }
+      // Navigates away to Google; this promise only settles if the redirect
+      // itself is blocked, so a rejection here is a genuine failure.
+      await signInWithRedirect(auth, googleProvider);
+    } catch {
+      showToast('Sign in failed', 'Google sign-in could not be completed.', 'error');
     }
   }
 
