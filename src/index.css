@@ -49,8 +49,8 @@
     --visitor-role: #334155;
     --admin-role: #b45309;
     --text: #111111;
-    --text-secondary: #555555;
-    --muted: #888888;
+    --text-secondary: #3f3f3f;
+    --muted: #666666;
     --card: rgba(0, 0, 0, 0.04);
     --input-bg: rgba(0, 0, 0, 0.04);
     --footer-bg: #d8d8d8;
@@ -63,6 +63,14 @@
     --hm-2: #717d88;
     --hm-3: #454f5a;
     --hm-4: #1e262e;
+}
+
+/* Light mode sits on a mid-grey ground, where the same 400-weight text reads
+   washed out. One step up on the inherited body weight firms up all body copy
+   at once; components that declare their own weight are untouched, and DM Mono
+   ships no 500 cut so its labels correctly stay at 400. */
+[data-theme="light"] body {
+    font-weight: 500;
 }
 
 /* ========================
@@ -274,6 +282,16 @@ nav.floating {
     font-weight: 600;
 }
 
+/* Light mode: --bg sits only ~4% away from the pill's own tinted ground, so the
+   active chip vanishes and hover (which is darker) reads as the selected item.
+   Punching the chip to white mirrors how --bg reads as a darker chip on the
+   dark pill, and the hairline keeps its edge defined. Dark mode is untouched. */
+[data-theme="light"] .nav-link.active,
+[data-theme="light"] .bnav-link.active {
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--border);
+}
+
 /* More dropdown in desktop navbar */
 .nav-more-wrap {
     position: relative;
@@ -288,6 +306,12 @@ nav.floating {
     background: none;
     border: none;
     cursor: pointer;
+    line-height: inherit;
+    font-family: inherit;
+}
+
+.bnav-more-btn {
+    line-height: inherit;
 }
 
 .nav-chevron {
@@ -4141,11 +4165,14 @@ footer {
 
 /* ── Footer: single row on very narrow screens (<393px) ── */
 @media (max-width: 392px) {
+    /* Was .6rem/.44rem, which read as shrunken rather than compact - the row
+       still has ~115px of slack at this width, so hold the 600px size and give
+       the pixel name a little more room. */
     .footer-copy {
-        font-size: .6rem;
+        font-size: .68rem;
     }
     .footer-name-pixel {
-        font-size: .44rem;
+        font-size: .5rem;
         letter-spacing: .02em;
     }
     .footer-bottom {
@@ -4164,11 +4191,11 @@ footer {
 /* ── Footer: very narrow screens (<340px)*/
 @media (max-width: 340px) {
     .footer-name-pixel {
-        font-size: .38rem;
+        font-size: .44rem;
         letter-spacing: 0;
     }
     .footer-copy {
-        font-size: .55rem;
+        font-size: .62rem;
     }
     .footer-icon-btn {
         width: 22px;
@@ -6677,6 +6704,34 @@ footer {
   color: #fff;
   border-color: #374151;
 }
+
+/* Four labels have to share one line. At .75rem with .9rem side padding the row
+   measures ~363px, and a 409px viewport only offers 409 - 48 (container padding)
+   = 361px, which is exactly where "Data Science" dropped to a second line.
+   Tighten the horizontal rhythm only - font-size, side padding, gap - and keep
+   the vertical padding so the tap target stays the same size. */
+@media (max-width: 430px) {
+  .projects-filter-pills {
+    gap: .35rem;
+  }
+
+  .filter-pill {
+    font-size: .68rem;
+    padding: .38rem .5rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .projects-filter-pills {
+    gap: .3rem;
+  }
+
+  .filter-pill {
+    font-size: .62rem;
+    padding: .36rem .4rem;
+  }
+}
+
 #allProjects {
   max-width: 860px;
   margin: 0 auto;
@@ -8471,6 +8526,700 @@ footer {
         flex-direction: column;
         align-items: flex-start;
     }
+}
+
+/* ==========================
+   LEGAL PAGES (PRIVACY/TERMS)
+   ========================== */
+
+/* position: sticky is inert inside a scroll container, and the global
+   `body { overflow-x: hidden }` turns body into one. `clip` keeps the same
+   horizontal guard without creating a scroll container — applied only while a
+   legal page is mounted, so no existing page changes behaviour. */
+body:has(.legal-page) {
+    overflow-x: clip;
+}
+
+.legal-page {
+    padding-top: 4.5rem;
+    overflow-wrap: break-word;
+}
+
+/* Header lede — same muted subtitle treatment as the About page */
+.legal-lede {
+    max-width: 60ch;
+    margin-top: .5rem;
+    color: var(--text-secondary);
+    font-size: .9rem;
+    line-height: 1.65;
+}
+
+/* The date badge sits beside a 1.6rem bold H1, so at --muted it recedes into
+   the page. --text-secondary is the token that stays clearly legible in both
+   themes (light 8.6:1, dark 8.4:1) without touching the font weight. */
+.legal-page .projects-count-badge {
+    color: var(--text-secondary);
+}
+
+/* Documentation layout: sticky contents + readable prose column.
+   860px matches .container / .projects-page-header / .footer-simple. */
+.legal-body {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: start;
+    max-width: 860px;
+    margin: 1.5rem auto 0;
+    padding: 0 24px 2.5rem;
+}
+
+/* ---------- On this page (desktop) ---------- */
+/* Sticky must sit on the grid item itself. A sticky child *inside* a
+   content-height grid item has no travel range — its containing block is the
+   same height as it is, so it silently never sticks. The grid area of
+   .legal-toc-col is as tall as the prose column, which gives it room to pin. */
+.legal-toc-col {
+    position: sticky;
+    top: 5.5rem;
+    max-height: calc(100vh - 7rem);
+    overflow-y: auto;
+    scrollbar-width: none;
+    padding-bottom: .5rem;
+}
+
+.legal-toc-col::-webkit-scrollbar {
+    display: none;
+}
+
+.legal-toc {
+    min-width: 0;
+}
+
+.legal-toc-title {
+    padding-left: .55rem;
+    margin-bottom: .7rem;
+    font-family: 'DM Mono', monospace;
+    font-size: .66rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.legal-toc-list {
+    display: flex;
+    flex-direction: column;
+    gap: .1rem;
+    list-style: none;
+}
+
+.legal-toc-link {
+    display: flex;
+    align-items: baseline;
+    gap: .5rem;
+    padding: .3rem .55rem;
+    border-left: 2px solid transparent;
+    border-radius: 0 6px 6px 0;
+    font-size: .78rem;
+    line-height: 1.35;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color .2s, background .2s, border-color .2s;
+}
+
+.legal-toc-link:hover {
+    color: var(--text);
+    background: var(--card);
+}
+
+.legal-toc-link.active {
+    color: var(--text);
+    background: var(--card);
+    border-left-color: var(--warm-accent);
+}
+
+.legal-toc-num {
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: .64rem;
+    opacity: .75;
+}
+
+.legal-toc-link:focus-visible,
+.legal-inline-link:focus-visible,
+.footer-legal-link:focus-visible {
+    outline: 2px solid var(--warm-accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* ---------- Prose ---------- */
+.legal-content {
+    min-width: 0;
+}
+
+.legal-summary {
+    padding: 1rem 1.15rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--warm-accent);
+    border-radius: 12px;
+    background: var(--card);
+}
+
+.legal-summary .legal-para {
+    margin: 0;
+    font-size: .9rem;
+}
+
+.legal-section {
+    /* overrides the global `section { padding }` rhythm */
+    padding: 0 0 1.9rem;
+    scroll-margin-top: 6rem;
+}
+
+.legal-section+.legal-section {
+    padding-top: 1.9rem;
+    border-top: 1px solid var(--border);
+}
+
+.legal-section:focus {
+    outline: none;
+}
+
+.legal-section-title {
+    display: flex;
+    align-items: baseline;
+    gap: .6rem;
+    margin-bottom: .9rem;
+    font-size: clamp(1rem, 2vw, 1.12rem);
+    font-weight: 700;
+    letter-spacing: -.015em;
+    line-height: 1.3;
+    color: var(--text);
+}
+
+.legal-section-num {
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+    /* Sized just under the heading so the number reads as part of the title. */
+    font-size: clamp(.95rem, 1.9vw, 1.08rem);
+    font-weight: 500;
+    letter-spacing: .02em;
+    color: var(--warm-accent);
+}
+
+.legal-subtitle {
+    margin: 1.4rem 0 .55rem;
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.legal-para {
+    margin-bottom: .9rem;
+    font-size: .95rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
+}
+
+.legal-para:last-child {
+    margin-bottom: 0;
+}
+
+.legal-para strong {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.legal-list {
+    display: flex;
+    flex-direction: column;
+    gap: .55rem;
+    margin: 0 0 1rem;
+    padding-left: 1.05rem;
+    list-style: none;
+}
+
+.legal-list>li {
+    position: relative;
+    font-size: .93rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+}
+
+.legal-list>li::before {
+    content: '';
+    position: absolute;
+    left: -1.05rem;
+    top: .68rem;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent2);
+}
+
+.legal-list>li strong {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.legal-note {
+    padding: .15rem 0 .15rem .9rem;
+    margin: 1rem 0;
+    border-left: 2px solid var(--warm-accent);
+    font-size: .9rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+}
+
+.legal-note strong {
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* Highlighted key terms. The colour sits in the background tint rather than in
+   the text itself: --warm-accent as body text is only ~4.3:1 in light mode, so
+   tinting the ground keeps the highlight readable in both themes off one token
+   pair. Falls back to plain bold where color-mix() is unsupported. */
+.legal-mark {
+    padding: .06rem .3rem;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--warm-accent) 18%, transparent);
+    color: var(--text);
+    font-weight: 600;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+.legal-content code {
+    padding: .08rem .32rem;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--card);
+    font-family: 'DM Mono', monospace;
+    font-size: .8em;
+    color: var(--text-secondary);
+    overflow-wrap: anywhere;
+}
+
+.legal-inline-link {
+    font-weight: 500;
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: color .2s, border-color .2s;
+}
+
+.legal-inline-link:hover {
+    color: var(--warm-accent);
+    border-bottom-color: var(--warm-accent);
+}
+
+.legal-closing {
+    padding-top: 1.3rem;
+    margin-top: 1.6rem;
+    border-top: 1px solid var(--border);
+}
+
+.legal-closing .legal-para {
+    font-size: .88rem;
+}
+
+/* ---------- Legal breakpoints ---------- */
+@media (max-width: 768px) {
+    .legal-body {
+        grid-template-columns: 1fr;
+        gap: 1.1rem;
+        margin-top: 1rem;
+    }
+
+    /* Table of contents is desktop only - the rail and its column are both
+       dropped, so the prose starts at the top with no empty grid row. */
+    .legal-toc-col {
+        display: none;
+    }
+
+    .legal-content {
+        margin-top: .35rem;
+    }
+}
+
+@media (max-width: 640px) {
+
+    /* Keep the "Last updated" badge from stretching the header row */
+    .legal-page .projects-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: .35rem;
+    }
+
+    .legal-lede {
+        font-size: .86rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .legal-section {
+        padding-bottom: 1.5rem;
+    }
+
+    .legal-section+.legal-section {
+        padding-top: 1.5rem;
+    }
+
+    .legal-para {
+        font-size: .92rem;
+    }
+
+    .legal-list>li {
+        font-size: .9rem;
+    }
+}
+
+/* ---------- Footer legal row ---------- */
+/* Desktop: rides along with the social icons. The auto margin absorbs the free
+   space, so copyright stays left and links + icons stay right. */
+.footer-legal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.15rem;
+    margin-left: auto;
+}
+
+.footer-legal-link {
+    padding: .1rem .25rem;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: .72rem;
+    letter-spacing: .04em;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color .2s, background .2s;
+}
+
+.footer-legal-link:hover {
+    color: var(--text);
+    background: var(--card);
+}
+
+/* Desktop keeps the compact "Privacy / Terms" pair; the full labels exist in the
+   DOM but only render once the footer stacks. display:none also drops them from
+   the accessibility tree, so a screen reader hears one link name, not two. */
+.footer-legal-full {
+    display: none;
+}
+
+/* Mobile-only furniture: group headings, the legal link icons and the text
+   labels beside the social icons. */
+.footer-group-title,
+.footer-legal-icon,
+.footer-icon-label {
+    display: none;
+}
+
+/* The brand mark shows in both layouts - its own line above the compact row on
+   desktop, and the first block of the stacked footer on a phone. */
+.footer-brand-name {
+    margin-bottom: .45rem;
+    font-family: 'Press Start 2P', monospace;
+    font-size: .68rem;
+    color: var(--text);
+}
+
+/* Georgia italic is already the site's editorial voice (About quote strip,
+   guestbook title); --warm-accent keeps it on-palette. */
+.footer-brand-tagline {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 1.15rem;
+    line-height: 1.3;
+    letter-spacing: -.01em;
+    color: var(--warm-accent);
+}
+
+/* Location rides on the copyright line and is pushed to the right end of that
+   row in both layouts. --warm-accent is the site's existing metadata accent. */
+.footer-bottom-left {
+    justify-content: space-between;
+}
+
+/* Pin + label. Inline-flex so the icon and text stay on one line in both the
+   stacked and the grid layout; gap does the spacing since JSX drops the
+   whitespace between a tag and text on the next line. */
+.footer-loc {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    font-family: 'DM Mono', monospace;
+    font-size: .72rem;
+    letter-spacing: .04em;
+    color: var(--warm-accent);
+    white-space: nowrap;
+}
+
+/* Desktop: two lines - brand on the left with the social icons on the right,
+   then copyright with the legal links on the right. Grid placement is used
+   instead of extra wrapper elements because the stacked mobile layout reorders
+   these same four children, which nested rows could not do. */
+@media (min-width: 769px) {
+    .footer-bottom {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        align-items: center;
+        column-gap: 1.5rem;
+        row-gap: 1.15rem;
+    }
+
+    .footer-brand {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .footer-icons {
+        grid-column: 2 / span 2;
+        grid-row: 1;
+        justify-self: end;
+    }
+
+    /* display: contents lifts the copyright line's two spans straight into the
+       grid, so the location can sit past the legal links without duplicating the
+       text or reshuffling the DOM the stacked layout reorders. */
+    .footer-bottom-left {
+        display: contents;
+    }
+
+    .footer-copy {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .footer-legal {
+        grid-column: 2;
+        grid-row: 2;
+        justify-self: end;
+    }
+
+    .footer-loc {
+        grid-column: 3;
+        grid-row: 2;
+    }
+}
+
+/* Below the desktop breakpoint the footer stacks into two labelled groups -
+   copyright, Legal, Network - with every link as an icon + text row. Same
+   content and the same destinations, only the arrangement changes. */
+@media (max-width: 768px) {
+    .footer-bottom {
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: 1.6rem;
+    }
+
+    /* Reading order on a phone: brand, then the two link groups, then copyright. */
+    .footer-brand {
+        order: 0;
+    }
+
+    .footer-bottom-left {
+        order: 3;
+        justify-content: space-between;
+        padding-top: 1.1rem;
+        margin-top: .2rem;
+        border-top: 1px solid var(--border);
+    }
+
+    /* Heading carries the same short accent rule the page titles use. */
+    .footer-group-title {
+        display: block;
+        width: max-content;
+        padding-bottom: .4rem;
+        margin-bottom: .5rem;
+        border-bottom: 2px solid var(--warm-accent);
+        font-family: 'DM Mono', monospace;
+        font-size: .62rem;
+        font-weight: 700;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+    }
+
+    .footer-legal {
+        order: 1;
+    }
+
+    .footer-icons {
+        order: 2;
+    }
+
+    .footer-legal,
+    .footer-icons {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: .1rem;
+        margin-left: 0;
+    }
+
+    .footer-legal-link {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        padding: .34rem .2rem;
+        border-radius: 6px;
+        font-size: .78rem;
+    }
+
+    .footer-legal-icon {
+        display: inline-flex;
+        flex-shrink: 0;
+        color: var(--warm-accent);
+    }
+
+    .footer-legal-short {
+        display: none;
+    }
+
+    .footer-legal-full {
+        display: inline;
+    }
+
+
+    .footer-icon-btn {
+        display: flex;
+        width: auto;
+        height: auto;
+        justify-content: flex-start;
+        gap: .65rem;
+        padding: .34rem .2rem;
+        border-radius: 6px;
+    }
+
+    .footer-icon-label {
+        display: inline;
+        font-family: 'DM Mono', monospace;
+        font-size: .78rem;
+        letter-spacing: .02em;
+    }
+}
+
+/* =================
+   NOT FOUND (404)
+   ================= */
+
+.notfound-page {
+    padding-top: 4.5rem;
+    overflow-wrap: break-word;
+}
+
+
+.notfound-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 3.5rem;
+}
+
+.notfound-code {
+    margin-bottom: .35rem;
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(1.25rem, 2.4vw, 1.5rem);
+    line-height: 1.1;
+    letter-spacing: .02em;
+    color: var(--text);
+}
+
+.notfound-page .section-title {
+    margin-bottom: .55rem;
+}
+
+.notfound-lede {
+    max-width: 52ch;
+    color: var(--text-secondary);
+    font-size: .95rem;
+    line-height: 1.7;
+}
+
+/* The missed URL as a compact accent line - the same left-rule treatment
+   .legal-note uses. A full-width card around a single row was mostly empty. */
+.notfound-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .55rem;
+    width: fit-content;
+    max-width: 100%;
+    margin-top: 1.7rem;
+    padding: .1rem 0 .1rem .8rem;
+    border-left: 2px solid var(--warm-accent);
+}
+
+.notfound-row-label {
+    font-family: 'DM Mono', monospace;
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+/* --bg punches each chip out of the --card panel in both themes; --surface
+   would sit at the same luminance as the panel in dark mode */
+.notfound-path {
+    max-width: 100%;
+    padding: .18rem .45rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    font-family: 'DM Mono', monospace;
+    font-size: .8rem;
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+
+/* One line of plain prose. The only accent here is the link itself - no icon,
+   no divider, no box. */
+.notfound-hint {
+    margin-top: 1.7rem;
+    font-size: .84rem;
+    line-height: 1.85;
+    color: var(--text-secondary);
+}
+
+.notfound-report-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .28rem;
+    vertical-align: baseline;
+    font-family: 'DM Mono', monospace;
+    font-size: .78rem;
+    letter-spacing: .02em;
+    color: var(--warm-accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color .2s, border-color .2s;
+}
+
+.notfound-report-link:hover {
+    border-bottom-color: var(--warm-accent);
+}
+
+.notfound-report-link svg {
+    transition: transform .2s;
+}
+
+.notfound-report-link:hover svg {
+    transform: translate(2px, -2px);
+}
+
+.notfound-report-link:focus-visible {
+    outline: 2px solid var(--warm-accent);
+    outline-offset: 2px;
 }
 
 

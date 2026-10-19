@@ -87,7 +87,9 @@
 | `/contact` | Contact - EmailJS form + social links |
 | `/about` | About - bio, education, collapsible experience cards with tech stack icons, certificates |
 | `/guestbook` | Guestbook - Google sign-in and real-time visitor notes |
-| `*` | Redirect to Home |
+| `/privacy` | Privacy Policy |
+| `/terms` | Terms of Service |
+| `*` | 404 - Page not found |
 
 </div>
 
@@ -131,6 +133,7 @@ Portfolio/
     |   |-- useProjectDetails.js     # Gist project details fetch + 5min cache
     |   |-- useGistContent.js        # Gist CMS hook - experiences, internships, certs
     |   |-- useReveal.js             # IntersectionObserver scroll reveal
+    |   |-- useActiveSection.js      # Tracks the visible section for the legal TOC
     |   |-- useTheme.js              # Re-export of useTheme from context
     |   +-- useNeko.js               # Oneko cat companion cursor follower
     |
@@ -147,7 +150,7 @@ Portfolio/
     |-- components/
     |   |-- layout/
     |   |   |-- Navbar.jsx          # Pill nav - tabs, GitHub icon, theme toggle
-    |   |   |-- Footer.jsx          # Footer + visit counter
+    |   |   |-- Footer.jsx          # Footer + visit counter + legal links
     |   |   |-- CustomCursor.jsx    # Dual-ring cursor (desktop only)
     |   |   +-- ScrollProgress.jsx  # Top gradient progress bar
     |   |
@@ -166,9 +169,12 @@ Portfolio/
     |   |   |-- QuoteStrip.jsx      # Rotating developer quotes
     |   |   +-- BottomNav.jsx       # Floating pill nav (home page only)
     |   |
-    |   +-- projects/
-    |       |-- CompactProjectCard.jsx     # Compact project card with arrow navigation
-    |       +-- ProjectDetailModal.jsx     # Project detail modal overlay
+    |   |-- projects/
+    |   |   |-- CompactProjectCard.jsx     # Compact project card with arrow navigation
+    |   |   +-- ProjectDetailModal.jsx     # Project detail modal overlay
+    |   |
+    |   +-- legal/
+    |       +-- LegalPage.jsx              # Shared shell for the privacy and terms pages
     |
     +-- pages/
         |-- Home.jsx
@@ -176,7 +182,9 @@ Portfolio/
         |-- Projects.jsx           # Full grid - search, filter, sort, incremental mobile load
         |-- ProjectDetail.jsx      # Individual project page with Gist-powered details
         |-- Contact.jsx            # EmailJS form + toast
-        +-- Guestbook.jsx          # Google sign-in + Firestore notes
+        |-- Guestbook.jsx          # Google sign-in + Firestore notes
+        |-- PrivacyPolicy.jsx      # /privacy
+        +-- TermsOfService.jsx     # /terms
 ```
 
 ---
