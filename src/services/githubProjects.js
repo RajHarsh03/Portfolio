@@ -117,7 +117,18 @@ function mapRepos(repos) {
         rawTopics: topics,
       };
     })
-    .sort((a, b) => a.rank - b.rank || new Date(b.updatedAt) - new Date(a.updatedAt));
+    .sort((a, b) => {
+      // If both have rank, sort by rank
+      if (a.rank !== RANK_DEFAULT && b.rank !== RANK_DEFAULT) {
+        return a.rank - b.rank;
+      }
+      // If only a has rank, a comes first
+      if (a.rank !== RANK_DEFAULT) return -1;
+      // If only b has rank, b comes first
+      if (b.rank !== RANK_DEFAULT) return 1;
+      // Both unranked, sort by date
+      return new Date(b.updatedAt) - new Date(a.updatedAt);
+    });
 }
 
 export async function fetchPortfolioProjects() {
