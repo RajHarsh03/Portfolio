@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import AppShell from './layouts/AppShell.jsx';
 import ScrollToTop from './router/ScrollToTop.jsx';
 import useNeko from './hooks/useNeko.js';
@@ -9,6 +9,9 @@ import {
   Contact,
   About,
   Guestbook,
+  PrivacyPolicy,
+  TermsOfService,
+  NotFound,
 } from './router/routes.jsx';
 
 export default function App() {
@@ -24,7 +27,9 @@ export default function App() {
         <Route path="/projects/:id" element={<ProjectDetail />} />
         <Route path="/contact"     element={<Contact />} />
         <Route path="/guestbook"   element={<Guestbook />} />
-        <Route path="*"            element={<Navigate to="/" replace />} />
+        <Route path="/privacy"     element={<PrivacyPolicy />} />
+        <Route path="/terms"       element={<TermsOfService />} />
+        <Route path="*"            element={<NotFound />} />
       </Routes>
     </AppShell>
   );
