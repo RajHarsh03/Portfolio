@@ -12,6 +12,15 @@ const MORE_LINKS = [
   { to: '/guestbook', label: 'Guestbook' },
 ];
 
+// Matches the desktop navbar: the footer-only legal pages still count as "More",
+// and so does any URL that falls through to the 404 page.
+const MORE_PATHS = [...MORE_LINKS.map(l => l.to), '/privacy', '/terms'];
+const KNOWN_PATHS = [...NAV_LINKS.map(l => l.to), ...MORE_PATHS];
+
+const isMoreActive = (path) =>
+  MORE_PATHS.includes(path) ||
+  (!KNOWN_PATHS.includes(path) && !path.startsWith('/projects/'));
+
 export default function BottomNav() {
   const { pathname } = useLocation();
   const [moreOpen, setMoreOpen] = useState(false);
@@ -36,7 +45,7 @@ export default function BottomNav() {
     }
   }, [pathname]);
 
-  const moreActive = MORE_LINKS.some(l => pathname === l.to);
+  const moreActive = isMoreActive(pathname);
 
   return (
     <div className="bottom-nav-portal">

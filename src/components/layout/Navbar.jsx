@@ -9,6 +9,16 @@ const MORE_LINKS = [
   { to: '/guestbook', label: 'Guestbook' },
 ];
 
+// The legal pages live in the footer instead of the menu, and any URL that matches
+// no route falls through to the 404 page. Both still sit under "More", so the pill
+// should light up for them.
+const MORE_PATHS = [...MORE_LINKS.map(l => l.to), '/privacy', '/terms'];
+const KNOWN_PATHS = ['/', '/about', '/projects', ...MORE_PATHS];
+
+const isMoreActive = (path) =>
+  MORE_PATHS.includes(path) ||
+  (!KNOWN_PATHS.includes(path) && !path.startsWith('/projects/'));
+
 export default function Navbar() {
   const { toggleTheme } = useTheme();
   const btnRef    = useRef(null);
@@ -43,7 +53,7 @@ export default function Navbar() {
   // Close on route change
   useEffect(() => { setMoreOpen(false); }, [pathname]);
 
-  const moreActive = MORE_LINKS.some(l => pathname === l.to);
+  const moreActive = isMoreActive(pathname);
 
   return (
     <nav className={scrolled ? 'scrolled' : ''}>
