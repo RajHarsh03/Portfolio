@@ -118,7 +118,7 @@ body {
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 16px;
     background: var(--bg);
-    color: var(--text);
+    color: var(--bg);
     overflow-x: hidden;
     transition: background 0.35s, color 0.35s;
     line-height: 1.6;
@@ -3355,9 +3355,10 @@ footer {
     stroke-width: 2.2;
 }
 
+/* Colour only - the --card fill read as a box around the icon on hover and
+   stayed stuck after a tap */
 .footer-icon-btn:hover {
     color: var(--text);
-    background: var(--card);
 }
 
 .visit-dot {
@@ -5005,26 +5006,41 @@ footer {
 }
 
 .guestbook-compose {
-    width: calc(100% - 48px);
+    width: 100%;
     margin-right: auto;
     margin-left: auto;
-    margin-bottom: 3rem;
-    padding: 1.25rem .5rem;
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    background: var(--surface);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, .12);
+    margin-bottom: 3.5rem;
+    padding: 0;
 }
 
 .guestbook-signin {
-    display: flex;
-    flex-direction: column;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
-    justify-content: center;
-    gap: 1.2rem;
-    min-height: 150px;
-    padding: 1.5rem .25rem;
-    text-align: center;
+    gap: 2rem;
+    min-height: 0;
+    padding: 1.75rem 2rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: linear-gradient(120deg, var(--surface), var(--card));
+    box-shadow: 0 16px 36px rgba(0, 0, 0, .1);
+    text-align: left;
+    overflow: hidden;
+}
+
+.guestbook-signin::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+    background: var(--accent);
+}
+
+.guestbook-signin > div {
+    position: relative;
 }
 
 .guestbook-signin h2,
@@ -5057,6 +5073,7 @@ footer {
     margin-top: .35rem;
     color: var(--muted);
     font-size: .78rem;
+    line-height: 1.6;
 }
 
 .guestbook-google,
@@ -5067,16 +5084,17 @@ footer {
     gap: .65rem;
     flex-shrink: 0;
     min-width: 250px;
-    padding: .72rem 1.1rem;
+    padding: .78rem 1.15rem;
     border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--surface);
+    border-radius: 9px;
+    background: transparent;
     color: var(--text);
     cursor: pointer;
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: .78rem;
     font-weight: 600;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+    box-shadow: none;
+    transition: transform .2s ease, border-color .2s ease, background .2s ease;
 }
 
 .guestbook-google-mark {
@@ -5086,13 +5104,23 @@ footer {
 
 .guestbook-google:hover,
 .guestbook-submit:hover:not(:disabled) {
-    opacity: .82;
+    transform: translateY(-2px);
+    border-color: var(--text);
+    background: var(--card);
+    box-shadow: none;
+}
+
+[data-theme="light"] .guestbook-google {
+    border-color: rgba(0, 0, 0, .18);
 }
 
 .guestbook-compose-user {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
     min-height: 42px;
-    margin-bottom: .8rem;
-    padding-bottom: .7rem;
+    margin-bottom: .9rem;
+    padding: .15rem 0 .9rem;
     border-bottom: 1px solid var(--border);
 }
 
@@ -5113,10 +5141,10 @@ footer {
 
 .guestbook-compose-user .guestbook-signout {
     margin-left: auto;
-    padding: .42rem .8rem;
+    padding: .45rem .85rem;
     border: 1px solid var(--border);
     border-radius: 999px;
-    background: transparent;
+    background: rgba(255, 255, 255, .025);
     color: var(--muted);
     font-family: 'DM Mono', monospace;
     font-size: .64rem;
@@ -5144,12 +5172,12 @@ footer {
 .guestbook-compose textarea {
     display: block;
     width: 100%;
-    height: 96px;
-    min-height: 96px;
-    padding: .85rem;
+    height: 112px;
+    min-height: 112px;
+    padding: 1rem;
     resize: vertical;
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 10px;
     outline: none;
     background: var(--bg);
     color: var(--text);
@@ -5159,6 +5187,7 @@ footer {
 
 .guestbook-compose textarea:focus {
     border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, .1);
 }
 
 .guestbook-compose-footer,
@@ -5242,7 +5271,11 @@ footer {
 }
 
 .guestbook-composer-form {
-    padding: 0 1rem;
+    padding: 1.5rem 1.75rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, .1);
 }
 
 .guestbook-notes-subtitle {
@@ -5465,6 +5498,9 @@ footer {
 
     .guestbook-signin {
         align-items: center;
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+        padding: 1.5rem 1.25rem;
         text-align: center;
     }
 
@@ -5488,15 +5524,15 @@ footer {
 
     .guestbook-compose {
         width: 100%;
-        padding: 1rem;
     }
 
     .guestbook-composer-form {
-        padding: 0 .25rem;
+        padding: 1.25rem 1rem 1rem;
     }
 
     .guestbook-google {
         width: 100%;
+        min-width: 0;
     }
 }
 
@@ -8899,12 +8935,11 @@ body:has(.legal-page) {
     letter-spacing: .04em;
     color: var(--text-secondary);
     text-decoration: none;
-    transition: color .2s, background .2s;
+    transition: color .2s;
 }
 
 .footer-legal-link:hover {
     color: var(--text);
-    background: var(--card);
 }
 
 /* Desktop keeps the compact "Privacy / Terms" pair; the full labels exist in the
@@ -9221,5 +9256,3 @@ body:has(.legal-page) {
     outline: 2px solid var(--warm-accent);
     outline-offset: 2px;
 }
-
-
