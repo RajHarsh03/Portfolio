@@ -118,7 +118,7 @@ body {
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 16px;
     background: var(--bg);
-    color: var(--bg);
+    color: var(--text);
     overflow-x: hidden;
     transition: background 0.35s, color 0.35s;
     line-height: 1.6;
