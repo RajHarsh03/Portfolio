@@ -6,6 +6,7 @@ import { auth, authPersistenceReady, db, firebaseReady, googleProvider } from '.
 
 const NOTES_CACHE_KEY = 'guestbook_entries_cache_v1';
 const AUTH_CACHE_KEY = 'guestbook_auth_user_v1';
+const AUTH_REDIRECT_PENDING_KEY = 'guestbook_auth_redirect_pending_v1';
 const TOAST_AVATAR_URL = 'https://github.com/RajHarsh03.png?size=96';
 const ADMIN_EMAIL = 'rajharsh.devx@gmail.com';
 const ADMIN_DISPLAY_NAME = 'Harsh Raj';
@@ -64,6 +65,18 @@ function cacheUser(user) {
 
 function clearCachedUser() {
   try { window.sessionStorage.removeItem(AUTH_CACHE_KEY); } catch { /* no-op */ }
+}
+
+function hasPendingAuthRedirect() {
+  try {
+    return window.sessionStorage.getItem(AUTH_REDIRECT_PENDING_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function clearPendingAuthRedirect() {
+  try { window.sessionStorage.removeItem(AUTH_REDIRECT_PENDING_KEY); } catch { /* no-op */ }
 }
 
 function formatDate(value) {
@@ -136,6 +149,7 @@ export default function Guestbook() {
   const initialUser = auth?.currentUser || readCachedUser();
   const initialEntries = readCachedEntries();
   const [user, setUser] = useState(initialUser);
+  const [authLoading, setAuthLoading] = useState(() => Boolean(auth && hasPendingAuthRedirect()));
   const [entries, setEntries] = useState(initialEntries);
   const [visibleCount, setVisibleCount] = useState(() => (
     typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches ? 2 : 3
@@ -186,6 +200,7 @@ export default function Guestbook() {
       return undefined;
     }
     redirectResultRead.current = true;
+    const redirectWasPending = hasPendingAuthRedirect();
     // getRedirectResult already waits for Firebase's own initialization. Waiting
     // for authStateReady first made the redirect return do those two waits in
     // sequence, leaving the composer unavailable for much longer than needed.
@@ -195,8 +210,12 @@ export default function Guestbook() {
         if (signedInUser) {
           setUser(signedInUser);
           cacheUser(signedInUser);
-          showToast('Sign in successful', "You're signed in. Leave a note whenever you're ready. 😊", 'success');
+          if (redirectWasPending) {
+            showToast('Sign in successful', "You're signed in. Leave a note whenever you're ready. 😊", 'success');
+          }
         }
+        clearPendingAuthRedirect();
+        setAuthLoading(false);
       })
       .catch(err => {
         if (wasCancelled(err)) {
@@ -204,6 +223,8 @@ export default function Guestbook() {
         } else {
           showToast('Sign in failed', 'Google sign-in could not be completed.', 'error');
         }
+        clearPendingAuthRedirect();
+        setAuthLoading(false);
       });
     return undefined;
   }, []);
@@ -231,6 +252,7 @@ export default function Guestbook() {
 
   async function handleSignIn() {
     try {
+      window.sessionStorage.setItem(AUTH_REDIRECT_PENDING_KEY, '1');
       // Navigates away to Google; this promise only settles if the redirect
       // itself is blocked, so a rejection here is a genuine failure.
       // Session persistence must be selected before redirecting, but waiting for
@@ -350,6 +372,16 @@ export default function Guestbook() {
         <div className="guestbook-compose">
           {!firebaseReady ? (
             <p className="guestbook-muted">This section is temporarily unavailable. Please try again later.</p>
+          ) : authLoading ? (
+            <div className="guestbook-auth-loading" role="status" aria-live="polite">
+              <div className="guestbook-auth-loader" aria-hidden="true"><span /></div>
+              <div>
+                <p className="section-label">// guestbook</p>
+                <h2>Checking your session</h2>
+                <p>One moment while we get your guestbook ready.</p>
+              </div>
+              <span className="guestbook-auth-status">Please wait</span>
+            </div>
           ) : user ? (
             <form className="guestbook-composer-form" onSubmit={handleSubmit}>
               <div className="guestbook-composer-aside">
