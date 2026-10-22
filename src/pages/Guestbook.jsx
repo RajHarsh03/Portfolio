@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { addDoc, arrayUnion, collection, deleteDoc, doc, increment, limit, onSnapshot, orderBy, query, runTransaction, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { getRedirectResult, onAuthStateChanged, signInWithRedirect, signOut } from 'firebase/auth';
-import { auth, authReady, db, firebaseReady, googleProvider } from '../services/firebase.js';
+import { auth, authPersistenceReady, db, firebaseReady, googleProvider } from '../services/firebase.js';
 
 const NOTES_CACHE_KEY = 'guestbook_entries_cache_v1';
 const AUTH_CACHE_KEY = 'guestbook_auth_user_v1';
@@ -186,8 +186,10 @@ export default function Guestbook() {
       return undefined;
     }
     redirectResultRead.current = true;
-    authReady
-      .then(() => getRedirectResult(auth))
+    // getRedirectResult already waits for Firebase's own initialization. Waiting
+    // for authStateReady first made the redirect return do those two waits in
+    // sequence, leaving the composer unavailable for much longer than needed.
+    getRedirectResult(auth)
       .then(result => {
         const signedInUser = result?.user || auth.currentUser;
         if (signedInUser) {
@@ -231,7 +233,9 @@ export default function Guestbook() {
     try {
       // Navigates away to Google; this promise only settles if the redirect
       // itself is blocked, so a rejection here is a genuine failure.
-      await authReady;
+      // Session persistence must be selected before redirecting, but waiting for
+      // the complete auth-state restore here only adds latency to a new sign-in.
+      await authPersistenceReady;
       await signInWithRedirect(auth, googleProvider);
     } catch {
       showToast('Sign in failed', 'Google sign-in could not be completed.', 'error');
