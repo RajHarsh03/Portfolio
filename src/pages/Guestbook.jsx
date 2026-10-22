@@ -186,7 +186,8 @@ export default function Guestbook() {
       return undefined;
     }
     redirectResultRead.current = true;
-    getRedirectResult(auth)
+    authPersistenceReady
+      .then(() => getRedirectResult(auth))
       .then(result => {
         if (result?.user) {
           setUser(result.user);
