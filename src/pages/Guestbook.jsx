@@ -11,6 +11,9 @@ const ADMIN_EMAIL = 'rajharsh.devx@gmail.com';
 const ADMIN_DISPLAY_NAME = 'Harsh Raj';
 const ADMIN_UID = 'VqE9wVvuIZXMoMjOlPtw8J3V6Go2';
 
+/* Google reports a bail-out from the consent screen under a few different codes
+   depending on where the redirect was dropped. All of them mean "cancelled",
+   not "broken", and the popup flow used to say so. */
 const CANCELLED_CODES = new Set([
   'auth/user-cancelled',
   'auth/cancelled-popup-request',
@@ -133,7 +136,6 @@ export default function Guestbook() {
   const initialUser = auth?.currentUser || readCachedUser();
   const initialEntries = readCachedEntries();
   const [user, setUser] = useState(initialUser);
-  const [authLoading, setAuthLoading] = useState(Boolean(auth));
   const [entries, setEntries] = useState(initialEntries);
   const [visibleCount, setVisibleCount] = useState(() => (
     typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches ? 2 : 3
@@ -168,37 +170,13 @@ export default function Guestbook() {
 
   useEffect(() => {
     if (!auth) {
-      setAuthLoading(false);
       return undefined;
     }
-    let active = true;
-    let unsubscribe = () => {};
-
-    // Do not attach the observer until the configured persistence has restored
-    // its final state. This avoids treating Auth's transient initial null as a
-    // completed sign-out after returning from Google's redirect.
-    authReady
-      .then(() => {
-        if (!active) return;
-        const applyUser = nextUser => {
-          if (!active) return;
-          setUser(nextUser);
-          if (nextUser) cacheUser(nextUser);
-          else clearCachedUser();
-          setAuthLoading(false);
-        };
-        applyUser(auth.currentUser);
-        unsubscribe = onAuthStateChanged(auth, applyUser);
-      })
-      .catch(error => {
-        console.error('Unable to restore the Guestbook sign-in session.', error);
-        if (active) setAuthLoading(false);
-      });
-
-    return () => {
-      active = false;
-      unsubscribe();
-    };
+    return onAuthStateChanged(auth, nextUser => {
+      setUser(nextUser);
+      if (nextUser) cacheUser(nextUser);
+      else clearCachedUser();
+    });
   }, []);
 
   useEffect(() => {
@@ -219,11 +197,10 @@ export default function Guestbook() {
         }
       })
       .catch(err => {
-        console.error('Google redirect sign-in failed.', err);
         if (wasCancelled(err)) {
           showToast('Sign in cancelled', 'Google sign-in was cancelled.', 'error');
         } else {
-          showToast('Sign in failed', `Google sign-in could not be completed (${err?.code || 'unknown error'}).`, 'error');
+          showToast('Sign in failed', 'Google sign-in could not be completed.', 'error');
         }
       });
     return undefined;
@@ -256,9 +233,8 @@ export default function Guestbook() {
       // itself is blocked, so a rejection here is a genuine failure.
       await authReady;
       await signInWithRedirect(auth, googleProvider);
-    } catch (err) {
-      console.error('Google sign-in could not start.', err);
-      showToast('Sign in failed', `Google sign-in could not be started (${err?.code || 'unknown error'}).`, 'error');
+    } catch {
+      showToast('Sign in failed', 'Google sign-in could not be completed.', 'error');
     }
   }
 
@@ -370,8 +346,6 @@ export default function Guestbook() {
         <div className="guestbook-compose">
           {!firebaseReady ? (
             <p className="guestbook-muted">This section is temporarily unavailable. Please try again later.</p>
-          ) : authLoading ? (
-            <p className="guestbook-muted" role="status">Restoring your sign-in…</p>
           ) : user ? (
             <form className="guestbook-composer-form" onSubmit={handleSubmit}>
               <div className="guestbook-compose-user">
