@@ -20,5 +20,6 @@ export const auth = app ? getAuth(app) : null;
 export const db = app ? getFirestore(app) : null;
 export const googleProvider = new GoogleAuthProvider();
 
-
-if (auth) setPersistence(auth, browserSessionPersistence).catch(() => {});
+export const authPersistenceReady = auth
+  ? setPersistence(auth, browserSessionPersistence)
+  : Promise.resolve();
