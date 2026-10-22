@@ -358,7 +358,19 @@ export default function Guestbook() {
           {!firebaseReady ? (
             <p className="guestbook-muted">This section is temporarily unavailable. Please try again later.</p>
           ) : authLoading ? (
-            <p className="guestbook-muted" role="status">Signing you in…</p>
+            <div className="guestbook-auth-loading" role="status" aria-live="polite">
+              <div className="guestbook-auth-loader" aria-hidden="true"><span /></div>
+              <div>
+                <p className="section-label">// secure sign-in</p>
+                <h2>Signing you in</h2>
+                <p>Verifying your Google session and preparing your guestbook.</p>
+              </div>
+              <div className="guestbook-auth-steps" aria-hidden="true">
+                <span className="is-complete">Google connected</span>
+                <span className="is-active">Verifying session</span>
+                <span>Preparing composer</span>
+              </div>
+            </div>
           ) : user ? (
             <form className="guestbook-composer-form" onSubmit={handleSubmit}>
               <div className="guestbook-compose-user">
