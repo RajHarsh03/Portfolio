@@ -2,9 +2,13 @@ import { getApp, getApps, initializeApp } from 'firebase/app';
 import { browserSessionPersistence, getAuth, GoogleAuthProvider, setPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
+// The live site canonicalizes to www.harshx.in. Redirect Auth must use that
+// exact origin, where Vercel proxies /__/auth/* to Firebase's helper pages.
+const isProductionDomain = typeof window !== 'undefined' && window.location.hostname === 'www.harshx.in';
+
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  authDomain: isProductionDomain ? 'www.harshx.in' : import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
