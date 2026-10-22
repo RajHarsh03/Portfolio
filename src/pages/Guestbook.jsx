@@ -361,30 +361,37 @@ export default function Guestbook() {
             <div className="guestbook-auth-loading" role="status" aria-live="polite">
               <div className="guestbook-auth-loader" aria-hidden="true"><span /></div>
               <div>
-                <p className="section-label">// secure sign-in</p>
-                <h2>Signing you in</h2>
-                <p>Verifying your Google session and preparing your guestbook.</p>
+                <p className="section-label">// guestbook</p>
+                <h2>Checking your session</h2>
+                <p>One moment while we get your guestbook ready.</p>
               </div>
-              <div className="guestbook-auth-steps" aria-hidden="true">
-                <span className="is-complete">Google connected</span>
-                <span className="is-active">Verifying session</span>
-                <span>Preparing composer</span>
-              </div>
+              <span className="guestbook-auth-status">Please wait</span>
             </div>
           ) : user ? (
             <form className="guestbook-composer-form" onSubmit={handleSubmit}>
-              <div className="guestbook-compose-user">
-                {user.photoURL ? <img src={user.photoURL} alt="" /> : <span>{(user.displayName || 'V').charAt(0)}</span>}
-                <div><strong>{user.displayName}</strong><small className={isAdmin ? 'guestbook-role role-admin' : 'guestbook-role role-visitor'}>Logged in as: {isAdmin ? 'Admin' : 'Visitor'}</small></div>
+              <div className="guestbook-composer-aside">
+                <div className="guestbook-compose-user">
+                  {user.photoURL ? <img src={user.photoURL} alt="" /> : <span>{(user.displayName || 'V').charAt(0)}</span>}
+                  <div><strong>{user.displayName}</strong><small className={isAdmin ? 'guestbook-role role-admin' : 'guestbook-role role-visitor'}>Logged in as: {isAdmin ? 'Admin' : 'Visitor'}</small></div>
+                </div>
                 <button type="button" className="guestbook-signout" onClick={() => { signOut(auth); showToast('Signed out', 'You have been disconnected.', 'success'); }}>Disconnect</button>
               </div>
-              <textarea value={message} onChange={event => {
-                const nextValue = event.target.value;
-                if (wordCount(nextValue) <= 100) setMessage(nextValue);
-              }} maxLength={500} placeholder="Write a message, share your feedback, or just say hello..." rows="4" required />
-              <div className="guestbook-compose-footer">
-                <small>{wordCount(message)}/100 words</small>
-                <button className="guestbook-submit" disabled={sending || !message.trim()}>{sending ? 'Posting...' : 'Post Note'}</button>
+              <div className="guestbook-composer-editor">
+                <div className="guestbook-composer-heading">
+                  <div>
+                    <span className="guestbook-composer-kicker">Guestbook note</span>
+                    <span className="guestbook-composer-hint">Say hello, share feedback, or leave a thought.</span>
+                  </div>
+                  <span className="guestbook-composer-count">{wordCount(message)}/100 words</span>
+                </div>
+                <textarea value={message} onChange={event => {
+                  const nextValue = event.target.value;
+                  if (wordCount(nextValue) <= 100) setMessage(nextValue);
+                }} maxLength={500} placeholder="Write something worth remembering..." rows="4" required />
+                <div className="guestbook-compose-footer">
+                  <small>Your note will be visible to everyone.</small>
+                  <button className="guestbook-submit" disabled={sending || !message.trim()}>{sending ? 'Posting...' : 'Post Note'}</button>
+                </div>
               </div>
             </form>
           ) : (
