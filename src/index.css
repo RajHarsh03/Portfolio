@@ -5441,8 +5441,39 @@ footer {
 }
 
 .guestbook-composer-aside .guestbook-signout {
+    appearance: none;
     align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
     margin: 1.5rem 0 0;
+    padding: .52rem .72rem;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--bg);
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: .62rem;
+    letter-spacing: .03em;
+    line-height: 1;
+    transition: border-color .2s ease, background .2s ease, color .2s ease, transform .2s ease;
+}
+
+.guestbook-composer-aside .guestbook-signout::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    opacity: .8;
+}
+
+.guestbook-composer-aside .guestbook-signout:hover {
+    border-color: var(--text);
+    background: var(--card);
+    color: var(--text);
+    transform: translateY(-1px);
 }
 
 .guestbook-composer-editor {
@@ -5510,17 +5541,35 @@ footer {
 }
 
 .guestbook-composer-form .guestbook-submit {
-    min-width: 116px;
-    padding: .55rem .9rem;
-    border-radius: 7px;
+    appearance: none;
+    min-width: 126px;
+    padding: .62rem 1rem;
+    border: 1px solid var(--text);
+    border-radius: 8px;
+    background: var(--text);
+    color: var(--bg);
     font-size: .72rem;
+    font-weight: 700;
     letter-spacing: .01em;
-    box-shadow: none;
+    box-shadow: 0 5px 14px rgba(0, 0, 0, .14);
+    transition: transform .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+.guestbook-composer-form .guestbook-submit:hover:not(:disabled) {
+    border-color: var(--accent-hover);
+    background: var(--accent-hover);
+    color: var(--bg);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, .2);
 }
 
 .guestbook-composer-form .guestbook-submit:disabled {
-    opacity: .58;
+    border-color: var(--border);
+    background: var(--card);
+    color: var(--muted);
+    opacity: 1;
     box-shadow: none;
+    cursor: not-allowed;
 }
 
 @media (max-width: 640px) {

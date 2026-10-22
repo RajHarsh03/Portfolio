@@ -136,7 +136,6 @@ export default function Guestbook() {
   const initialUser = auth?.currentUser || readCachedUser();
   const initialEntries = readCachedEntries();
   const [user, setUser] = useState(initialUser);
-  const [authLoading, setAuthLoading] = useState(Boolean(auth));
   const [entries, setEntries] = useState(initialEntries);
   const [visibleCount, setVisibleCount] = useState(() => (
     typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches ? 2 : 3
@@ -171,7 +170,6 @@ export default function Guestbook() {
 
   useEffect(() => {
     if (!auth) {
-      setAuthLoading(false);
       return undefined;
     }
     return onAuthStateChanged(auth, nextUser => {
@@ -199,10 +197,6 @@ export default function Guestbook() {
           cacheUser(signedInUser);
           showToast('Sign in successful', "You're signed in. Leave a note whenever you're ready. 😊", 'success');
         }
-        // Keep the sign-in prompt hidden until Firebase has completed the
-        // redirect-result check. This prevents the page from briefly showing
-        // a logged-out state while the returned Google session is verified.
-        setAuthLoading(false);
       })
       .catch(err => {
         if (wasCancelled(err)) {
@@ -210,7 +204,6 @@ export default function Guestbook() {
         } else {
           showToast('Sign in failed', 'Google sign-in could not be completed.', 'error');
         }
-        setAuthLoading(false);
       });
     return undefined;
   }, []);
@@ -357,16 +350,6 @@ export default function Guestbook() {
         <div className="guestbook-compose">
           {!firebaseReady ? (
             <p className="guestbook-muted">This section is temporarily unavailable. Please try again later.</p>
-          ) : authLoading ? (
-            <div className="guestbook-auth-loading" role="status" aria-live="polite">
-              <div className="guestbook-auth-loader" aria-hidden="true"><span /></div>
-              <div>
-                <p className="section-label">// guestbook</p>
-                <h2>Checking your session</h2>
-                <p>One moment while we get your guestbook ready.</p>
-              </div>
-              <span className="guestbook-auth-status">Please wait</span>
-            </div>
           ) : user ? (
             <form className="guestbook-composer-form" onSubmit={handleSubmit}>
               <div className="guestbook-composer-aside">
