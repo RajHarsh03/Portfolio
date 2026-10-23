@@ -411,10 +411,7 @@ export default function Guestbook() {
                     <span className="guestbook-composer-kicker">Guestbook note</span>
                     <span className="guestbook-composer-hint">Say hello, share feedback, or leave a thought.</span>
                   </div>
-                  <span className={`guestbook-composer-count${wordCount(message) >= 90 ? ' is-close' : ''}`}>
-                    <i aria-hidden="true" style={{ '--fill': `${Math.min(100, wordCount(message))}%` }} />
-                    {wordCount(message)}/100 words
-                  </span>
+                  <span className={`guestbook-composer-count${wordCount(message) >= 90 ? ' is-close' : ''}`}>{wordCount(message)}/100 words</span>
                 </div>
                 <textarea value={message} onChange={event => {
                   const nextValue = event.target.value;
@@ -422,10 +419,7 @@ export default function Guestbook() {
                 }} maxLength={500} placeholder="Write something worth remembering..." rows="4" required />
                 <div className="guestbook-compose-footer">
                   <small>Your note will be visible to everyone · {remainingChars(message)} chars left</small>
-                  <button className="guestbook-submit" disabled={sending || !message.trim()}>
-                    {sending ? 'Posting...' : 'Post Note'}
-                    {!sending && <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h13" /><path d="m12 5 7 7-7 7" /></svg>}
-                  </button>
+                  <button className="guestbook-submit" disabled={sending || !message.trim()}>{sending ? 'Posting...' : 'Post Note'}</button>
                 </div>
               </div>
             </form>
