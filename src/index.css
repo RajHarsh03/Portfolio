@@ -5114,16 +5114,6 @@ footer {
     border-color: rgba(0, 0, 0, .18);
 }
 
-.guestbook-compose-user {
-    display: flex;
-    align-items: center;
-    gap: .75rem;
-    min-height: 42px;
-    margin-bottom: .9rem;
-    padding: .15rem 0 .9rem;
-    border-bottom: 1px solid var(--border);
-}
-
 .guestbook-composer-form .guestbook-compose-user img,
 .guestbook-composer-form .guestbook-compose-user > span {
     width: 42px;
@@ -5137,36 +5127,6 @@ footer {
 .guestbook-composer-form .guestbook-compose-user small {
     margin-top: .15rem;
     font-size: .64rem;
-}
-
-.guestbook-compose-user .guestbook-signout {
-    margin-left: auto;
-    padding: .45rem .85rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, .025);
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    font-size: .64rem;
-    cursor: pointer;
-    transition: border-color .2s ease, background .2s ease, color .2s ease, transform .2s ease;
-}
-
-.guestbook-compose-user .guestbook-signout:hover {
-    border-color: var(--border);
-    background: transparent;
-    color: #fff;
-    transform: translateY(-1px);
-}
-
-[data-theme="light"] .guestbook-compose-user .guestbook-signout {
-    border-color: rgba(15, 23, 42, .22);
-    color: #475569;
-}
-
-[data-theme="light"] .guestbook-compose-user .guestbook-signout:hover {
-    border-color: rgba(15, 23, 42, .38);
-    color: #111827;
 }
 
 .guestbook-compose textarea {
@@ -5278,45 +5238,79 @@ footer {
     box-shadow: 0 16px 36px rgba(0, 0, 0, .1);
 }
 
-/* Auth handoff — keep the redirect wait purposeful rather than looking like
-   a blank page. */
+/* Auth handoff — a skeleton that mirrors the composer's shape, so the
+   redirect wait reads as "your editor is coming" instead of an error banner. */
 .guestbook-auth-loading {
-    position: relative;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    column-gap: 1.15rem;
-    min-height: 132px;
-    padding: 1.35rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.35rem;
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 16px;
     background: var(--surface);
-    overflow: hidden;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, .1);
 }
 
-.guestbook-auth-loading::before {
-    content: '';
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 2px;
-    background: var(--accent);
+.guestbook-skel-line {
+    display: block;
+    border-radius: 7px;
+    background: linear-gradient(90deg, var(--border) 25%, rgba(255, 255, 255, .06) 50%, var(--border) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
 }
+
+[data-theme="light"] .guestbook-skel-line {
+    background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+}
+
+.guestbook-auth-skeleton {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+}
+
+.guestbook-skel-line.is-avatar {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 50%;
+}
+
+.guestbook-skel-stack {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+    flex: 1;
+}
+
+.guestbook-skel-line.is-title { width: min(160px, 55%); height: 11px; }
+.guestbook-skel-line.is-meta { width: min(110px, 38%); height: 9px; }
+
+.guestbook-skel-line.is-button {
+    width: 96px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: 8px;
+}
+
+.guestbook-skel-line.is-block { width: 45%; height: 11px; }
+.guestbook-skel-line.is-input { width: 100%; height: 96px; border-radius: 9px; }
 
 .guestbook-auth-loader {
     position: relative;
     display: grid;
     place-items: center;
-    width: 42px;
-    height: 42px;
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    background: var(--bg);
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
 }
 
 .guestbook-auth-loader::before {
     content: '';
-    width: 22px;
-    height: 22px;
+    width: 14px;
+    height: 14px;
     border: 2px solid var(--border);
     border-top-color: var(--accent);
     border-right-color: var(--accent);
@@ -5326,45 +5320,21 @@ footer {
 
 .guestbook-auth-loader span {
     position: absolute;
-    width: 7px;
-    height: 7px;
+    width: 4px;
+    height: 4px;
     border-radius: 50%;
     background: var(--accent);
     animation: guestbook-auth-pulse 1.2s ease-in-out infinite;
 }
 
-.guestbook-auth-loading .section-label {
-    margin: 0 0 .3rem;
-}
-
-.guestbook-auth-loading h2 {
-    margin: 0;
-    color: var(--text);
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 1.15rem;
-    line-height: 1.15;
-}
-
-.guestbook-auth-loading p:not(.section-label) {
-    max-width: 37rem;
-    margin: .35rem 0 0;
-    color: var(--muted);
-    font-size: .75rem;
-    line-height: 1.55;
-}
-
 .guestbook-auth-status {
-    grid-column: 1 / -1;
-    justify-self: start;
-    margin-left: 3.25rem;
-    padding-top: .7rem;
-    border-top: 1px solid var(--border);
-    width: calc(100% - 3.25rem);
+    display: flex;
+    align-items: center;
+    gap: .55rem;
     color: var(--muted);
     font-family: 'DM Mono', monospace;
-    font-size: .58rem;
-    letter-spacing: .04em;
-    text-transform: uppercase;
+    font-size: .66rem;
+    letter-spacing: .03em;
 }
 
 @keyframes guestbook-auth-spin {
@@ -5375,79 +5345,67 @@ footer {
     50% { opacity: .35; transform: scale(.7); }
 }
 
-/* Composer — a stronger writing surface without introducing a new colour
-   system. */
+/* Composer — one clean column: identity row, editor, actions. Reads the
+   same on desktop and mobile without a cramped side rail. */
 .guestbook-composer-form {
-    position: relative;
-    display: grid;
-    grid-template-columns: 170px minmax(0, 1fr);
-    gap: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
     padding: 1.35rem;
     border-color: var(--border);
     background: var(--surface);
     overflow: hidden;
 }
 
-.guestbook-composer-form::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 1.35rem;
-    left: 1.35rem;
-    height: 1px;
-    background: var(--border);
-    opacity: 1;
-}
-
-.guestbook-composer-aside {
+.guestbook-composer-user {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     justify-content: space-between;
-    min-width: 0;
-    padding: .25rem 1.35rem .25rem .1rem;
-    border-right: 1px solid var(--border);
+    gap: .8rem;
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid var(--border);
 }
 
-.guestbook-compose-user {
-    position: relative;
+.guestbook-composer-form .guestbook-compose-user {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: .65rem;
+    flex-direction: row;
+    align-items: center;
+    gap: .7rem;
     margin: 0;
     padding: 0;
     border: 0;
+    min-width: 0;
 }
 
 .guestbook-composer-form .guestbook-compose-user img,
 .guestbook-composer-form .guestbook-compose-user > span {
-    width: 52px;
-    height: 52px;
+    width: 42px;
+    height: 42px;
     border: 1px solid var(--border);
+    border-radius: 50%;
     outline: none;
 }
 
 .guestbook-composer-form .guestbook-compose-user strong {
     display: block;
-    font-size: .88rem;
+    font-size: .85rem;
     letter-spacing: -.01em;
 }
 
 .guestbook-composer-form .guestbook-compose-user small {
     display: inline-flex;
     width: fit-content;
-    margin-top: .18rem;
+    margin-top: .12rem;
     letter-spacing: .04em;
 }
 
-.guestbook-composer-aside .guestbook-signout {
+.guestbook-composer-user .guestbook-signout {
     appearance: none;
-    align-self: flex-start;
+    flex-shrink: 0;
     display: inline-flex;
     align-items: center;
     gap: .45rem;
-    margin: 1.5rem 0 0;
-    padding: .52rem .72rem;
+    padding: .5rem .75rem;
     border: 1px solid var(--border);
     border-radius: 7px;
     background: var(--bg);
@@ -5460,7 +5418,7 @@ footer {
     transition: border-color .2s ease, background .2s ease, color .2s ease, transform .2s ease;
 }
 
-.guestbook-composer-aside .guestbook-signout::before {
+.guestbook-composer-user .guestbook-signout::before {
     content: '';
     width: 6px;
     height: 6px;
@@ -5469,7 +5427,7 @@ footer {
     opacity: .8;
 }
 
-.guestbook-composer-aside .guestbook-signout:hover {
+.guestbook-composer-user .guestbook-signout:hover {
     border-color: var(--text);
     background: var(--card);
     color: var(--text);
@@ -5532,8 +5490,8 @@ footer {
 }
 
 .guestbook-composer-form .guestbook-compose-footer {
-    margin-top: .65rem;
-    padding-top: .65rem;
+    margin-top: .15rem;
+    align-items: center;
 }
 
 .guestbook-composer-form .guestbook-compose-footer small {
@@ -5573,35 +5531,23 @@ footer {
 }
 
 @media (max-width: 640px) {
-    .guestbook-auth-loading { min-height: 0; padding: 1.35rem; }
-    .guestbook-auth-status { margin-left: 3.1rem; width: calc(100% - 3.1rem); }
-    .guestbook-composer-form {
-        grid-template-columns: 1fr;
-        gap: 1.1rem;
-        padding: 1rem;
-    }
-    .guestbook-composer-aside {
-        flex-direction: row;
-        align-items: center;
-        gap: 1rem;
-        padding: 0 0 1rem;
-        border-right: 0;
-        border-bottom: 1px solid var(--border);
-    }
-    .guestbook-compose-user {
-        flex-direction: row;
-        align-items: center;
-    }
-    .guestbook-composer-aside .guestbook-signout {
-        margin: 0 0 0 auto;
-    }
+    .guestbook-auth-loading { padding: 1.1rem; }
+    .guestbook-skel-line.is-input { height: 84px; }
+    .guestbook-composer-form { padding: 1.1rem; gap: .95rem; }
+    .guestbook-composer-user { padding-bottom: .95rem; }
     .guestbook-composer-heading {
         align-items: flex-start;
         flex-direction: column;
         gap: .25rem;
     }
-    .guestbook-composer-form::before { right: 1rem; left: 1rem; }
     .guestbook-compose textarea { min-height: 108px; }
+    .guestbook-composer-form .guestbook-compose-footer {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: .6rem;
+    }
+    .guestbook-composer-form .guestbook-compose-footer small { text-align: center; }
+    .guestbook-composer-form .guestbook-submit { min-width: 0; width: 100%; }
 }
 
 .guestbook-notes-subtitle {
@@ -5846,14 +5792,11 @@ footer {
 
     .guestbook-page {
         padding-top: 4.5rem;
+        padding-bottom: 7rem;
     }
 
     .guestbook-compose {
         width: 100%;
-    }
-
-    .guestbook-composer-form {
-        padding: 1.25rem 1rem 1rem;
     }
 
     .guestbook-google {

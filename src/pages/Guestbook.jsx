@@ -373,18 +373,25 @@ export default function Guestbook() {
           {!firebaseReady ? (
             <p className="guestbook-muted">This section is temporarily unavailable. Please try again later.</p>
           ) : authLoading ? (
-            <div className="guestbook-auth-loading" role="status" aria-live="polite">
-              <div className="guestbook-auth-loader" aria-hidden="true"><span /></div>
-              <div>
-                <p className="section-label">// guestbook</p>
-                <h2>Checking your session</h2>
-                <p>One moment while we get your guestbook ready.</p>
+            <div className="guestbook-auth-loading" role="status" aria-live="polite" aria-label="Checking your session">
+              <div className="guestbook-auth-skeleton">
+                <span className="guestbook-skel-line is-avatar" aria-hidden="true" />
+                <div className="guestbook-skel-stack">
+                  <span className="guestbook-skel-line is-title" aria-hidden="true" />
+                  <span className="guestbook-skel-line is-meta" aria-hidden="true" />
+                </div>
+                <span className="guestbook-skel-line is-button" aria-hidden="true" />
               </div>
-              <span className="guestbook-auth-status">Please wait</span>
+              <span className="guestbook-skel-line is-block" aria-hidden="true" />
+              <span className="guestbook-skel-line is-input" aria-hidden="true" />
+              <div className="guestbook-auth-status">
+                <span className="guestbook-auth-loader" aria-hidden="true"><span /></span>
+                Checking your session…
+              </div>
             </div>
           ) : user ? (
             <form className="guestbook-composer-form" onSubmit={handleSubmit}>
-              <div className="guestbook-composer-aside">
+              <div className="guestbook-composer-user">
                 <div className="guestbook-compose-user">
                   {user.photoURL ? <img src={user.photoURL} alt="" /> : <span>{(user.displayName || 'V').charAt(0)}</span>}
                   <div><strong>{user.displayName}</strong><small className={isAdmin ? 'guestbook-role role-admin' : 'guestbook-role role-visitor'}>Logged in as: {isAdmin ? 'Admin' : 'Visitor'}</small></div>
