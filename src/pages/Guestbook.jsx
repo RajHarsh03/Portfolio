@@ -12,9 +12,6 @@ const ADMIN_EMAIL = 'rajharsh.devx@gmail.com';
 const ADMIN_DISPLAY_NAME = 'Harsh Raj';
 const ADMIN_UID = 'VqE9wVvuIZXMoMjOlPtw8J3V6Go2';
 
-/* Google reports a bail-out from the consent screen under a few different codes
-   depending on where the redirect was dropped. All of them mean "cancelled",
-   not "broken", and the popup flow used to say so. */
 const CANCELLED_CODES = new Set([
   'auth/user-cancelled',
   'auth/cancelled-popup-request',
@@ -87,6 +84,10 @@ function formatDate(value) {
 
 function wordCount(value) {
   return value.trim() ? value.trim().split(/\s+/).length : 0;
+}
+
+function remainingChars(value) {
+  return 500 - value.length;
 }
 
 function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, onDelete, showDelete = true }) {
@@ -393,8 +394,14 @@ export default function Guestbook() {
             <form className="guestbook-composer-form" onSubmit={handleSubmit}>
               <div className="guestbook-composer-user">
                 <div className="guestbook-compose-user">
-                  {user.photoURL ? <img src={user.photoURL} alt="" /> : <span>{(user.displayName || 'V').charAt(0)}</span>}
-                  <div><strong>{user.displayName}</strong><small className={isAdmin ? 'guestbook-role role-admin' : 'guestbook-role role-visitor'}>Logged in as: {isAdmin ? 'Admin' : 'Visitor'}</small></div>
+                  <div className="guestbook-compose-avatar">
+                    {user.photoURL ? <img src={user.photoURL} alt="" /> : <span>{(user.displayName || 'V').charAt(0)}</span>}
+                    <i className="guestbook-presence" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <strong>{user.displayName}</strong>
+                    <small className={isAdmin ? 'guestbook-role role-admin' : 'guestbook-role role-visitor'}>Signed in as {isAdmin ? 'Admin' : 'Visitor'}</small>
+                  </div>
                 </div>
                 <button type="button" className="guestbook-signout" onClick={() => { signOut(auth); showToast('Signed out', 'You have been disconnected.', 'success'); }}>Disconnect</button>
               </div>
@@ -404,15 +411,21 @@ export default function Guestbook() {
                     <span className="guestbook-composer-kicker">Guestbook note</span>
                     <span className="guestbook-composer-hint">Say hello, share feedback, or leave a thought.</span>
                   </div>
-                  <span className="guestbook-composer-count">{wordCount(message)}/100 words</span>
+                  <span className={`guestbook-composer-count${wordCount(message) >= 90 ? ' is-close' : ''}`}>
+                    <i aria-hidden="true" style={{ '--fill': `${Math.min(100, wordCount(message))}%` }} />
+                    {wordCount(message)}/100 words
+                  </span>
                 </div>
                 <textarea value={message} onChange={event => {
                   const nextValue = event.target.value;
                   if (wordCount(nextValue) <= 100) setMessage(nextValue);
                 }} maxLength={500} placeholder="Write something worth remembering..." rows="4" required />
                 <div className="guestbook-compose-footer">
-                  <small>Your note will be visible to everyone.</small>
-                  <button className="guestbook-submit" disabled={sending || !message.trim()}>{sending ? 'Posting...' : 'Post Note'}</button>
+                  <small>Your note will be visible to everyone · {remainingChars(message)} chars left</small>
+                  <button className="guestbook-submit" disabled={sending || !message.trim()}>
+                    {sending ? 'Posting...' : 'Post Note'}
+                    {!sending && <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h13" /><path d="m12 5 7 7-7 7" /></svg>}
+                  </button>
                 </div>
               </div>
             </form>

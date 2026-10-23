@@ -5345,16 +5345,33 @@ footer {
     50% { opacity: .35; transform: scale(.7); }
 }
 
+@keyframes guestbook-presence-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, .45); }
+    60% { box-shadow: 0 0 0 5px rgba(34, 197, 94, 0); }
+}
+
 /* Composer — one clean column: identity row, editor, actions. Reads the
    same on desktop and mobile without a cramped side rail. */
 .guestbook-composer-form {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 1.1rem;
-    padding: 1.35rem;
+    padding: 1.5rem 1.35rem 1.35rem;
     border-color: var(--border);
     background: var(--surface);
     overflow: hidden;
+}
+
+.guestbook-composer-form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--warm-accent), transparent 70%);
+    opacity: .7;
 }
 
 .guestbook-composer-user {
@@ -5362,8 +5379,6 @@ footer {
     align-items: center;
     justify-content: space-between;
     gap: .8rem;
-    padding-bottom: 1.1rem;
-    border-bottom: 1px solid var(--border);
 }
 
 .guestbook-composer-form .guestbook-compose-user {
@@ -5378,12 +5393,53 @@ footer {
 }
 
 .guestbook-composer-form .guestbook-compose-user img,
-.guestbook-composer-form .guestbook-compose-user > span {
+.guestbook-composer-form .guestbook-compose-user span {
+    display: grid;
+    place-items: center;
     width: 42px;
     height: 42px;
     border: 1px solid var(--border);
     border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'DM Mono', monospace;
+    font-size: .78rem;
+    object-fit: cover;
     outline: none;
+}
+
+.guestbook-composer-form .guestbook-compose-user img {
+    background: transparent;
+}
+
+/* Identity chip — reads as a live session, not just a label. */
+.guestbook-composer-user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .8rem;
+    padding: .6rem .7rem .6rem .6rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+}
+
+.guestbook-compose-avatar {
+    position: relative;
+    flex-shrink: 0;
+    line-height: 0;
+}
+
+.guestbook-presence {
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+    width: 11px;
+    height: 11px;
+    border: 2px solid var(--surface);
+    border-radius: 50%;
+    background: #22c55e;
+    animation: guestbook-presence-pulse 2s ease-in-out infinite;
 }
 
 .guestbook-composer-form .guestbook-compose-user strong {
@@ -5428,10 +5484,16 @@ footer {
 }
 
 .guestbook-composer-user .guestbook-signout:hover {
-    border-color: var(--text);
-    background: var(--card);
-    color: var(--text);
+    border-color: rgba(248, 113, 113, .55);
+    background: rgba(248, 113, 113, .08);
+    color: #f87171;
     transform: translateY(-1px);
+}
+
+[data-theme="light"] .guestbook-composer-user .guestbook-signout:hover {
+    border-color: rgba(185, 28, 28, .4);
+    background: rgba(185, 28, 28, .06);
+    color: #b91c1c;
 }
 
 .guestbook-composer-editor {
@@ -5465,20 +5527,59 @@ footer {
 
 .guestbook-composer-count {
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .35rem;
+    padding: .4rem .65rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
     color: var(--muted);
     font-family: 'DM Mono', monospace;
     font-size: .6rem;
+    transition: border-color .2s ease, color .2s ease;
+}
+
+.guestbook-composer-count i {
+    display: block;
+    width: 64px;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+}
+
+.guestbook-composer-count i::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--fill, 0%);
+    border-radius: inherit;
+    background: var(--text);
+    transition: width .25s ease;
+}
+
+.guestbook-composer-count.is-close {
+    border-color: rgba(244, 199, 107, .5);
+    color: var(--admin-role);
+}
+
+.guestbook-composer-count.is-close i::after {
+    background: var(--admin-role);
 }
 
 .guestbook-compose textarea {
-    min-height: 128px;
-    padding: 1rem;
+    height: auto;
+    min-height: 140px;
+    padding: 1.05rem 1.1rem;
     border-color: var(--border);
-    border-radius: 9px;
-    background: var(--bg);
-    font-size: .78rem;
-    line-height: 1.6;
-    transition: border-color .2s ease, box-shadow .2s ease;
+    border-radius: 12px;
+    background: var(--input-bg);
+    font-size: .8rem;
+    line-height: 1.65;
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
 }
 
 .guestbook-compose textarea::placeholder { color: var(--muted); opacity: .8; }
@@ -5486,12 +5587,13 @@ footer {
 .guestbook-compose textarea:focus {
     border-color: var(--accent);
     background: var(--bg);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 12%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
 }
 
 .guestbook-composer-form .guestbook-compose-footer {
-    margin-top: .15rem;
-    align-items: center;
+    margin-top: .1rem;
+    padding-top: .85rem;
+    border-top: 1px solid var(--border);
 }
 
 .guestbook-composer-form .guestbook-compose-footer small {
@@ -5500,17 +5602,22 @@ footer {
 
 .guestbook-composer-form .guestbook-submit {
     appearance: none;
-    min-width: 126px;
+    gap: .5rem;
+    min-width: 132px;
     padding: .62rem 1rem;
     border: 1px solid var(--text);
-    border-radius: 8px;
+    border-radius: 9px;
     background: var(--text);
     color: var(--bg);
     font-size: .72rem;
     font-weight: 700;
     letter-spacing: .01em;
     box-shadow: 0 5px 14px rgba(0, 0, 0, .14);
-    transition: transform .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
+    transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.guestbook-composer-form .guestbook-submit svg {
+    transition: transform .2s ease;
 }
 
 .guestbook-composer-form .guestbook-submit:hover:not(:disabled) {
@@ -5521,20 +5628,25 @@ footer {
     box-shadow: 0 8px 18px rgba(0, 0, 0, .2);
 }
 
+.guestbook-composer-form .guestbook-submit:hover:not(:disabled) svg {
+    transform: translateX(3px);
+}
+
 .guestbook-composer-form .guestbook-submit:disabled {
+    border-style: dashed;
     border-color: var(--border);
-    background: var(--card);
+    background: transparent;
     color: var(--muted);
     opacity: 1;
     box-shadow: none;
     cursor: not-allowed;
+    transform: none;
 }
 
 @media (max-width: 640px) {
     .guestbook-auth-loading { padding: 1.1rem; }
     .guestbook-skel-line.is-input { height: 84px; }
     .guestbook-composer-form { padding: 1.1rem; gap: .95rem; }
-    .guestbook-composer-user { padding-bottom: .95rem; }
     .guestbook-composer-heading {
         align-items: flex-start;
         flex-direction: column;
@@ -5807,6 +5919,10 @@ footer {
 
 @media (prefers-reduced-motion: reduce) {
     .guestbook-preview-track {
+        animation: none;
+    }
+
+    .guestbook-presence {
         animation: none;
     }
 }
