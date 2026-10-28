@@ -368,7 +368,7 @@ export default function Guestbook() {
         <div className="guestbook-page-header">
           <p className="section-label">// Leave a note </p>
           <h1 className="guestbook-page-title">Guestbook</h1>
-          <p className="guestbook-page-subtitle">A small wall for visitors, developers, and friends to say hello.</p>
+          <p className="guestbook-page-subtitle">Leave a note. Say hi. Tell me I'm wrong about something. All welcome.</p>
         </div>
 
         <div className="guestbook-compose">
@@ -392,50 +392,38 @@ export default function Guestbook() {
               </div>
             </div>
           ) : user ? (
-            <form className="guestbook-composer-form" onSubmit={handleSubmit}>
-              <div className="guestbook-composer-user">
-                <div className="guestbook-compose-user">
-                  <div className="guestbook-compose-avatar">
-                    {user.photoURL ? <img src={user.photoURL} alt="" /> : <span>{(user.displayName || 'V').charAt(0)}</span>}
-                    <i className="guestbook-presence" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <strong>{user.displayName}</strong>
-                    <small className={isAdmin ? 'guestbook-role role-admin' : 'guestbook-role role-visitor'}>Signed in as {isAdmin ? 'Admin' : 'Visitor'}</small>
-                  </div>
-                </div>
-                <button type="button" className="guestbook-signout" onClick={() => { signOut(auth); showToast('Signed out', 'You have been disconnected.', 'success'); }}>Disconnect</button>
-              </div>
-              <div className="guestbook-composer-editor">
-                <div className="guestbook-composer-heading">
-                  <div>
-                    <span className="guestbook-composer-kicker">Guestbook note</span>
-                    <span className="guestbook-composer-hint">Say hello, share feedback, or leave a thought.</span>
-                  </div>
-                  <span className={`guestbook-composer-count${wordCount(message) >= 90 ? ' is-close' : ''}`}>{wordCount(message)}/100 words</span>
-                </div>
+            <form className="gb-composer" onSubmit={handleSubmit}>
+              <div className="gb-composer-input">
+                <span className="gb-quote-mark" aria-hidden="true">&ldquo;</span>
                 <textarea value={message} onChange={event => {
                   const nextValue = event.target.value;
                   if (wordCount(nextValue) <= 100) setMessage(nextValue);
-                }} maxLength={500} placeholder="Write something worth remembering..." aria-label="Guestbook note" rows="4" required />
-                <div className="guestbook-compose-footer">
-                  <small>Your note will be visible to everyone · {remainingChars(message)} chars left</small>
-                  <button className="guestbook-submit" disabled={sending || !message.trim()}>{sending ? 'Posting...' : 'Post Note'}</button>
+                }} maxLength={500} placeholder="Say something nice, or don't." aria-label="Guestbook note" rows="3" required />
+              </div>
+              <div className="gb-composer-footer">
+                <div className="gb-composer-user">
+                  {user.photoURL ? <img src={user.photoURL} alt="" /> : <span className="gb-avatar-fallback" aria-hidden="true">{(user.displayName || 'V').charAt(0)}</span>}
+                  <span className="gb-user-meta"><strong>{user.displayName || 'Visitor'}</strong><small className={`gb-role`+(isAdmin ? ' is-admin' : '')}>{isAdmin ? 'Admin' : 'Visitor'}</small></span>
+                  <button type="button" className="gb-signout" onClick={() => { signOut(auth); showToast('Signed out', 'You have been disconnected.', 'success'); }}>Sign out</button>
+                </div>
+                <div className="gb-composer-actions">
+                  <span className={`gb-count${remainingChars(message) <= 50 ? ' is-close' : ''}`} aria-label={`${remainingChars(message)} characters left`}>{remainingChars(message)}</span>
+                  <button type="submit" className="gb-submit" disabled={sending || !message.trim()}>
+                    <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 2 11 13" /><path d="M22 2 15 22l-4-9-9-4 20-7z" />
+                    </svg>
+                    {sending ? 'Signing…' : 'Sign it'}
+                  </button>
                 </div>
               </div>
             </form>
           ) : (
-            <div className="guestbook-signin">
-              <div><h2>Leave a note on the wall</h2><p>Sign in with Google to share your thoughts, feedback, or just say hello.</p></div>
-              <button className="guestbook-google" onClick={handleSignIn}>
-                <svg className="guestbook-google-mark" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20">
-                  <path fill="#4285F4" d="M21.35 12.27c0-.72-.06-1.42-.18-2.09H12v3.96h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.26Z"/>
-                  <path fill="#34A853" d="M12 21.7c2.63 0 4.84-.87 6.45-2.36l-3.14-2.45c-.87.58-1.98.92-3.31.92-2.55 0-4.7-1.72-5.47-4.03H3.28v2.53A9.74 9.74 0 0 0 12 21.7Z"/>
-                  <path fill="#FBBC05" d="M6.53 13.78a5.86 5.86 0 0 1 0-3.56V7.69H3.28a9.74 9.74 0 0 0 0 8.62l3.25-2.53Z"/>
-                  <path fill="#EA4335" d="M12 6.19c1.43 0 2.71.49 3.72 1.45l2.79-2.79C16.84 3.27 14.63 2.3 12 2.3a9.74 9.74 0 0 0-8.72 5.39l3.25 2.53C7.3 7.91 9.45 6.19 12 6.19Z"/>
-                </svg>
-                Sign in with Google
-              </button>
+            <div className="gb-signin">
+              <svg className="gb-signin-icon" aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+              </svg>
+              <p>Sign in with Google to leave a note.</p>
+              <button type="button" className="gb-signin-btn" onClick={handleSignIn}>Sign in</button>
             </div>
           )}
         </div>

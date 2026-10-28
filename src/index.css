@@ -8417,3 +8417,315 @@ footer {
         transition: none;
     }
 }
+
+/* ================================
+   GUESTBOOK COMPOSER — compact sign-in row and minimal note box
+   ================================ */
+.gb-signin,
+.gb-composer {
+    background: var(--card);
+    border: 1px solid var(--border);
+}
+
+.gb-signin {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    padding: 1.1rem 1.1rem 1.1rem 1.4rem;
+}
+
+.gb-signin-icon {
+    flex-shrink: 0;
+    color: var(--muted);
+}
+
+.gb-signin p {
+    flex: 1;
+    margin: 0;
+    color: var(--muted);
+    font-size: .92rem;
+}
+
+.gb-signin-btn,
+.gb-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    padding: .7rem 1.35rem;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: var(--bg);
+    font: inherit;
+    font-size: .9rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.gb-composer {
+    padding: 1.25rem 1.4rem 1.1rem;
+}
+
+.gb-composer-input {
+    display: flex;
+    gap: .4rem;
+}
+
+.gb-quote-mark {
+    flex-shrink: 0;
+    color: var(--muted);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.6rem;
+    line-height: 1;
+    margin-top: -.15rem;
+}
+
+.gb-composer textarea {
+    flex: 1;
+    display: block;
+    width: auto;
+    height: auto;
+    min-height: 92px;
+    box-shadow: none;
+    transition: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: .95rem;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+.gb-composer textarea::placeholder {
+    color: var(--muted);
+    opacity: .85;
+}
+
+.gb-composer textarea:focus {
+    outline: none;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.gb-composer:focus-within {
+    border-color: var(--muted);
+}
+
+.gb-composer-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.gb-composer-user {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    min-width: 0;
+}
+
+.gb-composer-user img,
+.gb-avatar-fallback {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: 50% !important;
+    object-fit: cover;
+}
+
+.gb-avatar-fallback {
+    display: grid;
+    place-items: center;
+    background: var(--border);
+    color: var(--text);
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.gb-composer-user strong {
+    overflow: hidden;
+    color: var(--text);
+    font-size: .88rem;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gb-admin-tag {
+    margin-left: .45rem;
+    color: var(--admin-role);
+    font-family: 'DM Mono', monospace;
+    font-size: .62rem;
+    font-style: normal;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.gb-signout {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-size: .85rem;
+    cursor: pointer;
+}
+
+.gb-composer-actions {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+    flex-shrink: 0;
+}
+
+.gb-count {
+    color: var(--muted);
+    font-size: .85rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.gb-count.is-close {
+    color: #f59e0b;
+}
+
+.gb-submit:disabled {
+    border-color: var(--border);
+    background: var(--border);
+    color: var(--muted);
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .gb-signin {
+        flex-wrap: wrap;
+        padding: 1rem;
+    }
+
+    .gb-signin p {
+        flex-basis: calc(100% - 2rem);
+    }
+
+    .gb-signin-btn {
+        width: 100%;
+    }
+
+    .gb-composer {
+        padding: 1rem;
+    }
+
+    .gb-composer-footer {
+        flex-wrap: wrap;
+    }
+
+    .gb-composer-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+/* Guestbook composer: rounded card + pill buttons (exception to the sharp grid) */
+.gb-signin,
+.gb-composer {
+    border-radius: 20px !important;
+    background: color-mix(in srgb, var(--text) 5%, var(--bg));
+    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+}
+
+.gb-signin-btn,
+.gb-submit {
+    border-radius: 999px !important;
+    padding: .7rem 1.4rem;
+    font-weight: 500;
+    border: 0;
+    background: var(--text);
+    color: var(--bg);
+    transition: background .2s ease, color .2s ease, opacity .2s ease;
+}
+
+.gb-signin-btn:hover,
+.gb-submit:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--text) 85%, var(--bg));
+}
+
+.gb-submit:disabled {
+    background: color-mix(in srgb, var(--text) 22%, var(--bg));
+    color: color-mix(in srgb, var(--text) 60%, var(--bg));
+    border: 0;
+}
+
+.gb-composer textarea {
+    resize: none;
+}
+
+.gb-composer:focus-within {
+    border-color: color-mix(in srgb, var(--text) 18%, transparent);
+}
+
+.gb-signout {
+    transition: color .2s ease;
+}
+
+.gb-signout:hover,
+.gb-signout:focus-visible {
+    color: var(--text);
+}
+
+/* Name with a small role label underneath */
+.gb-user-meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.2;
+}
+
+.gb-role {
+    margin-top: .15rem;
+    color: var(--visitor-role);
+    opacity: .7;
+    font-family: 'DM Mono', monospace;
+    font-size: .58rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.gb-role.is-admin {
+    color: var(--admin-role);
+    opacity: 1;
+}
+
+/* Compact user row: smaller name, role and sign-out, centred together */
+.gb-composer-user {
+    gap: .6rem;
+}
+
+.gb-composer-user img,
+.gb-avatar-fallback {
+    width: 26px;
+    height: 26px;
+}
+
+.gb-user-meta strong {
+    font-size: .8rem;
+    font-weight: 500;
+    line-height: 1.15;
+}
+
+.gb-role {
+    margin-top: .1rem;
+    font-size: .5rem;
+    letter-spacing: .1em;
+    line-height: 1;
+}
+
+.gb-signout {
+    align-self: center;
+    margin-left: .2rem;
+    padding: .2rem 0;
+    font-size: .76rem;
+    line-height: 1;
+}
