@@ -18,6 +18,15 @@ function upsertEnvLocal(key, value) {
   fs.writeFileSync(file, text);
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function sendHtml(res, html) {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -52,7 +61,7 @@ function nowPlayingDevPlugin() {
           const code = url.searchParams.get('code');
           const error = url.searchParams.get('error');
           if (error || !code) {
-            sendHtml(res, `<p>Spotify login failed: ${error || 'no code'}. Close this tab and try <a href="/spotify-connect">/spotify-connect</a> again.</p>`);
+            sendHtml(res, `<p>Spotify login failed: ${escapeHtml(error || 'no code')}. Close this tab and try <a href="/spotify-connect">/spotify-connect</a> again.</p>`);
             return;
           }
 
@@ -71,7 +80,7 @@ function nowPlayingDevPlugin() {
             });
             const data = await tokenRes.json();
             if (!data.refresh_token) {
-              sendHtml(res, `<p>No refresh token returned. ${data.error_description || JSON.stringify(data)}</p>`);
+              sendHtml(res, `<p>No refresh token returned. ${escapeHtml(data.error_description || JSON.stringify(data))}</p>`);
               return;
             }
 
@@ -79,7 +88,7 @@ function nowPlayingDevPlugin() {
             process.env.SPOTIFY_REFRESH_TOKEN = data.refresh_token;
             sendHtml(res, '<p>Connected. You can close this tab and refresh the portfolio.</p>');
           } catch (err) {
-            sendHtml(res, `<p>Token exchange failed: ${String(err)}</p>`);
+            sendHtml(res, `<p>Token exchange failed: ${escapeHtml(String(err))}</p>`);
           }
           return;
         }

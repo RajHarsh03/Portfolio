@@ -110,7 +110,6 @@ Portfolio/
 |
 |-- api/                        # Vercel serverless functions
 |   |-- now-playing.js          # Spotify currently playing / last played
-|   |-- spotify-auth.js         # Spotify OAuth token refresh
 |   +-- visits.js               # Upstash Redis visit counter
 |
 +-- src/
@@ -217,7 +216,6 @@ Create a `.env.local` in the project root:
 # Spotify (serverless API)
 SPOTIFY_CLIENT_ID=your_spotify_client_id
 SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
-SPOTIFY_REDIRECT_URI=http://127.0.0.1:8888/callback
 SPOTIFY_REFRESH_TOKEN=your_spotify_refresh_token
 
 # Firebase (client-side, VITE_ prefix required)
@@ -454,6 +452,13 @@ GET /api/now-playing  >  { track: { title, artist, artwork, url }, isPlaying }
 - **Last played persisted in `localStorage`** - no blank flash on page reload
 - Falls back to production endpoint (`harshx.in/api/now-playing`) in local dev
 - Glows green on hover; clicking opens the track on Spotify
+
+### Spotify setup
+
+1. In the Spotify developer dashboard, register the redirect URI `http://127.0.0.1:5173/callback`.
+2. Add `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` to `.env.local`.
+3. Run `npm run dev` and open `http://127.0.0.1:5173/spotify-connect`. After you log in, the dev server writes `SPOTIFY_REFRESH_TOKEN` to `.env.local`.
+4. Add `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, and `SPOTIFY_REFRESH_TOKEN` to the Vercel environment variables.
 
 ---
 
