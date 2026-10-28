@@ -8729,3 +8729,501 @@ footer {
     font-size: .76rem;
     line-height: 1;
 }
+
+/* Mobile composer: keep user and actions on one tidy row */
+@media (max-width: 480px) {
+    .gb-composer {
+        padding: 1rem 1rem .9rem;
+    }
+
+    .gb-composer textarea {
+        min-height: 72px;
+        font-size: .9rem;
+    }
+
+    .gb-composer-footer {
+        flex-wrap: nowrap;
+        gap: .6rem;
+        margin-top: .75rem;
+    }
+
+    .gb-composer-user {
+        flex: 1;
+        gap: .5rem;
+    }
+
+    .gb-composer-actions {
+        width: auto;
+        justify-content: flex-end;
+        gap: .6rem;
+    }
+
+    .gb-count {
+        font-size: .75rem;
+    }
+
+    .gb-submit {
+        padding: .55rem .95rem;
+        font-size: .8rem;
+        gap: .4rem;
+    }
+
+    .gb-submit svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+
+/* Mobile composer, compact like the reference: everything on one line */
+@media (max-width: 480px) {
+    .gb-composer-footer {
+        gap: .5rem;
+    }
+
+    .gb-composer-user {
+        gap: .45rem;
+        min-width: 0;
+    }
+
+    .gb-composer-user img,
+    .gb-avatar-fallback {
+        width: 22px;
+        height: 22px;
+    }
+
+    .gb-user-meta {
+        min-width: 0;
+        flex-shrink: 1;
+    }
+
+    .gb-user-meta strong {
+        font-size: .74rem;
+    }
+
+    .gb-role {
+        font-size: .46rem;
+    }
+
+    .gb-signout {
+        flex-shrink: 0;
+        margin-left: .1rem;
+        font-size: .72rem;
+        white-space: nowrap;
+    }
+
+    .gb-composer-actions {
+        flex-shrink: 0;
+        gap: .5rem;
+    }
+
+    .gb-count {
+        font-size: .72rem;
+    }
+
+    .gb-submit {
+        padding: .5rem .85rem;
+        font-size: .76rem;
+    }
+}
+
+/* ================================
+   GUESTBOOK NOTES — two-column masonry of compact rounded cards
+   ================================ */
+.guestbook-notes .guestbook-grid {
+    display: block;
+    columns: 2;
+    column-gap: 1rem;
+}
+
+.guestbook-card.gbn-card {
+    display: block;
+    width: 100%;
+    margin: 0 0 1rem;
+    padding: 1.15rem 1.3rem 1rem;
+    break-inside: avoid;
+    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+    border-radius: 20px !important;
+    background: color-mix(in srgb, var(--text) 5%, var(--bg));
+    background-image: none;
+    box-shadow: none;
+}
+
+.gbn-card .gbn-message {
+    min-height: 0;
+    margin: 0;
+    color: var(--text);
+    font-size: .95rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.gbn-quote {
+    margin-right: .2rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.15rem;
+    line-height: 0;
+    vertical-align: -.1em;
+}
+
+.gbn-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    margin-top: .9rem;
+}
+
+.gbn-author {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    min-width: 0;
+}
+
+.gbn-author img,
+.gbn-avatar-fallback {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 50% !important;
+    object-fit: cover;
+    box-shadow: none;
+}
+
+.gbn-avatar-fallback {
+    display: grid;
+    place-items: center;
+    background: var(--border);
+    color: var(--text);
+    font-size: .62rem;
+    font-weight: 700;
+}
+
+.gbn-name {
+    overflow: hidden;
+    color: var(--muted);
+    font-size: .85rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gbn-admin,
+.gbn-liked-by {
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: .55rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.gbn-admin { color: var(--admin-role); }
+.gbn-liked-by { color: #f472b6; }
+
+.gbn-meta {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    flex-shrink: 0;
+}
+
+.gbn-like {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-size: .82rem;
+    cursor: pointer;
+    transition: color .2s ease;
+}
+
+.gbn-like:disabled { cursor: default; }
+.gbn-like.is-liked { color: #f472b6; }
+
+.gbn-date {
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: .78rem;
+    white-space: nowrap;
+}
+
+.gbn-admin-actions {
+    display: inline-flex;
+    gap: .35rem;
+}
+
+.gbn-admin-actions button {
+    display: inline-grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+}
+
+.gbn-admin-actions button.is-active { color: var(--admin-role); }
+.gbn-admin-actions button.is-danger { color: #ef4444; }
+
+/* Pinned marquee keeps its own fixed card width */
+.guestbook-pinned-track .guestbook-card.gbn-card {
+    margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+    .guestbook-notes .guestbook-grid { columns: 1; }
+
+    .guestbook-card.gbn-card {
+        padding: 1rem 1.1rem .9rem;
+    }
+
+    .gbn-card .gbn-message { font-size: .9rem; }
+    .gbn-meta { gap: .65rem; }
+    .gbn-date { font-size: .72rem; }
+}
+
+/* Narrow cards (pinned strip, small phones): keep the full name visible and
+   move likes/date to their own line instead of squeezing the name */
+.gbn-footer {
+    flex-wrap: wrap;
+    row-gap: .55rem;
+}
+
+.gbn-author {
+    flex: 1 1 auto;
+}
+
+.gbn-name {
+    flex-shrink: 0;
+    max-width: 18ch;
+}
+
+.gbn-meta {
+    margin-left: auto;
+}
+
+/* Pinned notes live in the main grid; a small label marks them */
+.gbn-pinned {
+    flex-shrink: 0;
+    color: var(--admin-role);
+    font-family: 'DM Mono', monospace;
+    font-size: .55rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+/* Note cards, refined to the reference: borderless, quieter footer */
+.guestbook-notes .guestbook-grid {
+    column-gap: .75rem;
+}
+
+.guestbook-card.gbn-card {
+    margin-bottom: .75rem;
+    padding: 1.1rem 1.25rem .95rem;
+    border: 0;
+    border-radius: 18px !important;
+    background: color-mix(in srgb, var(--text) 6%, var(--bg));
+}
+
+.gbn-card .gbn-message {
+    font-size: .92rem;
+    font-weight: 400;
+    line-height: 1.55;
+}
+
+.gbn-quote {
+    font-size: 1.05rem;
+}
+
+.gbn-footer {
+    margin-top: .8rem;
+}
+
+.gbn-author {
+    gap: .5rem;
+}
+
+.gbn-author img,
+.gbn-avatar-fallback {
+    width: 20px;
+    height: 20px;
+}
+
+.gbn-name {
+    font-size: .8rem;
+}
+
+.gbn-admin,
+.gbn-pinned,
+.gbn-liked-by {
+    font-size: .5rem;
+    opacity: .85;
+}
+
+.gbn-meta {
+    gap: .75rem;
+}
+
+.gbn-like {
+    gap: .3rem;
+    color: var(--muted);
+    font-size: .78rem;
+}
+
+.gbn-like svg {
+    width: 15px;
+    height: 15px;
+}
+
+.gbn-like.is-liked {
+    color: var(--text);
+}
+
+.gbn-date {
+    font-size: .72rem;
+    letter-spacing: .02em;
+}
+
+.gbn-admin-actions {
+    gap: .45rem;
+}
+
+.gbn-admin-actions button,
+.gbn-admin-actions button.is-danger {
+    color: var(--muted);
+}
+
+.gbn-admin-actions button svg {
+    width: 13px;
+    height: 13px;
+}
+
+.gbn-admin-actions button.is-active {
+    color: var(--admin-role);
+}
+
+@media (max-width: 640px) {
+    .guestbook-card.gbn-card {
+        padding: 1rem 1.1rem .85rem;
+    }
+
+    .gbn-card .gbn-message { font-size: .88rem; }
+}
+
+/* Admin pin/delete icons sit in the card's top-right corner */
+.guestbook-card.gbn-card {
+    position: relative;
+}
+
+.gbn-card .gbn-admin-actions {
+    position: absolute;
+    top: .9rem;
+    right: 1rem;
+    z-index: 1;
+}
+
+/* Keep the first line of text clear of the icons (admin view only) */
+.gbn-card:has(.gbn-admin-actions) .gbn-message {
+    padding-right: 3rem;
+}
+
+/* Note cards: name with a small Admin/Visitor label underneath */
+.gbn-who {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.15;
+}
+
+.gbn-role {
+    margin-top: .12rem;
+    color: var(--visitor-role);
+    opacity: .7;
+    font-family: 'DM Mono', monospace;
+    font-size: .48rem;
+    letter-spacing: .1em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.gbn-role.is-admin {
+    color: var(--admin-role);
+    opacity: 1;
+}
+
+.gbn-author img,
+.gbn-avatar-fallback {
+    width: 24px;
+    height: 24px;
+}
+
+/* Author name in the main text colour, like the composer */
+.gbn-who .gbn-name {
+    color: var(--text);
+    font-weight: 500;
+}
+
+/* Breathing room between the name and its role label */
+.gbn-who,
+.gb-user-meta {
+    line-height: 1.25;
+}
+
+.gbn-role,
+.gb-role {
+    margin-top: .3rem;
+}
+
+.gbn-author,
+.gb-composer-user {
+    gap: .6rem;
+}
+
+/* "Liked by HR" chip */
+.gbn-liked-by {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    padding: .22rem .5rem .22rem .42rem;
+    border: 1px solid color-mix(in srgb, #f472b6 28%, transparent);
+    border-radius: 999px !important;
+    background: color-mix(in srgb, #f472b6 10%, transparent);
+    color: #f472b6;
+    font-family: 'DM Mono', monospace;
+    font-size: .52rem;
+    letter-spacing: .06em;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 1;
+}
+
+[data-theme="light"] .gbn-liked-by {
+    color: #db2777;
+    border-color: color-mix(in srgb, #db2777 30%, transparent);
+    background: color-mix(in srgb, #db2777 8%, transparent);
+}
+
+/* Pinned indicator for visitors: the same gold pin, not clickable */
+.gbn-pin-static {
+    display: inline-grid;
+    place-items: center;
+    color: var(--admin-role);
+}
+
+/* Show the full note: cancel the old 2-line clamp on compact cards */
+.guestbook-card.gbn-card p.gbn-message {
+    display: block;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+    -webkit-box-orient: initial;
+    overflow: visible;
+    max-height: none;
+    text-overflow: clip;
+    white-space: pre-wrap;
+}

@@ -39,6 +39,7 @@ function cacheEntries(entries) {
     window.localStorage.setItem(NOTES_CACHE_KEY, JSON.stringify(entries.map(entry => ({
       ...entry,
       createdAt: entry.createdAt?.toMillis ? entry.createdAt.toMillis() : entry.createdAt,
+      pinnedAt: entry.pinnedAt?.toMillis ? entry.pinnedAt.toMillis() : entry.pinnedAt,
     }))));
   } catch {
   }
@@ -84,7 +85,12 @@ function clearPendingAuthRedirect() {
 function formatDate(value) {
   if (!value) return 'Just now';
   const date = value.toDate ? value.toDate() : new Date(value);
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const days = Math.floor((Date.now() - date.getTime()) / 86400000);
+  if (days <= 0) return 'Today';
+  if (days === 1) return 'Yesterday';
+  if (days < 7) return `${days} days ago`;
+  const sameYear = date.getFullYear() === new Date().getFullYear();
+  return date.toLocaleDateString('en-US', sameYear ? { month: 'short', day: 'numeric' } : { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 function wordCount(value) {
@@ -93,6 +99,14 @@ function wordCount(value) {
 
 function remainingChars(value) {
   return 500 - value.length;
+}
+
+const QUOTE_COLORS = ['#f5c26b', '#f472b6', '#4ade80', '#a78bfa', '#60a5fa', '#fb923c'];
+
+function hashString(value) {
+  let hash = 0;
+  for (let i = 0; i < value.length; i++) hash = (hash * 31 + value.charCodeAt(i)) >>> 0;
+  return hash;
 }
 
 function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, onDelete, showDelete = true }) {
@@ -113,52 +127,55 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
     } catch { /* The live listener will keep the displayed count unchanged. */ }
   }
 
+  const quoteColor = QUOTE_COLORS[hashString(entry.id || entry.message || '') % QUOTE_COLORS.length];
+
   return (
-    <article className={`guestbook-card guestbook-compact-card ${entryIsAdmin ? 'role-admin' : 'role-visitor'}`}>
-      <div className="guestbook-card-top">
-        <div className="guestbook-card-author">
-          {entry.photoURL ? <img src={entry.photoURL} alt="" /> : <span className="guestbook-avatar-fallback">{initial}</span>}
-          <div>
-            <strong>{entry.displayName || 'Visitor'}</strong>
-            <small className={entryIsAdmin ? 'guestbook-role role-admin' : 'guestbook-role role-visitor'}>{entryIsAdmin ? 'Admin' : 'Visitor'}</small>
-          </div>
-        </div>
-        {isAdmin && <div className="guestbook-admin-actions">
-          <button type="button" onClick={() => onPin(entry)} aria-label={entry.pinned ? 'Unpin note' : 'Pin note'} title={entry.pinned ? 'Unpin note' : 'Pin note'}>
-            <svg aria-hidden="true" viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><g transform="rotate(35 12 12)"><path d="M7 2h10v3l-2 2v4l3 3v2h-5v6h-2v-6H6v-2l3-3V7L7 5V2Z" /></g></svg>
-          </button>
-          {showDelete && <button type="button" onClick={() => onDelete(entry)} className="is-danger" aria-label="Delete note" title="Delete note">
-            <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h16" /><path d="M10 11v6m4-6v6" /><path d="m6 7 1 13h10l1-13M9 7V4h6v3" /></svg>
-          </button>}
-        </div>}
-      </div>
-      <p>{entry.message}</p>
-      <div className="guestbook-card-footer">
-            <span>{formatDate(entry.createdAt)}</span>
-            <span className="guestbook-like-wrap">
-          {entry.likedBy?.includes('HR') && <small className="guestbook-liked-by">Liked by HR</small>}
-          <button type="button" className={`guestbook-like-button${hasLiked ? ' is-liked' : ''}`} onClick={handleLike} disabled={hasLiked} aria-label={!user ? 'Sign in to like this note' : hasLiked ? 'You already liked this note' : 'Like this note'} title={!user ? 'Sign in to like this note' : hasLiked ? 'You already liked this note' : 'Like this note'}>
-            <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M7 10v10H4a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h3Z" />
-              <path d="M7 20h9.4a2 2 0 0 0 1.9-1.4l2-6A2 2 0 0 0 18.4 10H14l.7-3.4A2.2 2.2 0 0 0 12.6 4L7 10v10Z" />
-            </svg>
-            {entry.likes || 0}
-          </button>
+    <article className={`guestbook-card guestbook-compact-card gbn-card ${entryIsAdmin ? 'role-admin' : 'role-visitor'}`}>
+      {isAdmin && <span className="gbn-admin-actions">
+        <button type="button" onClick={() => onPin(entry)} aria-label={entry.pinned ? 'Unpin note' : 'Pin note'} title={entry.pinned ? 'Unpin note' : 'Pin note'} className={entry.pinned ? 'is-active' : ''}>
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><g transform="rotate(35 12 12)"><path d="M7 2h10v3l-2 2v4l3 3v2h-5v6h-2v-6H6v-2l3-3V7L7 5V2Z" /></g></svg>
+        </button>
+        {showDelete && <button type="button" onClick={() => onDelete(entry)} className="is-danger" aria-label="Delete note" title="Delete note">
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h16" /><path d="M10 11v6m4-6v6" /><path d="m6 7 1 13h10l1-13M9 7V4h6v3" /></svg>
+        </button>}
+      </span>}
+      {!isAdmin && entry.pinned && <span className="gbn-admin-actions">
+        <span className="gbn-pin-static" role="img" aria-label="Pinned note" title="Pinned note">
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><g transform="rotate(35 12 12)"><path d="M7 2h10v3l-2 2v4l3 3v2h-5v6h-2v-6H6v-2l3-3V7L7 5V2Z" /></g></svg>
         </span>
+      </span>}
+      <p className="gbn-message">
+        <span className="gbn-quote" style={{ color: quoteColor }} aria-hidden="true">&ldquo;</span>
+        {entry.message}
+      </p>
+      <div className="gbn-footer">
+        <div className="gbn-author">
+          {entry.photoURL ? <img src={entry.photoURL} alt="" loading="lazy" decoding="async" /> : <span className="gbn-avatar-fallback" aria-hidden="true">{initial}</span>}
+          <span className="gbn-who">
+            <span className="gbn-name">{entry.displayName || 'Visitor'}</span>
+            <small className={`gbn-role`+(entryIsAdmin ? ' is-admin' : '')}>{entryIsAdmin ? 'Admin' : 'Visitor'}</small>
+          </span>
+          {entry.likedBy?.includes('HR') && <span className="gbn-liked-by" title="Liked by Harsh Raj"><svg aria-hidden="true" viewBox="0 0 24 24" width="9" height="9" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>Liked by HR</span>}
+        </div>
+        <div className="gbn-meta">
+          <button type="button" className={`gbn-like${hasLiked ? ' is-liked' : ''}`} onClick={handleLike} disabled={hasLiked} aria-label={!user ? 'Sign in to like this note' : hasLiked ? 'You already liked this note' : 'Like this note'} title={!user ? 'Sign in to like this note' : hasLiked ? 'You already liked this note' : 'Like this note'}>
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill={hasLiked ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+            </svg>
+            {entry.likes > 0 && <span>{entry.likes}</span>}
+          </button>
+          <time className="gbn-date">{formatDate(entry.createdAt)}</time>
+        </div>
       </div>
     </article>
   );
 }
-
 export default function Guestbook() {
   const initialUser = auth?.currentUser || readCachedUser();
   const initialEntries = readCachedEntries();
   const [user, setUser] = useState(initialUser);
   const [authLoading, setAuthLoading] = useState(() => Boolean(auth && hasPendingAuthRedirect()));
   const [entries, setEntries] = useState(initialEntries);
-  const [visibleCount, setVisibleCount] = useState(() => (
-    typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches ? 2 : 3
-  ));
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(initialEntries.length === 0);
   const [sending, setSending] = useState(false);
@@ -330,7 +347,7 @@ export default function Guestbook() {
   async function handlePin(entry) {
     if (!isAdmin || !db) return;
     try {
-      await updateDoc(doc(db, 'guestbook_entries', entry.id), { pinned: !entry.pinned });
+      await updateDoc(doc(db, 'guestbook_entries', entry.id), entry.pinned ? { pinned: false, pinnedAt: null } : { pinned: true, pinnedAt: serverTimestamp() });
       showToast(entry.pinned ? 'Note unpinned' : 'Note pinned', 'The guestbook note was updated.', 'success');
     } catch {
       showToast('Something went wrong', 'That action could not be completed. Please try again.', 'error');
@@ -352,10 +369,20 @@ export default function Guestbook() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  const pinnedEntries = entries.filter(entry => entry.pinned).slice(0, 5);
-  const marqueePinnedEntries = pinnedEntries.length > 1
-    ? [...pinnedEntries, ...pinnedEntries]
-    : pinnedEntries;
+  // Pinned notes first (most recently pinned on top), then everything else newest first.
+  const toMillis = value => {
+    if (value?.toMillis) return value.toMillis();
+    if (typeof value === 'number') return value;
+    if (typeof value?.seconds === 'number') return value.seconds * 1000;
+    return 0;
+  };
+  // A just-pinned note has pinnedAt === null until the server timestamp arrives: treat it as now.
+  const pinTime = entry => (entry.pinnedAt === null ? Date.now() : toMillis(entry.pinnedAt) || toMillis(entry.createdAt));
+  const sortedEntries = [...entries].sort((a, b) => {
+    if (Boolean(a.pinned) !== Boolean(b.pinned)) return a.pinned ? -1 : 1;
+    if (a.pinned) return pinTime(b) - pinTime(a);
+    return toMillis(b.createdAt) - toMillis(a.createdAt);
+  });
 
   return (
     <>
@@ -368,7 +395,7 @@ export default function Guestbook() {
         <div className="guestbook-page-header">
           <p className="section-label">// Leave a note </p>
           <h1 className="guestbook-page-title">Guestbook</h1>
-          <p className="guestbook-page-subtitle">Leave a note. Say hi. Tell me I'm wrong about something. All welcome.</p>
+          <p className="guestbook-page-subtitle">Say hello, share some feedback, or leave a thought for the next visitor.</p>
         </div>
 
         <div className="guestbook-compose">
@@ -428,18 +455,10 @@ export default function Guestbook() {
           )}
         </div>
 
-        {entries.some(entry => entry.pinned) && <section className="guestbook-pinned" aria-label="Pinned notes">
-          <div className="guestbook-notes-heading"><div><p className="section-label">// highlights</p><h2>Pinned Notes</h2></div></div>
-          <div className="guestbook-pinned-marquee"><div className={`guestbook-pinned-track${pinnedEntries.length < 2 ? ' is-static' : ''}`}>
-            {marqueePinnedEntries.map((entry, index) => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} showDelete={false} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={`pinned-${entry.id}-${index}`} />)}
-          </div></div>
-        </section>}
-
         <div className="guestbook-notes">
           <div className="guestbook-notes-heading"><div><p className="section-label">// recent messages</p><h2>Voices From Visitors</h2></div></div>
           {loading ? <div className="guestbook-empty-state"><p className="guestbook-muted">Loading notes...</p></div> : entries.length === 0 ? <div className="guestbook-empty-state"><p>No notes yet.</p><small>Be the first to say hello.</small></div> : <>
-            <div className="guestbook-grid">{entries.slice(0, visibleCount).map(entry => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={entry.id} />)}</div>
-            {visibleCount < entries.length && <button type="button" className="guestbook-load-more" onClick={() => setVisibleCount(count => count + (window.matchMedia('(max-width: 640px)').matches ? 2 : 3))}>View more</button>}
+            <div className="guestbook-grid">{sortedEntries.map(entry => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={entry.id} />)}</div>
           </>}
         </div>
       </section>
