@@ -561,16 +561,45 @@ nav.floating {
     top: 0; left: 0;
     width: 20px;
     height: 20px;
-    transition: opacity .3s ease, transform .35s cubic-bezier(.34,1.56,.64,1);
+    transition: opacity .4s ease, transform .55s cubic-bezier(.4, 0, .2, 1);
     color: var(--text);
 }
 
 /* Default (light mode): show moon to indicate "switch to dark" */
 .theme-icon-wrap .icon-moon { opacity: 1; transform: rotate(0deg) scale(1); }
-.theme-icon-wrap .icon-sun  { opacity: 0; transform: rotate(90deg) scale(0.5); }
+.theme-icon-wrap .icon-sun  { opacity: 0; transform: rotate(-45deg) scale(0.6); }
 
-[data-theme="dark"] .theme-icon-wrap .icon-moon { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+[data-theme="dark"] .theme-icon-wrap .icon-moon { opacity: 0; transform: rotate(-90deg) scale(0.4); }
 [data-theme="dark"] .theme-icon-wrap .icon-sun  { opacity: 1; transform: rotate(0deg) scale(1); color: #e2e8f0; }
+
+/* Sun core grows in, then each ray slides out from the centre, one after
+   another clockwise. Reversed (rays retract first) when switching away. */
+.icon-sun .sun-core,
+.icon-sun .sun-rays line {
+    transform-box: view-box;
+    transform-origin: 12px 12px;
+}
+
+.icon-sun .sun-core {
+    transform: scale(.4);
+    transition: transform .45s cubic-bezier(.4, 0, .2, 1);
+}
+
+.icon-sun .sun-rays line {
+    opacity: 0;
+    transform: scale(.35);
+    transition:
+        transform .35s cubic-bezier(.2, .8, .2, 1) calc(var(--i) * 25ms),
+        opacity .2s ease calc(var(--i) * 25ms);
+}
+
+[data-theme="dark"] .icon-sun .sun-core { transform: scale(1); }
+
+[data-theme="dark"] .icon-sun .sun-rays line {
+    opacity: 1;
+    transform: scale(1);
+    transition-delay: calc(150ms + var(--i) * 45ms);
+}
 
 /* GitHub nav button */
 .nav-gh-btn {
@@ -8271,9 +8300,9 @@ footer::before,
     }
 }
 
-/* Home has no quote divider, so retain its existing top spacing. */
+/* Home has no quote divider: the Guestbook CTA's own bottom padding is the gap. */
 #main-content:has(.guestbook-home-cta) + .quote-strip {
-    padding-top: 1.5rem;
+    padding-top: 0;
 }
 
 footer {
@@ -8340,4 +8369,51 @@ footer {
 
 .notfound-lede {
     margin-top: 1.5rem;
+}
+
+/* ================================
+   ARROW NUDGE — the only hover effect kept on purpose: diagonal ↗ arrows
+   slide up-right on hover/keyboard focus. Nothing else changes on hover.
+   ================================ */
+.cpc-arrow svg,
+.about-cert-verify svg,
+.acert-verify svg,
+.hc-link-arrow,
+.hc-submit svg,
+.guestbook-preview-link svg,
+.pd-arrow,
+.notfound-report-link svg {
+    transition: transform .2s ease;
+}
+
+.cpc-arrow:hover svg,
+.cpc-arrow:focus-visible svg,
+.about-cert-verify:hover svg,
+.about-cert-verify:focus-visible svg,
+.acert-verify:hover svg,
+.acert-verify:focus-visible svg,
+.hc-link-row:hover .hc-link-arrow,
+.hc-link-row:focus-visible .hc-link-arrow,
+.hc-submit:hover:not(:disabled) svg,
+.hc-submit:focus-visible:not(:disabled) svg,
+.guestbook-preview-link:hover svg,
+.guestbook-preview-link:focus-visible svg,
+.pd-action-btn:hover .pd-arrow,
+.pd-action-btn:focus-visible .pd-arrow,
+.notfound-report-link:hover svg,
+.notfound-report-link:focus-visible svg {
+    transform: translate(2px, -2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cpc-arrow svg,
+    .about-cert-verify svg,
+    .acert-verify svg,
+    .hc-link-arrow,
+    .hc-submit svg,
+    .guestbook-preview-link svg,
+    .pd-arrow,
+    .notfound-report-link svg {
+        transition: none;
+    }
 }
