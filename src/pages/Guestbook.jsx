@@ -9,7 +9,6 @@ const AUTH_CACHE_KEY = 'guestbook_auth_user_v1';
 const AUTH_REDIRECT_PENDING_KEY = 'guestbook_auth_redirect_pending_v1';
 const TOAST_AVATAR_URL = 'https://github.com/RajHarsh03.png?size=96';
 const ADMIN_EMAIL = 'rajharsh.devx@gmail.com';
-const ADMIN_DISPLAY_NAME = 'Harsh Raj';
 const ADMIN_UID = 'VqE9wVvuIZXMoMjOlPtw8J3V6Go2';
 
 const CANCELLED_CODES = new Set([
@@ -94,7 +93,6 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
   const initial = (entry.displayName || 'V').charAt(0).toUpperCase();
   const entryIsAdmin = entry.authorRole === 'Admin'
     || entry.authorEmail?.toLowerCase() === ADMIN_EMAIL
-    || entry.displayName?.trim().toLowerCase() === ADMIN_DISPLAY_NAME.toLowerCase()
     || entry.userId === ADMIN_UID
     || (entry.userId === user?.uid && isAdmin);
   const hasLiked = Boolean(user?.uid && entry.likedUserIds?.includes(user.uid));
@@ -171,14 +169,13 @@ export default function Guestbook() {
   useEffect(() => {
     if (!isAdmin || !db || !user?.uid || !entries.length) return;
     entries
-      .filter(entry => (entry.userId === user.uid || entry.userId === ADMIN_UID || entry.displayName?.trim().toLowerCase() === ADMIN_DISPLAY_NAME.toLowerCase()) && !entry.authorRole)
+      .filter(entry => (entry.userId === user.uid || entry.userId === ADMIN_UID) && !entry.authorRole)
       .forEach(entry => {
         setEntries(current => current.map(item => item.id === entry.id
-          ? { ...item, authorRole: 'Admin', authorEmail: user.email || ADMIN_EMAIL }
+          ? { ...item, authorRole: 'Admin' }
           : item));
         updateDoc(doc(db, 'guestbook_entries', entry.id), {
           authorRole: 'Admin',
-          authorEmail: user.email || ADMIN_EMAIL,
         }).catch(() => {});
       });
   }, [entries, isAdmin, user]);
@@ -273,7 +270,6 @@ export default function Guestbook() {
     try {
       await addDoc(collection(db, 'guestbook_entries'), {
         userId: user.uid,
-        authorEmail: user.email || '',
         authorRole: isAdmin ? 'Admin' : 'Visitor',
         displayName: user.displayName || 'Visitor',
         photoURL: user.photoURL || '',
