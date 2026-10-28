@@ -38,12 +38,15 @@ export default function AppShell({ children }) {
 
       <Navbar />
 
-      <main id="main-content">
-        {children}
-      </main>
+      {/* Ruled frame — draws the double vertical rails from top to footer */}
+      <div className="site-frame">
+        <main id="main-content">
+          {children}
+        </main>
 
-      <QuoteStrip />
-      <Footer />
+        <QuoteStrip />
+        <Footer />
+      </div>
 
       {/* Bottom nav pill — visible on mobile, handles page navigation */}
       <BottomNav />

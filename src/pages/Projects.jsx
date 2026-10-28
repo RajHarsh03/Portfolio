@@ -23,15 +23,15 @@ function SkeletonCard() {
   return (
     <div className="compact-project-card">
       <div className="cpc-thumbnail">
-        <div className="skel-block" style={{ width: '100%', height: '100%', borderRadius: 12 }} />
+        <div className="skel-block" style={{ width: '100%', height: '100%' }} />
       </div>
       <div className="cpc-content">
         <div className="cpc-header">
-          <div className="skel-block" style={{ width: '70%', height: 20, borderRadius: 6, marginBottom: '.5rem' }} />
-          <div className="skel-block" style={{ width: '40%', height: 14, borderRadius: 4, marginBottom: '.75rem' }} />
+          <div className="skel-block" style={{ width: '70%', height: 20, marginBottom: '.5rem' }} />
+          <div className="skel-block" style={{ width: '40%', height: 14, marginBottom: '.75rem' }} />
         </div>
-        <div className="skel-block" style={{ width: '100%', height: 12, borderRadius: 4, marginBottom: '.4rem' }} />
-        <div className="skel-block" style={{ width: '90%', height: 12, borderRadius: 4 }} />
+        <div className="skel-block" style={{ width: '100%', height: 12, marginBottom: '.4rem' }} />
+        <div className="skel-block" style={{ width: '90%', height: 12 }} />
       </div>
     </div>
   );
