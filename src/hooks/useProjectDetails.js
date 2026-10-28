@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { fetchProjectDetails } from '../services/projectDetailsGist.js';
+import { fetchProjectDetails, getCachedProjectDetails } from '../services/projectDetailsGist.js';
 
 export function useProjectDetails() {
-  const [details, setDetails] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [cached] = useState(getCachedProjectDetails);
+  const [details, setDetails] = useState(cached ?? {});
+  const [loading, setLoading] = useState(!cached);
 
   useEffect(() => {
     fetchProjectDetails()

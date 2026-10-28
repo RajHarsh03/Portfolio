@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext.jsx';
 
-const GH_USER = 'RajHarsh03';
+import { getGitHubUser } from '../../services/githubUser.js';
 
 const MORE_LINKS = [
   { to: '/contact',   label: 'Contact'   },
@@ -36,10 +36,8 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    fetch(`https://api.github.com/users/${GH_USER}`)
-      .then(r => r.ok ? r.json() : null)
-      .then(d => { if (d?.public_repos) setRepoCount(String(d.public_repos)); })
-      .catch(() => {});
+    getGitHubUser()
+      .then(d => { if (d?.public_repos) setRepoCount(String(d.public_repos)); });
   }, []);
 
   // Close dropdown on outside click

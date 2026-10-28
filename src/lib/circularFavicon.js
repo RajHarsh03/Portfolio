@@ -1,3 +1,4 @@
+import { getGitHubUser } from '../services/githubUser.js';
 const GH_USER = 'RajHarsh03';
 const FALLBACK_ICON = '/favicon.png';
 const CACHE_KEY = 'gh_favicon_cache_v1';
@@ -67,16 +68,9 @@ function drawCircular(src) {
 }
 
 async function resolveAvatarUrl() {
-  try {
-    const res = await fetch(`https://api.github.com/users/${GH_USER}`);
-    if (res.ok) {
-      const data = await res.json();
-      if (data.avatar_url) {
-        return `${data.avatar_url}${data.avatar_url.includes('?') ? '&' : '?'}s=128`;
-      }
-    }
-  } catch {
-    /* fall through */
+  const data = await getGitHubUser();
+  if (data?.avatar_url) {
+    return `${data.avatar_url}${data.avatar_url.includes('?') ? '&' : '?'}s=128`;
   }
   return `https://github.com/${GH_USER}.png?size=128`;
 }

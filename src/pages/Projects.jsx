@@ -168,10 +168,11 @@ export default function Projects() {
               </div>
             )}
 
-            {!loading && !error && visible.map(p => (
+            {!loading && !error && visible.map((p, i) => (
               <CompactProjectCard 
                 key={p.repoName} 
                 project={p}
+                priority={i < 2}
               />
             ))}
           </div>

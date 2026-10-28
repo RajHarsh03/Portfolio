@@ -5,7 +5,7 @@ import { GH_USER, TECH_ICON_MAP } from '../../services/githubProjects.js';
  * Compact project card component
  * Shows: thumbnail, title, short description, tech icons, and arrow to open details
  */
-export default function CompactProjectCard({ project }) {
+export default function CompactProjectCard({ project, priority = false }) {
   const navigate = useNavigate();
 
   // Truncate description to ~100 chars
@@ -43,8 +43,9 @@ export default function CompactProjectCard({ project }) {
         <img
           src={ghImgUrl}
           alt={`${project.name} preview`}
-          loading="eager"
-          fetchPriority="high"
+          loading={priority ? 'eager' : 'lazy'}
+          decoding="async"
+          fetchPriority={priority ? 'high' : undefined}
           onError={e => {
             if (e.currentTarget.src !== ghImgFallback) {
               e.currentTarget.src = ghImgFallback;

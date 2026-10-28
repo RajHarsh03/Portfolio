@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchGistContent, FALLBACK_DATA } from '../services/gistContent.js';
+import { fetchGistContent, getCachedGistContent, FALLBACK_DATA } from '../services/gistContent.js';
 
 /**
  * Loads portfolio content from GitHub Gist.
@@ -7,7 +7,7 @@ import { fetchGistContent, FALLBACK_DATA } from '../services/gistContent.js';
  * Swaps to live Gist data once the fetch completes.
  */
 export function useGistContent() {
-  const [data, setData]       = useState(FALLBACK_DATA); // instant render, no flash
+  const [data, setData]       = useState(() => getCachedGistContent() ?? FALLBACK_DATA); // instant render, no flash
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState(null);
 

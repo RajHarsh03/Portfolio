@@ -51,10 +51,11 @@ export default function FeaturedProjects() {
             No projects tagged "portfolio" yet.
           </p>
         )}
-        {!loading && projects.map(p => (
+        {!loading && projects.map((p, i) => (
           <CompactProjectCard 
             key={p.repoName} 
             project={p}
+            priority={i === 0}
           />
         ))}
       </div>
