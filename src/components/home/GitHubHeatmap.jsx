@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { fetchContributions, GH_USER } from '../../services/githubContributions.js';
+import { fetchContributions } from '../../services/githubContributions.js';
 import { useReveal } from '../../hooks/useReveal.js';
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -21,10 +21,16 @@ function pickLevel(count) {
   return 4;
 }
 
+// Local calendar date as 'YYYY-MM-DD' (toISOString would give the UTC date)
+function ymd(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 function buildWeeks(contributions) {
   const map = {};
   contributions.forEach(c => { map[c.date] = c.count; });
   const today      = new Date();
+  today.setHours(0, 0, 0, 0);
   const oneYearAgo = new Date(today);
   oneYearAgo.setFullYear(today.getFullYear() - 1);
   oneYearAgo.setDate(oneYearAgo.getDate() + 1);
@@ -33,7 +39,7 @@ function buildWeeks(contributions) {
   for (let i = 0; i < oneYearAgo.getDay(); i++) week.push(null);
   const d = new Date(oneYearAgo);
   while (d <= today) {
-    const key = d.toISOString().slice(0, 10);
+    const key = ymd(d);
     week.push({ date: key, count: map[key] || 0, month: d.getMonth() });
     if (week.length === 7) { weeks.push(week); week = []; }
     d.setDate(d.getDate() + 1);
@@ -43,14 +49,17 @@ function buildWeeks(contributions) {
 }
 
 function formatDate(dateStr) {
-  const d = new Date(dateStr + 'T12:00:00');
+  const [y, m, day] = dateStr.split('-').map(Number);
+  const d = new Date(y, m - 1, day);
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
+
+const MIN_LABEL_GAP = 3; // min week columns between labels so they don't overlap
 
 // Build month label row: one label per column, only shown when month changes
 function buildMonthLabels(weeks) {
   let lastMonth = -1;
-  return weeks.map((week, wi) => {
+  const labels = weeks.map((week, wi) => {
     const first = week.find(c => c);
     if (first && first.month !== lastMonth) {
       lastMonth = first.month;
@@ -58,6 +67,14 @@ function buildMonthLabels(weeks) {
     }
     return null;
   }).filter(Boolean);
+  // Walk right-to-left: hide a label too close to the next kept one (the
+  // earlier, partial month) or one starting in the last 2 columns of the grid.
+  let nextWi = weeks.length;
+  return labels.reverse().filter(m => {
+    if (nextWi - m.wi < MIN_LABEL_GAP) return false;
+    nextWi = m.wi;
+    return true;
+  }).reverse();
 }
 
 export default function GitHubHeatmap() {
@@ -94,7 +111,6 @@ export default function GitHubHeatmap() {
     setTooltip({ text, x: tx, y: cy - 4 + 48 });
   }
 
-  const year        = new Date().getFullYear();
   const monthLabels = weeks ? buildMonthLabels(weeks) : [];
   const labelMap    = Object.fromEntries(monthLabels.map(m => [m.wi, m.label]));
 
