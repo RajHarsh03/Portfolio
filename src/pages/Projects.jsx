@@ -11,10 +11,13 @@ const SHOW_LIMIT_MOBILE_INCREMENT = 3;
 
 const FILTERS = [
   { value: 'all',       label: 'All'         },
-  { value: 'fullstack', label: 'Web Apps'    },
-  { value: 'ai',        label: 'AI & ML'     },
-  { value: 'data',      label: 'Data Science'}
+  { value: 'fullstack', label: 'Web Apps',     categories: ['fullstack', 'frontend'] },
+  { value: 'ai',        label: 'AI & ML',      categories: ['ai']   },
+  { value: 'data',      label: 'Data Science', categories: ['data'] }
 ];
+
+const matchesFilter = (project, value) =>
+  value === 'all' || FILTERS.find(f => f.value === value)?.categories.includes(project.category);
 
 function SkeletonCard() {
   return (
@@ -55,7 +58,7 @@ export default function Projects() {
 
   const filtered = useMemo(() => {
     let list = [...projects];
-    if (filter !== 'all') list = list.filter(p => p.category === filter);
+    if (filter !== 'all') list = list.filter(p => matchesFilter(p, filter));
     list.sort((a, b) => {
       const ra = Number.isFinite(a.rank) ? a.rank : 9999;
       const rb = Number.isFinite(b.rank) ? b.rank : 9999;
@@ -132,7 +135,7 @@ export default function Projects() {
           </div>
           {/* Filter pills */}
           <div className="projects-filter-pills">
-            {FILTERS.map(f => (
+            {FILTERS.filter(f => loading || f.value === 'all' || f.value === filter || projects.some(p => matchesFilter(p, f.value))).map(f => (
               <button
                 key={f.value}
                 className={`filter-pill${filter === f.value ? ' active' : ''}`}
@@ -161,7 +164,7 @@ export default function Projects() {
             {!loading && !error && filtered.length === 0 && (
               <div className="no-results">
                 <span className="nr-title">No projects found</span>
-                Try a different search term or filter.
+                No projects in this category yet.
               </div>
             )}
 

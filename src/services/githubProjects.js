@@ -64,7 +64,19 @@ const CATEGORY_MAP = {
   frontend: 'frontend', fullstack: 'fullstack',
   'full-stack': 'fullstack', ai: 'ai',
   'machine-learning': 'ai', ml: 'ai', 'deep-learning': 'ai',
+  'data-science': 'data', 'data-analysis': 'data', 'data-analytics': 'data',
+  'data-visualization': 'data', eda: 'data',
 };
+
+// When a repo has several category topics, the first match here wins.
+const CATEGORY_PRIORITY = ['ai', 'data', 'fullstack', 'frontend'];
+
+// Tool topics that imply a data project when no category topic is set.
+// Kept out of META_TOPICS so they still show as stack chips.
+const DATA_TOOL_TOPICS = new Set([
+  'pandas', 'numpy', 'matplotlib', 'seaborn',
+  'jupyter', 'jupyter-notebook', 'powerbi', 'tableau',
+]);
 
 const META_TOPICS = new Set([
   'portfolio', 'completed', 'in-progress', 'live',
@@ -87,10 +99,9 @@ function mapRepos(repos) {
     .map(r => {
       const topics = r.topics || [];
 
-      let category = 'fullstack';
-      for (const t of topics) {
-        if (CATEGORY_MAP[t]) { category = CATEGORY_MAP[t]; break; }
-      }
+      const tagged = new Set(topics.map(t => CATEGORY_MAP[t]).filter(Boolean));
+      const category = CATEGORY_PRIORITY.find(c => tagged.has(c))
+        || (topics.some(t => DATA_TOOL_TOPICS.has(t)) ? 'data' : 'fullstack');
 
       const stack = topics
         .filter(t => !META_TOPICS.has(t) && !/^rank-\d+$/i.test(t))
