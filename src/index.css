@@ -992,6 +992,8 @@ h2:focus,
     object-fit: cover;
     object-position: top center;
     display: block;
+    /* Same picture from the local favicon, shown until the GitHub avatar loads */
+    background: #fff url('/favicon.png') center / cover no-repeat;
 }
 
 /* ── Text content ── */
@@ -5157,6 +5159,8 @@ footer {
     object-fit: cover;
     display: block;
     filter: grayscale(20%);
+    /* Same picture from the local favicon, shown until the GitHub avatar loads */
+    background: #fff url('/favicon.png') center / cover no-repeat;
 }
 
 .about-photo-meta {

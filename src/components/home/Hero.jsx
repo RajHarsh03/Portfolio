@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import TypingEffect from './TypingEffect.jsx';
+import { getAvatarUrl } from '../../services/githubUser.js';
 
 const GH_USER = 'RajHarsh03';
+const AVATAR_URL = getAvatarUrl();
 
 export default function Hero() {
   return (
@@ -35,11 +37,14 @@ export default function Hero() {
         <div className="hero-mobile-top">
           <div className="hero-avatar-ring hero-mobile-avatar">
             <img
-              src={`https://github.com/${GH_USER}.png?size=400`}
+              src={AVATAR_URL}
               alt="Harsh Raj"
               className="hero-avatar-img"
+              width="90"
+              height="90"
               loading="eager"
               fetchPriority="high"
+              decoding="async"
             />
           </div>
           <div className="hero-mobile-identity">
@@ -67,11 +72,14 @@ export default function Hero() {
           <div className="hero-avatar-wrap">
             <div className="hero-avatar-ring">
               <img
-                src={`https://github.com/${GH_USER}.png?size=400`}
+                src={AVATAR_URL}
                 alt="Harsh Raj"
                 className="hero-avatar-img"
+                width="124"
+                height="124"
                 loading="eager"
                 fetchPriority="high"
+                decoding="async"
               />
             </div>
             <div className="hero-location">

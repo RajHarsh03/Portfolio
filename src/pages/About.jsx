@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useReveal } from '../hooks/useReveal.js';
 import { useGistContent } from '../hooks/useGistContent.js';
+import { getAvatarUrl } from '../services/githubUser.js';
 
-const GH_USER = 'RajHarsh03';
+const AVATAR_URL = getAvatarUrl();
 
 /* ── Rich cert card ── */
 function AboutCertCard({ c }) {
@@ -229,7 +230,7 @@ export default function About() {
         <div className="about-body">
           <div className="about-photo-col reveal">
             <div className="about-photo-wrap">
-              <img src={`https://github.com/${GH_USER}.png?size=600`} alt="Harsh Raj" className="about-photo" loading="eager" fetchPriority="high" />
+              <img src={AVATAR_URL} alt="Harsh Raj" className="about-photo" width="220" height="220" loading="eager" fetchPriority="high" decoding="async" />
             </div>
             <div className="about-photo-meta">
               <span className="about-photo-name">Harsh Raj</span>

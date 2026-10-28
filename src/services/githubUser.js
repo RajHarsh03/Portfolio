@@ -1,11 +1,18 @@
 /**
  * githubUser.js
- * Shared GitHub user lookup for the Navbar (repo count) and the favicon (avatar).
+ * Shared GitHub user lookup for the Navbar (repo count), the favicon and the
+ * Hero/About profile photo (avatar).
  * One request per page load at most, none while the localStorage copy is fresh.
  */
 const GH_USER = 'RajHarsh03';
 const CACHE_KEY = 'gh_user_cache_v1';
 const CACHE_TTL = 60 * 60 * 1000; // 1 hour
+
+/* Direct avatar URL (no github.com/<user>.png redirect). It always serves the
+   current GitHub picture. Keep `${DEFAULT_AVATAR_BASE}&s=400` identical to the
+   <link rel="preload"> in index.html so the preload is reused. */
+const DEFAULT_AVATAR_BASE = 'https://avatars.githubusercontent.com/u/217300092?v=4';
+const AVATAR_ORIGIN = 'https://avatars.githubusercontent.com/';
 
 let _promise = null;
 
@@ -25,6 +32,21 @@ function writeCache(user) {
   } catch {
     /* quota / private mode */
   }
+}
+
+/**
+ * Synchronous profile photo URL for the Hero and About avatars.
+ * Uses the cached `avatar_url` (even when stale) and falls back to the known one.
+ */
+export function getAvatarUrl(size = 400) {
+  let base = DEFAULT_AVATAR_BASE;
+  try {
+    const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null')?.user?.avatar_url;
+    if (typeof cached === 'string' && cached.startsWith(AVATAR_ORIGIN)) base = cached;
+  } catch {
+    /* corrupt entry / storage blocked */
+  }
+  return `${base}${base.includes('?') ? '&' : '?'}s=${size}`;
 }
 
 /** Resolves to { public_repos, avatar_url } or null when the request fails. */
