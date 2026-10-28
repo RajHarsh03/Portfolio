@@ -169,6 +169,8 @@ export default function Hero() {
 }
 
 /* ── Minimal one-line Spotify: 🟢 Last played - Song · Artist ── */
+const SPOTIFY_POLL_MS = 30000;
+
 function MiniSpotify() {
   const [data, setData] = useState(() => {
     try {
@@ -194,9 +196,26 @@ function MiniSpotify() {
         }
       } catch {}
     }
-    load();
-    const id = setInterval(load, 5000);
-    return () => { cancelled = true; clearInterval(id); };
+    // Poll only while the tab is visible; refresh immediately when it becomes visible again.
+    let id = null;
+    function start() {
+      if (id !== null) return;
+      load();
+      id = setInterval(load, SPOTIFY_POLL_MS);
+    }
+    function stop() {
+      if (id !== null) { clearInterval(id); id = null; }
+    }
+    function onVisibilityChange() {
+      if (document.hidden) stop(); else start();
+    }
+    if (!document.hidden) start();
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => {
+      cancelled = true;
+      stop();
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
   }, []);
 
   const { track, isPlaying } = data;

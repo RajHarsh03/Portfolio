@@ -11,7 +11,15 @@ const TOKEN_URL   = 'https://accounts.spotify.com/api/token';
 const NOW_PLAYING = 'https://api.spotify.com/v1/me/player/currently-playing';
 const RECENT      = 'https://api.spotify.com/v1/me/player/recently-played?limit=1';
 
-async function getAccessToken(clientId, clientSecret, refreshToken) {
+const TOKEN_REFRESH_MARGIN_MS = 60 * 1000;
+const PAYLOAD_TTL_MS = 10 * 1000;
+
+// Module-scope caches: reused across requests on a warm serverless instance.
+let cachedToken = null;   // { value, expiresAt, refreshToken }
+let cachedPayload = null; // { value, expiresAt }
+let inflightPayload = null;
+
+async function fetchAccessToken(clientId, clientSecret, refreshToken) {
   const basic = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
   const res = await fetch(TOKEN_URL, {
     method: 'POST',
@@ -26,7 +34,32 @@ async function getAccessToken(clientId, clientSecret, refreshToken) {
   });
   if (!res.ok) throw new Error(`Token error ${res.status}`);
   const data = await res.json();
-  return data.access_token;
+  const expiresInMs = (Number(data.expires_in) || 3600) * 1000;
+  cachedToken = {
+    value: data.access_token,
+    expiresAt: Date.now() + expiresInMs - TOKEN_REFRESH_MARGIN_MS,
+    refreshToken,
+  };
+  return cachedToken.value;
+}
+
+async function getAccessToken(clientId, clientSecret, refreshToken) {
+  if (cachedToken && cachedToken.refreshToken === refreshToken && Date.now() < cachedToken.expiresAt) {
+    return { token: cachedToken.value, fromCache: true };
+  }
+  return { token: await fetchAccessToken(clientId, clientSecret, refreshToken), fromCache: false };
+}
+
+// GET a Spotify API URL; if a cached token is rejected (401), drop it and retry once with a fresh one.
+async function spotifyGet(url, creds) {
+  const { token, fromCache } = await getAccessToken(...creds);
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+  if (res.status === 401 && fromCache) {
+    cachedToken = null;
+    const fresh = await fetchAccessToken(...creds);
+    return fetch(url, { headers: { Authorization: `Bearer ${fresh}` } });
+  }
+  return res;
 }
 
 export async function getNowPlayingPayload() {
@@ -37,19 +70,27 @@ export async function getNowPlayingPayload() {
     return { configured: false, track: null, isPlaying: false };
   }
 
-  try {
-    const token = await getAccessToken(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN);
+  if (cachedPayload && Date.now() < cachedPayload.expiresAt) return cachedPayload.value;
+  if (inflightPayload) return inflightPayload;
 
+  inflightPayload = fetchNowPlayingPayload([SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN])
+    .then(payload => {
+      // Only cache successful lookups so errors are retried on the next request.
+      if (payload.configured) cachedPayload = { value: payload, expiresAt: Date.now() + PAYLOAD_TTL_MS };
+      return payload;
+    })
+    .finally(() => { inflightPayload = null; });
+  return inflightPayload;
+}
+
+async function fetchNowPlayingPayload(creds) {
+  try {
     // Try currently playing first
-    const npRes = await fetch(NOW_PLAYING, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const npRes = await spotifyGet(NOW_PLAYING, creds);
 
     if (npRes.status === 204) {
       // Nothing playing — fall back to recently played
-      const recentRes = await fetch(RECENT, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const recentRes = await spotifyGet(RECENT, creds);
       if (!recentRes.ok) return { configured: true, track: null, isPlaying: false };
       const recent = await recentRes.json();
       const item = recent.items?.[0]?.track;
@@ -89,7 +130,8 @@ export async function getNowPlayingPayload() {
 }
 
 export default async function handler(req, res) {
-  res.setHeader('Cache-Control', 'no-store');
+  // Let Vercel's edge CDN serve repeat requests briefly instead of invoking Spotify each time.
+  res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=20');
   res.setHeader('Access-Control-Allow-Origin', '*');
   const payload = await getNowPlayingPayload();
   return res.status(200).json(payload);

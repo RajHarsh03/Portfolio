@@ -62,6 +62,8 @@ export default async function handler(req, res) {
 
     try {
         if (req.method === 'GET') {
+            // Read-only total: allow brief edge caching. POST stays no-store.
+            res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=60');
             const total = await getTotalVisits(config);
             return res.status(200).json({ configured: true, total });
         }

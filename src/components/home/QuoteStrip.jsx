@@ -31,6 +31,9 @@ const LONG_QUOTES = [
   { text: 'Software is a great combination between artistry and engineering that creates meaningful solutions.', author: 'Bill Gates' },
 ];
 
+const VISIT_COUNTED_KEY = 'pf_visit_counted';
+const VISITS_REFRESH_MS = 60000;
+
 function getInitialQuoteIndex(isMobile) {
   const quotes = isMobile ? SHORT_QUOTES : LONG_QUOTES;
   const previousIndex = Number(sessionStorage.getItem('quoteIndex'));
@@ -81,24 +84,53 @@ export default function QuoteStrip() {
       && !window.location.hostname.startsWith('127.');
     const apiUrl = isProd ? '/api/visits' : 'https://harshx.in/api/visits';
     let active = true;
+    let visitorsTimer = null;
+    let lastFetchAt = 0;
+
+    const readFlag = () => { try { return sessionStorage.getItem(VISIT_COUNTED_KEY) === '1'; } catch { return false; } };
+    const writeFlag = on => {
+      try { on ? sessionStorage.setItem(VISIT_COUNTED_KEY, '1') : sessionStorage.removeItem(VISIT_COUNTED_KEY); } catch {}
+    };
 
     const fetchVisitors = () => {
-      fetch(apiUrl, { method: isProd ? 'POST' : 'GET' })
+      lastFetchAt = Date.now();
+      // Count the visit once per browser session (production only); otherwise just read the total.
+      const shouldPost = isProd && !readFlag();
+      // Set the flag before the request so a remount can't POST twice; cleared again if the POST fails.
+      if (shouldPost) writeFlag(true);
+      fetch(apiUrl, { method: shouldPost ? 'POST' : 'GET' })
         .then(r => r.ok ? r.json() : null)
         .then(data => {
+          if (shouldPost && data?.total == null) writeFlag(false);
           if (active && data?.total != null) {
             setVisitors(Number(data.total).toLocaleString('en-IN'));
           }
         })
-        .catch(() => {});
+        .catch(() => { if (shouldPost) writeFlag(false); });
     };
 
-    fetchVisitors();
-    const visitorsTimer = window.setInterval(fetchVisitors, 15000);
+    const start = () => {
+      if (visitorsTimer !== null) return;
+      if (Date.now() - lastFetchAt >= VISITS_REFRESH_MS) fetchVisitors();
+      visitorsTimer = window.setInterval(fetchVisitors, VISITS_REFRESH_MS);
+    };
+    const stop = () => {
+      if (visitorsTimer !== null) { window.clearInterval(visitorsTimer); visitorsTimer = null; }
+    };
+    const handleVisibilityChange = () => { if (document.hidden) stop(); else start(); };
+
+    if (document.hidden) {
+      // Still record the visit / show the total for tabs opened in the background.
+      fetchVisitors();
+    } else {
+      start();
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       active = false;
-      window.clearInterval(visitorsTimer);
+      stop();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
