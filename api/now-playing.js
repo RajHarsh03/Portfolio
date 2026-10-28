@@ -29,14 +29,12 @@ async function getAccessToken(clientId, clientSecret, refreshToken) {
   return data.access_token;
 }
 
-export default async function handler(req, res) {
-  res.setHeader('Cache-Control', 'no-store');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-
+export async function getNowPlayingPayload() {
+  // Read env at call time so values loaded later (e.g. by vite.config.js in dev) apply.
   const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN } = process.env;
 
   if (!SPOTIFY_CLIENT_ID || !SPOTIFY_CLIENT_SECRET || !SPOTIFY_REFRESH_TOKEN) {
-    return res.status(200).json({ configured: false, track: null, isPlaying: false });
+    return { configured: false, track: null, isPlaying: false };
   }
 
   try {
@@ -52,12 +50,12 @@ export default async function handler(req, res) {
       const recentRes = await fetch(RECENT, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (!recentRes.ok) return res.status(200).json({ configured: true, track: null, isPlaying: false });
+      if (!recentRes.ok) return { configured: true, track: null, isPlaying: false };
       const recent = await recentRes.json();
       const item = recent.items?.[0]?.track;
-      if (!item) return res.status(200).json({ configured: true, track: null, isPlaying: false });
+      if (!item) return { configured: true, track: null, isPlaying: false };
 
-      return res.status(200).json({
+      return {
         configured: true,
         isPlaying: false,
         track: {
@@ -66,15 +64,15 @@ export default async function handler(req, res) {
           artwork: item.album.images[1]?.url || item.album.images[0]?.url || null,
           url:     item.external_urls.spotify,
         },
-      });
+      };
     }
 
-    if (!npRes.ok) return res.status(200).json({ configured: true, track: null, isPlaying: false });
+    if (!npRes.ok) return { configured: true, track: null, isPlaying: false };
 
     const np = await npRes.json();
-    if (!np?.item) return res.status(200).json({ configured: true, track: null, isPlaying: false });
+    if (!np?.item) return { configured: true, track: null, isPlaying: false };
 
-    return res.status(200).json({
+    return {
       configured: true,
       isPlaying: np.is_playing,
       track: {
@@ -83,9 +81,16 @@ export default async function handler(req, res) {
         artwork: np.item.album.images[1]?.url || np.item.album.images[0]?.url || null,
         url:     np.item.external_urls.spotify,
       },
-    });
+    };
   } catch (err) {
     console.error('Spotify error:', err);
-    return res.status(200).json({ configured: false, track: null, isPlaying: false });
+    return { configured: false, track: null, isPlaying: false };
   }
+}
+
+export default async function handler(req, res) {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  const payload = await getNowPlayingPayload();
+  return res.status(200).json(payload);
 }

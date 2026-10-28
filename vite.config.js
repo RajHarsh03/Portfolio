@@ -88,11 +88,15 @@ function nowPlayingDevPlugin() {
           try {
             const { getNowPlayingPayload } = await import('./api/now-playing.js');
             const payload = await getNowPlayingPayload();
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify(payload));
-          } catch (error) {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Cache-Control', 'no-store');
+            res.end(JSON.stringify(payload));
+          } catch (error) {
+            console.error('[now-playing-dev]', error);
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Cache-Control', 'no-store');
             res.end(JSON.stringify({ configured: false, error: String(error.message || error) }));
           }
           return;

@@ -185,7 +185,7 @@ function MiniSpotify() {
       try {
         const isLocal = window.location.hostname === 'localhost' || window.location.hostname.startsWith('127.');
         let json = await fetch('/api/now-playing').then(r => r.ok ? r.json() : null).catch(() => null);
-        if (isLocal && !json?.track) {
+        if (isLocal && json?.configured !== true) {
           json = await fetch('https://harshx.in/api/now-playing').then(r => r.ok ? r.json() : null).catch(() => null);
         }
         if (!cancelled && json?.track) {
