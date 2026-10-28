@@ -15,6 +15,7 @@ export function useProjects({ limit = 0 } = {}) {
   );
   const [loading, setLoading] = useState(!cached); // no spinner if cache hit
   const [error, setError]     = useState(null);
+  const [fresh, setFresh]     = useState(false); // true after a successful network fetch
   const lastFetch = useRef(0);
   const cooldown  = useRef(false);
 
@@ -29,6 +30,7 @@ export function useProjects({ limit = 0 } = {}) {
     try {
       const all = await fetchPortfolioProjects();
       applyProjects(all);
+      setFresh(true);
     } catch (err) {
       setError(err.message || 'Failed to load projects');
     } finally {
@@ -65,5 +67,5 @@ export function useProjects({ limit = 0 } = {}) {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return { projects, loading, error, reload: () => load(false) };
+  return { projects, loading, error, fresh, reload: () => load(false) };
 }

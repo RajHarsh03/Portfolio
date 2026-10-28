@@ -7,38 +7,16 @@ import { useProjectDetails } from '../hooks/useProjectDetails.js';
 
 export default function ProjectDetail() {
   const { id } = useParams();
-  const { projects, loading, error } = useProjects();
+  const { projects, loading, error, fresh } = useProjects();
   const { details: projectDetailsMap } = useProjectDetails();
   const ref = useReveal();
-
-  if (loading) {
-    return (
-      <div style={{ paddingTop: '4.5rem', minHeight: '100vh', background: 'var(--bg)' }}>
-        <div className="container" style={{ padding: '3rem 24px', textAlign: 'center' }}>
-          <div style={{ fontFamily: 'DM Mono, monospace', color: 'var(--text)', fontSize: '1rem' }}>
-            Loading project...
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div style={{ paddingTop: '4.5rem', minHeight: '100vh', background: 'var(--bg)' }}>
-        <div className="container" style={{ padding: '3rem 24px', textAlign: 'center' }}>
-          <div style={{ fontFamily: 'DM Mono, monospace', color: 'var(--text)', fontSize: '1rem' }}>
-            Error loading project. Please try again.
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // Find project by repoName (use as ID)
   const project = projects.find(p => p.repoName === id);
 
-  if (!project && !loading) {
+  // Not in the (possibly stale) cache yet: wait for the network fetch to
+  // settle before deciding the project doesn't exist.
+  if (!project && (fresh || (error && !loading))) {
     return <Navigate to="/projects" replace />;
   }
 
@@ -46,8 +24,8 @@ export default function ProjectDetail() {
     return (
       <div style={{ paddingTop: '4.5rem', minHeight: '100vh', background: 'var(--bg)' }}>
         <div className="container" style={{ padding: '3rem 24px', textAlign: 'center' }}>
-          <div style={{ fontFamily: 'DM Mono, monospace', color: 'var(--text)' }}>
-            Project not found...
+          <div style={{ fontFamily: 'DM Mono, monospace', color: 'var(--text)', fontSize: '1rem' }}>
+            Loading project...
           </div>
         </div>
       </div>

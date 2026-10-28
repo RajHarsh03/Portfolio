@@ -1,19 +1,21 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
- * useReveal — attaches an IntersectionObserver to a container ref.
+ * useReveal — attaches an IntersectionObserver to a container element.
  * All children with className "reveal" inside that container get
  * the "visible" class added when they scroll into view.
+ *
+ * Returns a callback ref, so the observer is (re)attached whenever the
+ * container element mounts — including when it renders after a loading view.
  *
  * Usage:
  *   const ref = useReveal();
  *   return <section ref={ref}><div className="reveal">…</div></section>
  */
 export function useReveal(threshold = 0.08) {
-  const ref = useRef(null);
+  const [container, setContainer] = useState(null);
 
   useEffect(() => {
-    const container = ref.current;
     if (!container) return;
 
     const observer = new IntersectionObserver(
@@ -42,7 +44,7 @@ export function useReveal(threshold = 0.08) {
       observer.disconnect();
       mutation.disconnect();
     };
-  }, [threshold]);
+  }, [container, threshold]);
 
-  return ref;
+  return setContainer;
 }
