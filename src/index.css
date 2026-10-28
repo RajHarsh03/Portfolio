@@ -161,6 +161,98 @@
 html {
     scroll-behavior: smooth;
     overflow-x: hidden;
+    /* Thin scrollbar: no arrow buttons, track blends into the page, subtle thumb */
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-thumb) transparent;
+}
+
+[data-theme="dark"] { --scroll-thumb: rgba(255, 255, 255, 0.22); }
+[data-theme="light"] { --scroll-thumb: rgba(0, 0, 0, 0.25); }
+
+/* Mobile: no visible page scrollbar (scrolling still works) */
+@media (max-width: 580px) {
+    html { scrollbar-width: none; }
+    html::-webkit-scrollbar { display: none; }
+}
+
+/* Back-to-top button: ring fills with scroll progress */
+.scroll-top-btn {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    z-index: 9994;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: opacity .25s ease, transform .25s ease, visibility .25s;
+}
+
+.scroll-top-btn.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+}
+
+.scroll-top-btn svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.scroll-top-btn .ring-bg {
+    fill: var(--bg);
+    stroke: var(--border);
+    stroke-width: 2;
+}
+
+.scroll-top-btn .ring-fill {
+    fill: none;
+    stroke: var(--text);
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.scroll-top-btn .arrow {
+    position: relative;
+    inset: auto;
+    width: 18px;
+    height: 18px;
+    /* Only the ring is rotated (so it fills from the top); the arrow points up */
+    transform: none;
+    transition: transform .2s ease;
+}
+
+/* Arrow nudges straight up on hover / keyboard focus */
+.scroll-top-btn:hover .arrow,
+.scroll-top-btn:focus-visible .arrow {
+    transform: translateY(-3px);
+}
+
+@media (max-width: 580px) {
+    /* Sit above the floating bottom nav */
+    .scroll-top-btn {
+        right: 1rem;
+        bottom: 5.25rem;
+        width: 42px;
+        height: 42px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scroll-top-btn,
+    .scroll-top-btn .arrow { transition: none; }
+    .scroll-top-btn { transform: none; }
 }
 
 body {

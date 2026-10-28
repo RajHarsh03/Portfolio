@@ -4,6 +4,7 @@ import Footer from '../components/layout/Footer.jsx';
 import ScrollProgress from '../components/layout/ScrollProgress.jsx';
 import QuoteStrip from '../components/home/QuoteStrip.jsx';
 import BottomNav from '../components/home/BottomNav.jsx';
+import ScrollToTopButton from '../components/layout/ScrollToTopButton.jsx';
 
 /**
  * AppShell — mounts exactly once.
@@ -50,6 +51,9 @@ export default function AppShell({ children }) {
 
       {/* Bottom nav pill — visible on mobile, handles page navigation */}
       <BottomNav />
+
+      {/* Back-to-top button with a scroll-progress ring */}
+      <ScrollToTopButton />
 
       {/* Bottom scroll-fade overlay — hidden at bottom so footer is never covered */}
       <div className={`scroll-bottom-fade${scrolled && !atBottom ? ' visible' : ''}`} aria-hidden="true" />
