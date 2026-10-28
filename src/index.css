@@ -413,8 +413,7 @@ nav.floating {
     transform: scale(1.08);
 }
 
-.theme-btn:focus,
-.theme-btn:focus-visible {
+.theme-btn:focus {
     outline: none !important;
     border: none !important;
     box-shadow: none !important;
@@ -5900,6 +5899,36 @@ footer {
     }
 }
 
+/* Site-wide reduced motion: finish animations/transitions instantly so nothing
+   is left waiting on an end state (fills, delays) to become visible. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-delay: 0s !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        transition-delay: 0s !important;
+        scroll-behavior: auto !important;
+    }
+
+    html {
+        scroll-behavior: auto !important;
+    }
+
+    .ticker-track.rtl,
+    .ticker-track.ltr {
+        animation: none !important;
+    }
+
+    .reveal,
+    .fade-in {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
 .bottom-nav {
   pointer-events: auto;
   display: inline-flex;
@@ -5938,13 +5967,17 @@ footer {
 }
 
 .bnav-link:focus,
-.bnav-link:focus-visible,
 .bnav-link:active,
 .bnav-drop-item:focus,
-.bnav-drop-item:focus-visible,
 .bnav-drop-item:active {
   outline: none;
   box-shadow: none;
+}
+
+.bnav-link:focus-visible,
+.bnav-drop-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .bnav-link:hover {
@@ -8012,13 +8045,18 @@ footer {
 .theme-btn,
 .theme-btn:hover,
 .theme-btn:focus,
-.theme-btn:focus-visible,
 .theme-btn:active {
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
   background: transparent !important;
   -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Keyboard focus only; mouse/touch focus stays outline-free (see :focus above). */
+.theme-btn:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 2px;
 }
 
 

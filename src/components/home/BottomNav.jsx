@@ -25,6 +25,7 @@ export default function BottomNav() {
   const { pathname } = useLocation();
   const [moreOpen, setMoreOpen] = useState(false);
   const moreRef  = useRef(null);
+  const moreBtnRef = useRef(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -36,6 +37,19 @@ export default function BottomNav() {
     document.addEventListener('pointerdown', onPointerDown);
     return () => document.removeEventListener('pointerdown', onPointerDown);
   }, []);
+
+  // Close on Escape and return focus to the trigger
+  useEffect(() => {
+    if (!moreOpen) return;
+    function onKeyDown(e) {
+      if (e.key === 'Escape') {
+        setMoreOpen(false);
+        moreBtnRef.current?.focus();
+      }
+    }
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [moreOpen]);
 
   // Close dropdown on route change
   useEffect(() => {
@@ -64,10 +78,11 @@ export default function BottomNav() {
       {/* More dropdown */}
       <div className="bnav-more-wrap" ref={moreRef}>
         <button
+          ref={moreBtnRef}
           className={`bnav-link bnav-more-btn${moreActive ? ' active' : ''}`}
           onClick={() => setMoreOpen(o => !o)}
-          aria-haspopup="true"
           aria-expanded={moreOpen}
+          aria-controls="bnav-more-dropdown"
         >
           More
           <svg
@@ -81,13 +96,12 @@ export default function BottomNav() {
         </button>
 
         {moreOpen && (
-          <div className="bnav-dropdown" role="menu">
+          <div className="bnav-dropdown" id="bnav-more-dropdown">
             {MORE_LINKS.map(({ to, label }) => (
               <NavLink
                 key={to}
                 to={to}
                 className={({ isActive }) => `bnav-drop-item${isActive ? ' active' : ''}`}
-                role="menuitem"
               >
                 {label}
               </NavLink>

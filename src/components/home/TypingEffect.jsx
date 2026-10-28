@@ -11,7 +11,9 @@ const PAUSE_AFTER  = 1800;
 const PAUSE_BEFORE = 400;
 
 export default function TypingEffect() {
-  const [displayed, setDisplayed] = useState('');
+  // Reduced motion: show the first role statically, no typing loop.
+  const [reduceMotion] = useState(() => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false);
+  const [displayed, setDisplayed] = useState(() => (reduceMotion ? ROLES[0].title : ''));
   const [roleIdx,   setRoleIdx]   = useState(0);
   const [phase,     setPhase]     = useState('typing');
 
@@ -19,6 +21,7 @@ export default function TypingEffect() {
   const isDone  = phase === 'deleting' ? false : displayed.length === current.title.length;
 
   useEffect(() => {
+    if (reduceMotion) return;
     if (phase === 'typing') {
       if (displayed.length < current.title.length) {
         const t = setTimeout(() => setDisplayed(current.title.slice(0, displayed.length + 1)), TYPE_SPEED);

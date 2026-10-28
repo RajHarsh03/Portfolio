@@ -16,7 +16,9 @@ export function ThemeProvider({ children }) {
   function toggleTheme(fromEl) {
     const next = theme === 'dark' ? 'light' : 'dark';
 
-    if (document.startViewTransition && fromEl) {
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+    if (document.startViewTransition && fromEl && !reduceMotion) {
       const rect = fromEl.getBoundingClientRect();
       const ox = rect.left + rect.width / 2;
       const oy = rect.top + rect.height / 2;

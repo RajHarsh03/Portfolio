@@ -99,13 +99,13 @@ export default function HomeContact() {
             ) : (
               <form className="hc-form" onSubmit={submit}>
                 <div className="hc-fg">
-                  <input type="text" placeholder="Name" value={form.name} onChange={set('name')} required />
+                  <input type="text" placeholder="Name" aria-label="Name" value={form.name} onChange={set('name')} required />
                 </div>
                 <div className="hc-fg">
-                  <input type="email" placeholder="Email" value={form.email} onChange={set('email')} required />
+                  <input type="email" placeholder="Email" aria-label="Email" value={form.email} onChange={set('email')} required />
                 </div>
                 <div className="hc-fg">
-                  <textarea placeholder="Message" rows="4" value={form.message} onChange={set('message')} required />
+                  <textarea placeholder="Message" aria-label="Message" rows="4" value={form.message} onChange={set('message')} required />
                 </div>
                 <button type="submit" className="hc-submit" disabled={sending}>
                   {sending ? 'Sending…' : 'Send Message ↗'}

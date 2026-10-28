@@ -417,7 +417,7 @@ export default function Guestbook() {
                 <textarea value={message} onChange={event => {
                   const nextValue = event.target.value;
                   if (wordCount(nextValue) <= 100) setMessage(nextValue);
-                }} maxLength={500} placeholder="Write something worth remembering..." rows="4" required />
+                }} maxLength={500} placeholder="Write something worth remembering..." aria-label="Guestbook note" rows="4" required />
                 <div className="guestbook-compose-footer">
                   <small>Your note will be visible to everyone · {remainingChars(message)} chars left</small>
                   <button className="guestbook-submit" disabled={sending || !message.trim()}>{sending ? 'Posting...' : 'Post Note'}</button>

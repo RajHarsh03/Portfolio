@@ -7,6 +7,7 @@ let nekoInstance = null;
 export default function useNeko() {
   useEffect(() => {
     if (nekoStarted) return;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
     nekoStarted = true;
 
     const SCRIPT_ID = 'nekojs-script';

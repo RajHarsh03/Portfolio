@@ -23,6 +23,7 @@ export default function Navbar() {
   const { toggleTheme } = useTheme();
   const btnRef    = useRef(null);
   const moreRef   = useRef(null);
+  const moreBtnRef = useRef(null);
   const [scrolled,   setScrolled]   = useState(false);
   const [repoCount,  setRepoCount]  = useState('');
   const [moreOpen,   setMoreOpen]   = useState(false);
@@ -50,6 +51,19 @@ export default function Navbar() {
     return () => document.removeEventListener('pointerdown', onPointerDown);
   }, []);
 
+  // Close on Escape and return focus to the trigger
+  useEffect(() => {
+    if (!moreOpen) return;
+    function onKeyDown(e) {
+      if (e.key === 'Escape') {
+        setMoreOpen(false);
+        moreBtnRef.current?.focus();
+      }
+    }
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [moreOpen]);
+
   // Close on route change
   useEffect(() => { setMoreOpen(false); }, [pathname]);
 
@@ -70,10 +84,11 @@ export default function Navbar() {
           {/* More dropdown — replaces Contact */}
           <div className="nav-more-wrap" ref={moreRef}>
             <button
+              ref={moreBtnRef}
               className={`nav-link nav-more-btn${moreActive ? ' active' : ''}`}
               onClick={() => setMoreOpen(o => !o)}
-              aria-haspopup="true"
               aria-expanded={moreOpen}
+              aria-controls="nav-more-dropdown"
             >
               More
               <svg
@@ -87,13 +102,12 @@ export default function Navbar() {
             </button>
 
             {moreOpen && (
-              <div className="nav-more-dropdown" role="menu">
+              <div className="nav-more-dropdown" id="nav-more-dropdown">
                 {MORE_LINKS.map(({ to, label }) => (
                   <NavLink
                     key={to}
                     to={to}
                     className={({ isActive }) => `nav-more-item${isActive ? ' active' : ''}`}
-                    role="menuitem"
                   >
                     {label}
                   </NavLink>
