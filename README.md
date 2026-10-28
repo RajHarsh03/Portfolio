@@ -236,6 +236,19 @@ VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
 
 > The `vercel.json` handles SPA routing - all URLs serve `index.html` and React Router takes over client-side.
 
+### Content Security Policy
+
+`vercel.json` sends a full CSP as `Content-Security-Policy-Report-Only` on every path except the Firebase auth proxy (`/__/auth/*`). Report-only means the browser blocks nothing. It only logs what it would block. There is no reporting endpoint, so violations appear in the DevTools Console as messages starting with `[Report Only] Refused to ...`. The separate enforced `Content-Security-Policy: frame-ancestors 'self'` header stays in place.
+
+- **Checking:** open each page (including Contact send and Guestbook sign-in, post, like) with DevTools Console open and look for `[Report Only]` messages. A new third-party origin (script, image, API) must be added to the matching directive.
+- **Inline theme script:** `index.html` has one inline script, allowed by its `sha256-...` hash in `script-src`. Any edit to that script, even whitespace, changes the hash. Recompute it after `npm run build` with:
+  ```bash
+  node -e "const h=require('fs').readFileSync('dist/index.html','utf8');const s=h.match(/<script>([\s\S]*?)<\/script>/)[1];console.log('sha256-'+require('crypto').createHash('sha256').update(s).digest('base64'))"
+  ```
+  Two hashes are listed because the hash depends on line endings: one for LF (Git/Vercel builds) and one for CRLF (a Windows checkout deployed with the Vercel CLI).
+- **Switching to enforcing:** after about a week with no violations, rename the key to `Content-Security-Policy` and delete the old `frame-ancestors 'self'` CSP entry in the same block (the full policy already contains `frame-ancestors 'self'`). Keep `X-Frame-Options`.
+- `style-src` includes `'unsafe-inline'` because React `style={{...}}` props render as inline style attributes. This is the usual trade-off for React apps; scripts stay hash-restricted.
+
 ---
 
 ## Firebase Guestbook Setup
