@@ -1,38 +1,79 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useReveal } from '../hooks/useReveal.js';
+import { useToast } from '../hooks/useToast.js';
+import Toast from '../components/ui/Toast.jsx';
 const EMAILJS_SERVICE_ID  = 'service_gb3gqr6';
 const EMAILJS_TEMPLATE_ID = 'template_ngboxe4';
 const EMAILJS_PUBLIC_KEY  = 'f-P9D7rMpesYc3TAk';
+const EMAILJS_SDK_URL     = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+const EMAILJS_TIMEOUT_MS  = 8000;
+
+// Shared across mounts so the SDK script is only injected once at a time.
+let ejsPromise = null;
+let ejsInitialized = false;
+function loadEmailJS() {
+  if (window.emailjs) {
+    if (!ejsInitialized) { window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); ejsInitialized = true; }
+    return Promise.resolve(window.emailjs);
+  }
+  if (ejsPromise) return ejsPromise;
+  ejsPromise = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = EMAILJS_SDK_URL;
+    const fail = err => {
+      clearTimeout(timer);
+      s.remove();
+      ejsPromise = null; // allow a retry on the next submit
+      reject(err);
+    };
+    const timer = setTimeout(() => fail(new Error('EmailJS SDK load timed out')), EMAILJS_TIMEOUT_MS);
+    s.onload = () => {
+      clearTimeout(timer);
+      if (!window.emailjs) { fail(new Error('EmailJS SDK loaded but window.emailjs is missing')); return; }
+      if (!ejsInitialized) { window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); ejsInitialized = true; }
+      resolve(window.emailjs);
+    };
+    s.onerror = () => fail(new Error('EmailJS SDK failed to load'));
+    document.head.appendChild(s);
+  });
+  return ejsPromise;
+}
+
 export default function Contact() {
   const ref = useReveal();
   const [form, setForm]       = useState({ name: '', email: '', message: '' });
   const [sending, setSending] = useState(false);
-  const [sent, setSent]       = useState(false);
-  const ejsLoaded             = useRef(false);
+  const { toast, showToast, dismissToast } = useToast();
   useEffect(() => {
-    if (ejsLoaded.current || window.emailjs) { ejsLoaded.current = true; return; }
-    const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
-    s.onload = () => { window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); ejsLoaded.current = true; };
-    document.head.appendChild(s);
+    loadEmailJS().catch(err => console.error('[contact] EmailJS preload failed:', err));
   }, []);
   function set(f) { return e => setForm(p => ({ ...p, [f]: e.target.value })); }
   async function submit(e) {
     e.preventDefault();
-    if (!form.name || !form.email || !form.message) return;
+    if (sending) return;
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) return;
     setSending(true);
+    let emailjs;
     try {
-      await window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      emailjs = await loadEmailJS();
+    } catch (err) {
+      console.error('[contact] EmailJS SDK unavailable:', err);
+      showToast('Could not load email service', 'An ad blocker may be blocking it. Please try again or email me directly.', 'error');
+      setSending(false);
+      return;
+    }
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
         from_name: form.name, from_email: form.email,
         reply_to: form.email, subject: 'Message from portfolio',
         message: form.message, to_name: 'Harsh Raj',
       });
-      setSent(true);
       setForm({ name: '', email: '', message: '' });
-      setTimeout(() => setSent(false), 2000);
-    } catch {
-      // silent fail
+      showToast('Message sent', "Thanks for reaching out! I'll get back to you soon. 😊", 'success');
+    } catch (err) {
+      console.error('[contact] EmailJS send failed:', err);
+      showToast('Could not send message', 'Please try again or email me directly.', 'error');
     } finally { setSending(false); }
   }
   return (
@@ -41,6 +82,7 @@ export default function Contact() {
         <title>Contact | Harsh Raj | Full-Stack Developer</title>
         <meta name="description" content="Get in touch with Harsh Raj for collaborations, freelance work, or just a good tech chat." />
       </Helmet>
+      <Toast toast={toast} onDismiss={dismissToast} />
       <section id="home-contact" ref={ref} style={{ paddingTop: '4.5rem' }}>
         <div className="container">
           <div className="section-label reveal">// let's connect</div>
@@ -134,31 +176,27 @@ export default function Contact() {
             <div className="hc-right reveal">
               <h3 className="hc-form-title">Send a message</h3>
               <p className="hc-form-sub">Prefer to write? Fill out the form and I'll get back to you within 24 hours.</p>
-              {sent ? (
-                <div className="hc-sent">✓ Message sent! I'll get back to you soon.</div>
-              ) : (
-                <form className="hc-form" onSubmit={submit}>
-                  <div className="hc-fg">
-                    <input type="text" placeholder="Name" value={form.name} onChange={set('name')} required />
-                  </div>
-                  <div className="hc-fg">
-                    <input type="email" placeholder="Email" value={form.email} onChange={set('email')} required />
-                  </div>
-                  <div className="hc-fg">
-                    <textarea placeholder="Message" rows="4" value={form.message} onChange={set('message')} required />
-                  </div>
-                  <button type="submit" className="hc-submit" disabled={sending}>
-                    {sending ? 'Sending…' : (
-                      <>
-                        Send Message
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M7 17L17 7"/><path d="M7 7h10v10"/>
-                        </svg>
-                      </>
-                    )}
-                  </button>
-                </form>
-              )}
+              <form className="hc-form" onSubmit={submit}>
+                <div className="hc-fg">
+                  <input type="text" placeholder="Name" value={form.name} onChange={set('name')} required />
+                </div>
+                <div className="hc-fg">
+                  <input type="email" placeholder="Email" value={form.email} onChange={set('email')} required />
+                </div>
+                <div className="hc-fg">
+                  <textarea placeholder="Message" rows="4" value={form.message} onChange={set('message')} required />
+                </div>
+                <button type="submit" className="hc-submit" disabled={sending}>
+                  {sending ? 'Sending…' : (
+                    <>
+                      Send Message
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M7 17L17 7"/><path d="M7 7h10v10"/>
+                      </svg>
+                    </>
+                  )}
+                </button>
+              </form>
             </div>
           </div>
         </div>

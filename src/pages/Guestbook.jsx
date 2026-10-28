@@ -3,11 +3,12 @@ import { Helmet } from 'react-helmet-async';
 import { addDoc, arrayUnion, collection, deleteDoc, doc, increment, limit, onSnapshot, orderBy, query, runTransaction, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from 'firebase/auth';
 import { auth, authPersistenceReady, db, firebaseReady, googleProvider } from '../services/firebase.js';
+import Toast from '../components/ui/Toast.jsx';
+import { useToast } from '../hooks/useToast.js';
 
 const NOTES_CACHE_KEY = 'guestbook_entries_cache_v1';
 const AUTH_CACHE_KEY = 'guestbook_auth_user_v1';
 const AUTH_REDIRECT_PENDING_KEY = 'guestbook_auth_redirect_pending_v1';
-const TOAST_AVATAR_URL = 'https://github.com/RajHarsh03.png?size=96';
 const ADMIN_EMAIL = 'rajharsh.devx@gmail.com';
 const ADMIN_UID = 'VqE9wVvuIZXMoMjOlPtw8J3V6Go2';
 
@@ -161,15 +162,9 @@ export default function Guestbook() {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(initialEntries.length === 0);
   const [sending, setSending] = useState(false);
-  const [toast, setToast] = useState(null);
-  const toastTimer = useRef(null);
+  const { toast, showToast, dismissToast } = useToast();
   const redirectResultRead = useRef(false);
   const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL;
-
-  useEffect(() => {
-    const avatar = new Image();
-    avatar.src = TOAST_AVATAR_URL;
-  }, []);
 
   useEffect(() => {
     if (!isAdmin || !db || !user?.uid || !entries.length) return;
@@ -357,12 +352,6 @@ export default function Guestbook() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function showToast(title, message, tone = 'info') {
-    setToast({ title, message, tone });
-    window.clearTimeout(toastTimer.current);
-    toastTimer.current = window.setTimeout(() => setToast(null), 2500);
-  }
-
   const pinnedEntries = entries.filter(entry => entry.pinned).slice(0, 5);
   const marqueePinnedEntries = pinnedEntries.length > 1
     ? [...pinnedEntries, ...pinnedEntries]
@@ -374,12 +363,7 @@ export default function Guestbook() {
         <title>Guestbook | Harsh Raj | Full-Stack Developer</title>
         <meta name="description" content="Leave a note for Harsh Raj and browse messages from visitors." />
       </Helmet>
-      {toast && <div className={`guestbook-toast is-${toast.tone}`} role="status" aria-live="polite">
-        <img src={TOAST_AVATAR_URL} alt="Harsh Raj" loading="eager" fetchPriority="high" decoding="async" />
-        <strong>{toast.title}</strong>
-        <span>{toast.message}</span>
-        <button type="button" onClick={() => setToast(null)} aria-label="Dismiss notification">×</button>
-      </div>}
+      <Toast toast={toast} onDismiss={dismissToast} />
       <section className="guestbook-page">
         <div className="guestbook-page-header">
           <p className="section-label">// Leave a note </p>
