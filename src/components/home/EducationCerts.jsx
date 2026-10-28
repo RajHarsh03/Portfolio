@@ -6,15 +6,6 @@ function shortYear(y) {
   return y.replace(/\b\d{2}(\d{2})\b/g, '$1');
 }
 
-const EDUCATION = [
-  {
-    school: 'Heritage Institute of Technology, Kolkata',
-    degree: 'B.Tech in Computer Science & Business Systems',
-    year: '2023 - 2027',
-  },
-];
-
-
 function CertRow({ c }) {
   return (
     <div className="edu-certs-row reveal">
@@ -46,7 +37,7 @@ export default function EducationCerts() {
   const ref = useReveal();
   const { data } = useGistContent();
   const certificates = (data.certificates ?? []).slice(0, 2);
-  const education    = (data.education    ?? EDUCATION).slice(0, 1);
+  const education    = (data.education    ?? []).slice(0, 1);
 
   return (
     <section id="edu-certs" ref={ref}>

@@ -8,11 +8,10 @@
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-6-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev)
 [![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com)
-[![License](https://img.shields.io/badge/License-MIT-14b8a6?style=for-the-badge)](./LICENSE)
 
 <br/>
 
-> **Personal portfolio of Harsh Raj** - a fast, fully-featured React SPA with dark/light theme, live GitHub data, animated custom cursor, canvas contribution heatmap, live Spotify now-playing widget, oneko.js cat companion, circular GitHub favicon, and a Gist-powered CMS for experiences, internships, and certificates.
+> **Personal portfolio of Harsh Raj** - a fast, fully-featured React SPA with dark/light theme, live GitHub data, DOM-based contribution heatmap, live Spotify now-playing widget, oneko.js cat companion, circular GitHub favicon, and a Gist-powered CMS for experiences, internships, and certificates.
 
 </div>
 
@@ -29,23 +28,22 @@
 **Live GitHub Projects** - fetched, filtered & sorted by topics\
 **Project Detail Pages** - route-based with Gist-powered content\
 **GitHub Heatmap** - DOM-rendered contribution graph, monochrome style, contribution count + less/more legend\
-**Contact Form** - EmailJS + toast feedback + `Ctrl+Enter`\
-**Spotify Widget** - live now-playing / last-played, polls every 5 seconds\
-**Firebase Guestbook** - Google sign-in, real-time visitor notes, and Home preview
+**Contact Form** - EmailJS + toast feedback\
+**Spotify Widget** - live now-playing / last-played mini player in the hero, polls every 30 seconds\
+**Firebase Guestbook** - Google sign-in and real-time visitor notes
 
 </td>
 <td width="50%">
 
 **Scroll Reveal** - IntersectionObserver fade-up animations\
-**Custom Cursor** - dual-ring, hover-expand (desktop only)\
 **Oneko Cat** - nekojs cat companion that follows your cursor\
 **Circular Favicon** - live GitHub avatar rendered as circular favicon\
-**Visit Counter** - Upstash Redis via Vercel serverless\
-**Persistent Layout** - Nav, Footer, Cursor mount once\
+**Visit Counter** - Upstash Redis via Vercel serverless, shown in the quote strip above the footer\
+**Persistent Layout** - Nav, quote strip, Footer mount once\
 **Fully Responsive** - mobile-first, incremental load on mobile\
 **Experience Cards** - collapsible cards with tech stack icons\
 **Gist CMS** - manage content without redeployment\
-**Quote Strip** - rotating developer quotes in hero section\
+**Quote Strip** - rotating developer quotes above the footer\
 **Typing Effect** - animated typing in hero section
 
 </td>
@@ -81,10 +79,10 @@
 
 | URL | Page |
 |:----|:-----|
-| `/` | Home - hero, bio + Spotify strip, experience preview, skills ticker, featured projects, heatmap, guestbook preview, quote strip |
-| `/projects` | All Projects - search, filter (frontend / fullstack / AI), sort, incremental mobile load |
+| `/` | Home - hero with Spotify mini player, skills ticker, education + certificates, featured projects, heatmap, guestbook invitation |
+| `/projects` | All Projects - category filter pills (Web Apps / AI & ML / Data Science), incremental mobile load |
 | `/projects/:id` | Project Detail - full overview, tech stack, features, highlights, challenges (Gist-powered) |
-| `/contact` | Contact - EmailJS form + social links |
+| `/contact` | Contact - EmailJS form with toast feedback + social links |
 | `/about` | About - bio, education, collapsible experience cards with tech stack icons, certificates |
 | `/guestbook` | Guestbook - Google sign-in and real-time visitor notes |
 | `/privacy` | Privacy Policy |
@@ -118,10 +116,10 @@ Portfolio/
     |-- index.css               # Full design system + all component styles
     |
     |-- layouts/
-    |   +-- AppShell.jsx        # Persistent shell - Nav, Footer, Cursor, Glows
+    |   +-- AppShell.jsx        # Persistent shell - Nav, quote strip, Footer, bottom nav, glows
     |
     |-- router/
-    |   |-- routes.jsx          # Eager imports for all pages (no lazy loading)
+    |   |-- routes.jsx          # Home eager; other pages lazy-loaded and prefetched when idle
     |   +-- ScrollToTop.jsx     # Scrolls to top on every route change
     |
     |-- context/
@@ -133,7 +131,7 @@ Portfolio/
     |   |-- useGistContent.js        # Gist CMS hook - experiences, internships, certs
     |   |-- useReveal.js             # IntersectionObserver scroll reveal
     |   |-- useActiveSection.js      # Tracks the visible section for the legal TOC
-    |   |-- useTheme.js              # Re-export of useTheme from context
+    |   |-- useToast.js              # Toast state for contact form + guestbook
     |   +-- useNeko.js               # Oneko cat companion cursor follower
     |
     |-- lib/
@@ -144,33 +142,29 @@ Portfolio/
     |   |-- githubProjects.js            # Fetch + normalise portfolio repos
     |   |-- projectDetailsGist.js        # Fetch project details from Gist
     |   |-- githubContributions.js       # Fetch contribution heatmap data
-    |   +-- gistContent.js               # Gist CMS - fetch + fallback + spotify field
+    |   +-- gistContent.js               # Gist CMS - fetch + fallback
     |
     |-- components/
     |   |-- layout/
     |   |   |-- Navbar.jsx          # Pill nav - tabs, GitHub icon, theme toggle
-    |   |   |-- Footer.jsx          # Footer + visit counter + legal links
-    |   |   |-- CustomCursor.jsx    # Dual-ring cursor (desktop only)
+    |   |   |-- Footer.jsx          # Footer + legal links
     |   |   +-- ScrollProgress.jsx  # Top gradient progress bar
     |   |
     |   |-- home/
-    |   |   |-- Hero.jsx            # Hero section - avatar, name, CTA, socials
+    |   |   |-- Hero.jsx            # Hero section - avatar, name, CTA, socials, Spotify mini player
     |   |   |-- TypingEffect.jsx    # Animated typing text in hero
-    |   |   |-- InfoStrip.jsx       # Bio card + live Spotify now-playing widget
-    |   |   |-- JourneyPreview.jsx  # Experience card preview (static, home only)
     |   |   |-- EducationCerts.jsx  # Education timeline + certificates section
-    |   |   |-- CertModal.jsx       # Certificate detail modal overlay
     |   |   |-- Skills.jsx          # Ticker marquee tech stack
     |   |   |-- FeaturedProjects.jsx # Top 2 projects from GitHub
-    |   |   |-- GitHubHeatmap.jsx   # Canvas contribution heatmap
-    |   |   |-- GuestbookPreview.jsx # Real-time Home guestbook marquee
-    |   |   |-- HomeContact.jsx     # Inline contact form on home page
-    |   |   |-- QuoteStrip.jsx      # Rotating developer quotes
-    |   |   +-- BottomNav.jsx       # Floating pill nav (home page only)
+    |   |   |-- GitHubHeatmap.jsx   # DOM-based contribution heatmap
+    |   |   |-- QuoteStrip.jsx      # Rotating developer quotes + visit counter (above the footer)
+    |   |   +-- BottomNav.jsx       # Floating pill nav (mobile)
     |   |
     |   |-- projects/
-    |   |   |-- CompactProjectCard.jsx     # Compact project card with arrow navigation
-    |   |   +-- ProjectDetailModal.jsx     # Project detail modal overlay
+    |   |   +-- CompactProjectCard.jsx     # Compact project card with arrow navigation
+    |   |
+    |   |-- ui/
+    |   |   +-- Toast.jsx                  # Toast notification (contact form + guestbook)
     |   |
     |   +-- legal/
     |       +-- LegalPage.jsx              # Shared shell for the privacy and terms pages
@@ -178,12 +172,13 @@ Portfolio/
     +-- pages/
         |-- Home.jsx
         |-- About.jsx              # Education + collapsible ExpCard with stacks
-        |-- Projects.jsx           # Full grid - search, filter, sort, incremental mobile load
+        |-- Projects.jsx           # Full grid - category filter pills, incremental mobile load
         |-- ProjectDetail.jsx      # Individual project page with Gist-powered details
         |-- Contact.jsx            # EmailJS form + toast
         |-- Guestbook.jsx          # Google sign-in + Firestore notes
         |-- PrivacyPolicy.jsx      # /privacy
-        +-- TermsOfService.jsx     # /terms
+        |-- TermsOfService.jsx     # /terms
+        +-- NotFound.jsx           # 404
 ```
 
 ---
@@ -263,12 +258,14 @@ Expected note fields:
 | `userId` | string | Firebase Authentication user ID |
 | `displayName` | string | Google display name |
 | `photoURL` | string | Google profile image URL |
-| `message` | string | Visitor note, up to 500 characters |
+| `authorRole` | string | `Admin` or `Visitor` |
+| `message` | string | Visitor note, up to 100 words / 500 characters |
 | `createdAt` | timestamp | Server-generated creation time |
-| `likes` | number | Reserved for future reactions |
-| `pinned` | boolean | Reserved for future pinned notes |
+| `likes` | number | Like count |
+| `likedUserIds` | array | User IDs that liked the note |
+| `pinned` | boolean | Pinned by the admin, shown in the Pinned Notes marquee |
 
-The Home page subscribes to the latest notes in real time and displays them in a marquee. The full `/guestbook` page provides Google sign-in and note submission.
+The Home page links to the guestbook. The `/guestbook` page subscribes to the latest notes in real time and provides Google sign-in, note submission, and toast feedback.
 
 ---
 
@@ -440,7 +437,7 @@ Each project can have additional details (features, highlights, challenges) mana
 
 ## Spotify Now Playing Widget
 
-The **InfoStrip** section on the home page displays a live Spotify widget showing the currently playing song (or last-played if nothing is active).
+The mini player in the **Hero** section on the home page shows the currently playing song (or last-played if nothing is active).
 
 ### How it works
 
@@ -448,10 +445,10 @@ The **InfoStrip** section on the home page displays a live Spotify widget showin
 GET /api/now-playing  >  { track: { title, artist, artwork, url }, isPlaying }
 ```
 
-- Polls every **5 seconds** for near-real-time updates
+- Polls every **30 seconds** while the tab is visible
 - **Last played persisted in `localStorage`** - no blank flash on page reload
 - Falls back to production endpoint (`harshx.in/api/now-playing`) in local dev
-- Glows green on hover; clicking opens the track on Spotify
+- Clicking opens the track on Spotify
 
 ### Spotify setup
 

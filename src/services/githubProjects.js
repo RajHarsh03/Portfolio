@@ -5,7 +5,6 @@
 
 export const GH_USER = 'RajHarsh03';
 const GH_CACHE_KEY = 'gh_portfolio_cache_v2';
-const GH_CACHE_TTL = 10 * 60 * 1000;
 const RANK_DEFAULT = 9999;
 
 export const TECH_ICON_MAP = {

@@ -27,7 +27,3 @@ export const googleProvider = new GoogleAuthProvider();
 export const authPersistenceReady = auth
   ? setPersistence(auth, browserSessionPersistence)
   : Promise.resolve();
-
-export const authReady = auth
-  ? authPersistenceReady.then(() => auth.authStateReady())
-  : Promise.resolve();
