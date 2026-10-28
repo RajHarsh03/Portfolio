@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { addDoc, arrayUnion, collection, deleteDoc, doc, increment, limit, onSnapshot, orderBy, query, runTransaction, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { getRedirectResult, onAuthStateChanged, signInWithRedirect, signOut } from 'firebase/auth';
+import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from 'firebase/auth';
 import { auth, authPersistenceReady, db, firebaseReady, googleProvider } from '../services/firebase.js';
 
 const NOTES_CACHE_KEY = 'guestbook_entries_cache_v1';
@@ -18,6 +18,11 @@ const CANCELLED_CODES = new Set([
   'auth/redirect-interrupted',
 ]);
 const wasCancelled = (err) => CANCELLED_CODES.has(err?.code);
+
+// On local hosts the auth domain is a different origin (firebaseapp.com), and
+// browser storage partitioning breaks the redirect flow there, so use a popup.
+const isLocalHost = typeof window !== 'undefined'
+  && ['localhost', '127.0.0.1'].includes(window.location.hostname);
 
 function readCachedEntries() {
   try {
@@ -205,13 +210,7 @@ export default function Guestbook() {
     getRedirectResult(auth)
       .then(result => {
         const signedInUser = result?.user || auth.currentUser;
-        if (signedInUser) {
-          setUser(signedInUser);
-          cacheUser(signedInUser);
-          if (redirectWasPending) {
-            showToast('Sign in successful', "You're signed in. Leave a note whenever you're ready. 😊", 'success');
-          }
-        }
+        if (signedInUser) completeSignIn(signedInUser, redirectWasPending);
         clearPendingAuthRedirect();
         setAuthLoading(false);
       })
@@ -248,7 +247,29 @@ export default function Guestbook() {
     });
   }, []);
 
+  function completeSignIn(signedInUser, announce) {
+    setUser(signedInUser);
+    cacheUser(signedInUser);
+    if (announce) {
+      showToast('Sign in successful', "You're signed in. Leave a note whenever you're ready. 😊", 'success');
+    }
+  }
+
   async function handleSignIn() {
+    if (isLocalHost) {
+      try {
+        await authPersistenceReady;
+        const result = await signInWithPopup(auth, googleProvider);
+        completeSignIn(result.user, true);
+      } catch (err) {
+        if (err?.code === 'auth/popup-blocked') {
+          showToast('Popup blocked', 'Allow popups for this site to sign in with Google.', 'error');
+        } else if (err?.code !== 'auth/popup-closed-by-user' && err?.code !== 'auth/cancelled-popup-request') {
+          showToast('Sign in failed', 'Google sign-in could not be completed.', 'error');
+        }
+      }
+      return;
+    }
     try {
       window.sessionStorage.setItem(AUTH_REDIRECT_PENDING_KEY, '1');
       // Navigates away to Google; this promise only settles if the redirect

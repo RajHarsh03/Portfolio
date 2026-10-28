@@ -129,5 +129,17 @@ export default defineConfig(({ mode }) => {
       host: '127.0.0.1',
       port: 5173,
     },
+    build: {
+      rollupOptions: {
+        output: {
+          // Keep the React runtime in its own long-cached chunk.
+          manualChunks(id) {
+            if (/[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/.test(id)) {
+              return 'vendor';
+            }
+          },
+        },
+      },
+    },
   };
 });
