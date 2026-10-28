@@ -246,7 +246,7 @@ VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
   node -e "const h=require('fs').readFileSync('dist/index.html','utf8');const s=h.match(/<script>([\s\S]*?)<\/script>/)[1];console.log('sha256-'+require('crypto').createHash('sha256').update(s).digest('base64'))"
   ```
   Two hashes are listed because the hash depends on line endings: one for LF (Git/Vercel builds) and one for CRLF (a Windows checkout deployed with the Vercel CLI).
-- **Switching to enforcing:** after about a week with no violations, rename the key to `Content-Security-Policy` and delete the old `frame-ancestors 'self'` CSP entry in the same block (the full policy already contains `frame-ancestors 'self'`). Keep `X-Frame-Options`.
+- **Switching to enforcing:** after about a week with no violations, rename the key to `Content-Security-Policy` and delete the old `frame-ancestors 'self'` CSP entry in the same block (the full policy already contains `frame-ancestors 'self'`). Keep `X-Frame-Options`. Also append `; upgrade-insecure-requests` to the policy, since browsers ignore it in report-only mode.
 - `style-src` includes `'unsafe-inline'` because React `style={{...}}` props render as inline style attributes. This is the usual trade-off for React apps; scripts stay hash-restricted.
 
 ---
