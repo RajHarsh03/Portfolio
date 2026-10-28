@@ -33,6 +33,12 @@ const LONG_QUOTES = [
 
 const VISIT_COUNTED_KEY = 'pf_visit_counted';
 const VISITS_REFRESH_MS = 60000;
+const ORDINAL_RULES = new Intl.PluralRules('en-US', { type: 'ordinal' });
+const ORDINAL_SUFFIXES = { one: 'st', two: 'nd', few: 'rd', other: 'th' };
+
+function ordinalSuffix(n) {
+  return ORDINAL_SUFFIXES[ORDINAL_RULES.select(n)] ?? 'th';
+}
 
 function getInitialQuoteIndex(isMobile) {
   const quotes = isMobile ? SHORT_QUOTES : LONG_QUOTES;
@@ -82,7 +88,7 @@ export default function QuoteStrip() {
   useEffect(() => {
     const isProd = window.location.hostname !== 'localhost'
       && !window.location.hostname.startsWith('127.');
-    const apiUrl = isProd ? '/api/visits' : 'https://harshx.in/api/visits';
+    const apiUrl = isProd ? '/api/visits' : 'https://www.harshx.in/api/visits';
     let active = true;
     let visitorsTimer = null;
     let lastFetchAt = 0;
@@ -103,7 +109,7 @@ export default function QuoteStrip() {
         .then(data => {
           if (shouldPost && data?.total == null) writeFlag(false);
           if (active && data?.total != null) {
-            setVisitors(Number(data.total).toLocaleString('en-IN'));
+            setVisitors(Number(data.total));
           }
         })
         .catch(() => { if (shouldPost) writeFlag(false); });
@@ -148,11 +154,11 @@ export default function QuoteStrip() {
           </div>
         </div>
 
-        {visitors && (
+        {visitors != null && (
           <>
             <div className="quote-strip-divider" aria-hidden="true" />
             <div className="quote-strip-visitors">
-              You are the <strong>{visitors}</strong><sup>th</sup> visitor
+              You are the <strong>{visitors.toLocaleString('en-IN')}</strong><sup>{ordinalSuffix(visitors)}</sup> visitor
             </div>
           </>
         )}
