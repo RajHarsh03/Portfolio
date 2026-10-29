@@ -8183,24 +8183,7 @@ body { overflow-x: clip; }
     margin: 0 auto;
 }
 
-.site-frame::before,
-.site-frame::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: var(--rule-h);
-    border-left: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    background: repeating-linear-gradient(-45deg, var(--hatch) 0 1px, transparent 1px 7px);
-    pointer-events: none;
-    z-index: 1;
-}
-
-.site-frame::before { left: var(--rail-inset); }
-.site-frame::after { right: var(--rail-inset); }
-
-/* Line hosts: each draws the double line at its own top edge */
+/* Former divider hosts (lines removed; spacing kept) */
 #main-content,
 .quote-strip,
 footer,
@@ -8214,39 +8197,6 @@ footer,
 .guestbook-page > .guestbook-notes {
     position: relative;
 }
-
-#main-content::before,
-.quote-strip::before,
-footer::before,
-#skills::before,
-#edu-certs::before,
-#projects::before,
-#ghActivity::before,
-.guestbook-home-cta::before,
-.about-certs-section::before,
-.guestbook-page > .guestbook-pinned::before,
-.guestbook-page > .guestbook-notes::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100vw;
-    right: -100vw;
-    height: var(--rule-h);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    background: repeating-linear-gradient(-45deg, var(--hatch) 0 1px, transparent 1px 7px);
-    pointer-events: none;
-    z-index: 1;
-}
-
-/* Home already ends with the Guestbook CTA; keep its transition into the
-   persistent quote strip open instead of drawing another divider. */
-#main-content:has(.guestbook-home-cta) + .quote-strip::before {
-    display: none;
-}
-
-/* Navbar → content line sits in the gap under the floating navbar */
-#main-content::before { top: var(--nav-rule-y); }
 
 /* Keep every route's first content edge below the navbar divider without
    changing the spacing between the sections that follow it. */
