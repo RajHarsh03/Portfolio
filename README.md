@@ -547,12 +547,45 @@ POST /api/contact  { name, email, message, website }  >  { ok: true }
 - The email goes to `CONTACT_TO_EMAIL` from `CONTACT_FROM_EMAIL`, with `reply_to` set to the visitor, so replying in Gmail answers them directly. All user input is HTML-escaped.
 - In local dev, `vite.config.js` serves the same `/api/contact` route from `.env.local`.
 
+**Responses**
+
+| Status | Body | When |
+|:-------|:-----|:-----|
+| `200` | `{ ok: true }` | Email sent (or the honeypot was filled) |
+| `400` | `{ error: 'invalid', field }` | Missing or invalid `name`, `email` or `message` |
+| `403` | `{ error: 'forbidden' }` | Request not from the site's own origin |
+| `405` | `{ error: 'Method not allowed' }` | Anything other than `POST` / `OPTIONS` |
+| `429` | `{ error: 'rate_limited' }` | More than 3 messages from the same IP in an hour |
+| `502` | `{ error: 'send_failed' }` | Resend rejected or could not be reached |
+| `503` | `{ error: 'not_configured' }` | `RESEND_API_KEY` is not set |
+
+The contact page shows the success toast on `200`, a "Too many messages" toast on `429`, and a generic error toast otherwise. It keeps the typed text on failure.
+
+### Email format
+
+`buildEmail()` in `api/contact.js` sends both an HTML and a plain-text version:
+
+- **Subject:** `New message from <name> · harshx.in`
+- **Layout:** a light card (table layout with inline styles, so it renders the same in Gmail, Outlook and Apple Mail) with a "Harsh Raj / harshx.in" header, the title "New message from <name>", the time received in IST, a sender row (initial avatar, name, email and a small **Reply** button), and the message with its word count.
+- **Reply:** both the Reply button and the mail app's own Reply go to the visitor, because `reply_to` is their address.
+- **Ref ID:** each email gets a short reference ID in the footer and in an `X-Entity-Ref-ID` header, so Gmail doesn't merge separate messages into one thread.
+- The email declares a light colour scheme so mail apps in dark mode don't recolour it.
+
 ### Resend setup
 
 1. In the [Resend dashboard](https://resend.com/domains), add and verify the sending domain (`harshx.in`) by adding the DNS records it lists.
 2. Create an API key with **Sending access** (optionally limited to that domain).
 3. Add `RESEND_API_KEY` (plus `CONTACT_TO_EMAIL` / `CONTACT_FROM_EMAIL` if you want to override the defaults) to `.env.local` and to the Vercel environment variables. `CONTACT_FROM_EMAIL` must use the verified domain.
 4. Restart `npm run dev`, send a test message from `/contact`, and check the inbox (and spam folder).
+
+Defaults when the variables are not set: `CONTACT_TO_EMAIL` = `rajharsh.devx@gmail.com`, `CONTACT_FROM_EMAIL` = `Portfolio <contact@harshx.in>`. No DNS record is needed for the `contact@` part: any address on the verified domain can send.
+
+**Troubleshooting**
+
+- **No email arrives:** look for a `[contact] Resend error ...` line in the `npm run dev` terminal (locally) or in the Vercel function logs. The API key, message text and visitor details are never logged.
+- **`403` from Resend:** `CONTACT_FROM_EMAIL` doesn't use the verified domain, or the domain isn't verified yet.
+- **Lands in spam:** make sure the SPF and DKIM records from Resend show as verified, and add the optional DMARC record.
+- **Works locally but not on Vercel:** the three variables are missing from the Vercel project, or the deployment ran before they were added (redeploy).
 
 ---
 
