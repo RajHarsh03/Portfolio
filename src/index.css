@@ -5,7 +5,7 @@
     --bg: #0a0a0a;
     --bg-secondary: #111111;
     --surface: #111111;
-    --border: rgba(255, 255, 255, 0.1);
+    --border: rgba(255, 255, 255, 0.16);
     --accent: #e2e8f0;
     --accent-hover: #ffffff;
     --accent2: #a0aec0;
@@ -38,7 +38,7 @@
     --bg: #e8e8e8;
     --bg-secondary: #efefef;
     --surface: #f0f0f0;
-    --border: rgba(0, 0, 0, 0.1);
+    --border: rgba(0, 0, 0, 0.16);
     --accent: #111111;
     --accent-hover: #000000;
     --accent2: #555555;
@@ -8571,7 +8571,7 @@ footer {
 .gb-composer {
     border-radius: 20px !important;
     background: color-mix(in srgb, var(--text) 5%, var(--bg));
-    border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 15%, transparent);
 }
 
 .gb-signin-btn,
@@ -8780,7 +8780,7 @@ footer {
     margin: 0 0 1rem;
     padding: 1.15rem 1.3rem 1rem;
     break-inside: avoid;
-    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text) 15%, transparent);
     border-radius: 20px !important;
     background: color-mix(in srgb, var(--text) 5%, var(--bg));
     background-image: none;
