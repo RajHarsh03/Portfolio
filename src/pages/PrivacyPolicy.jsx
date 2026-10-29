@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import LegalPage from '../components/legal/LegalPage.jsx';
 
 const UPDATED      = 'October 2026';
-const UPDATED_ISO  = '2026-10-22';
+const UPDATED_ISO  = '2026-10-28';
 const EMAIL        = 'rajharsh.devx@gmail.com';
 
 const SEO = {
@@ -14,7 +14,7 @@ const SEO = {
     '@type': 'PrivacyPolicy',
     name: 'Privacy Policy',
     headline: 'Privacy Policy for harshx.in',
-    description: 'How harshx.in collects, uses, and protects information when you browse the site or sign in with Google.',
+    description: 'How harshx.in collects, uses, and protects information when you browse the site or sign in to the guestbook.',
     url: 'https://harshx.in/privacy',
     dateModified: UPDATED_ISO,
     inLanguage: 'en',
@@ -40,18 +40,20 @@ const SECTIONS = [
           three things: sign in, post a note, or send me a message.
         </p>
 
-        <h3 className="legal-subtitle">Google account information</h3>
+        <h3 className="legal-subtitle">Sign-in account information</h3>
         <p className="legal-para">
-          Sign in with Google and Google passes across your basic profile, once you approve
-          it: your name, email address, profile picture, and a unique user ID. I{' '}
+          Guestbook sign-in is handled by Clerk. Sign in with Google and, once you approve it,
+          Google passes your basic profile to Clerk: your name, email address, and profile
+          picture. Clerk keeps these in an account record with a unique user ID. I{' '}
           <mark className="legal-mark">never see your Google password</mark>, and I have no way
           to ask for it.
         </p>
 
         <h3 className="legal-subtitle">Guestbook information</h3>
         <p className="legal-para">
-          The note you write, plus the name and picture shown beside it, the time it went up,
-          and a record of who liked it so one person cannot like the same note twice.
+          The note you write, plus the name and picture shown beside it, your Clerk user ID, the
+          time it went up, and a record of who liked it so one person cannot like the same note
+          twice. Your email address is not saved with your note.
         </p>
 
         <h3 className="legal-subtitle">Contact form information</h3>
@@ -62,11 +64,12 @@ const SECTIONS = [
 
         <h3 className="legal-subtitle">Visitor counting</h3>
         <p className="legal-para">
-          The home page shows a running total of visitors. To maintain an approximate unique
-          visitor count, I may use a short-lived hash derived from your IP address, browser
-          user-agent, and date. The hash may be retained for up to 48 hours.{' '}
-          <mark className="legal-mark">The raw IP address is not stored</mark> or linked to
-          your account.
+          The strip above the footer shows a running total of visitors. To count each visitor
+          roughly once a day, the server keeps a short hash made from your IP address, browser
+          user-agent, and the date, plus a separate hash of your IP address that limits how
+          many visitors one network can add in a day. Both hashes expire after about 48
+          hours. <mark className="legal-mark">The raw IP address is not stored</mark> or linked
+          to your account.
         </p>
       </>
     ),
@@ -97,36 +100,39 @@ const SECTIONS = [
     ),
   },
   {
-    id: 'google-sign-in',
-    toc: 'Google Sign-In',
-    heading: 'Google Sign-In',
+    id: 'guestbook-sign-in',
+    toc: 'Guestbook Sign-In',
+    heading: 'Guestbook Sign-In',
     body: (
       <>
         <p className="legal-para">
-          The Guestbook uses Google Sign-In so you can leave a note without making yet
-          another password. Press sign in and a Google window opens. You decide whether to
-          continue, and nothing happens if you don't. I ask for basic profile information
-          only.
+          The Guestbook uses Clerk so you can leave a note without making yet another password.
+          Press sign in and a Clerk sign-in window opens, with Google as the way in. You decide
+          whether to continue, and nothing happens if you don't. Only basic profile information
+          is requested. While you sign in or sign up, Clerk may run a quick automated bot check
+          through Cloudflare Turnstile.
         </p>
         <p className="legal-para">
           You can revoke this site whenever you like from the security settings in your Google
-          Account. Google's own Privacy Policy covers your account and whatever Google chooses
-          to share with me.
+          Account. Google's own Privacy Policy covers your Google account and what Google shares
+          during sign-in, and Clerk's Privacy Policy covers the account record Clerk keeps.
         </p>
       </>
     ),
   },
   {
-    id: 'firebase-authentication',
-    toc: 'Firebase Authentication',
-    heading: 'Firebase Authentication',
+    id: 'clerk-and-supabase',
+    toc: 'Clerk & Supabase',
+    heading: 'Clerk & Supabase',
     body: (
       <>
         <p className="legal-para">
-          Sign-in runs through Firebase Authentication, part of Google's Firebase platform.
-          Firebase creates the account record that stands in for you here and manages your
-          session, which is why this site never handles a password of its own. Your notes live
-          in Cloud Firestore, the database in the same Firebase project.
+          Clerk creates the account record that stands in for you here and manages your
+          session, which is why this site never handles a password of its own. Your notes and
+          likes live in a Supabase Postgres database. Each request your browser makes to it
+          carries your Clerk session token, and the database checks that token before it lets
+          you post or like anything. New notes, likes, and pins reach anyone with the
+          Guestbook open straight away, through Supabase Realtime.
         </p>
       </>
     ),
@@ -141,17 +147,22 @@ const SECTIONS = [
           harshx.in runs on a handful of services. Each does one job:
         </p>
         <ul className="legal-list">
-          <li><strong>Firebase</strong> (Google) - sign-in and the guestbook database.</li>
-          <li><strong>Vercel</strong> - hosting for the site.</li>
-          <li><strong>Upstash</strong> - the counter behind the visitor total.</li>
+          <li><strong>Clerk</strong> - guestbook sign-in, account records, and sessions.</li>
+          <li><strong>Google</strong> - the sign-in option offered in the Clerk window.</li>
+          <li><strong>Supabase</strong> - the database that holds guestbook notes and likes.</li>
+          <li><strong>Vercel</strong> - hosting for the site, plus the small server functions behind the visitor total and the music widget.</li>
+          <li><strong>Upstash</strong> - stores the counter behind the visitor total.</li>
           <li><strong>EmailJS</strong> - carries contact-form messages to my inbox.</li>
-          <li><strong>GitHub</strong> - public information such as my repositories and profile picture.</li>
+          <li><strong>GitHub</strong> - public information such as my repositories and profile picture, and the Gists that hold some page content.</li>
+          <li><strong>Spotify</strong> - the song I'm listening to. The site's own server asks Spotify, so your browser doesn't contact it.</li>
+          <li><strong>Open-Meteo</strong> - the current temperature in Kolkata on the home page.</li>
         </ul>
         <p className="legal-para">
-          Loading a page also pulls fonts, an icon set, and a couple of small scripts from
-          public CDNs, and reads one public contribution API. Each of them keeps its own
-          technical logs under its own privacy policy. Outside these, your information doesn't
-          go anywhere.
+          Loading a page also pulls fonts from Google Fonts, icons and the contact-form script
+          from jsDelivr, project images from ImageKit, the cat animation script from GitHub
+          Pages, and contribution data from a public GitHub contributions API. Each of them
+          keeps its own technical logs under its own privacy policy. Outside these, your
+          information doesn't go anywhere.
         </p>
       </>
     ),
@@ -189,14 +200,31 @@ const SECTIONS = [
     body: (
       <>
         <p className="legal-para">
-          harshx.in sets <mark className="legal-mark">no cookies of its own</mark>. Google may
-          set some inside the sign-in window while you authenticate, and those belong to Google.
+          harshx.in uses <mark className="legal-mark">no analytics or advertising cookies</mark>.
+          The cookies it does use come from Clerk, which loads with every page so it knows
+          whether you're signed in. Clerk sets the cookies it needs for authentication on
+          harshx.in and its sign-in subdomain, mainly to keep your Guestbook session going
+          after you sign in. Google may set its own cookies inside its sign-in window, and
+          Cloudflare may do the same during the bot check.
         </p>
         <p className="legal-para">
-          The site does keep a few small things on your device: your theme choice, short-lived
-          copies of content so pages load faster, and a note of your sign-in so the Guestbook
-          remembers you during the visit. Clear them whenever you like in your browser
-          settings. All that does is sign you out and reset these preferences.
+          The site also keeps a few small things in your browser's storage:
+        </p>
+        <ul className="legal-list">
+          <li>Your theme choice (<code>pf-theme</code>).</li>
+          <li>
+            Short-lived copies of content so pages load faster: GitHub projects, profile and
+            favicon, Gist content, guestbook notes, and the last song shown in the music widget.
+          </li>
+          <li>
+            For the current tab only: a flag so your visit is counted once per session
+            (<code>pf_visit_counted</code>), the quote on display, and a short flag that shows a
+            confirmation after you sign in.
+          </li>
+        </ul>
+        <p className="legal-para">
+          Clear them whenever you like in your browser settings. All that does is sign you out
+          and reset these preferences.
         </p>
       </>
     ),
@@ -208,11 +236,12 @@ const SECTIONS = [
     body: (
       <>
         <p className="legal-para">
-          Everything runs over HTTPS, and the database sits behind security rules that decide
-          what a visitor may read and write. A signed-in visitor can post a note and like
-          notes. They cannot edit or delete what someone else posted, and only I can remove
-          notes. <mark className="legal-mark">There are no passwords stored anywhere</mark> on
-          the site.
+          Everything runs over HTTPS, and the database uses Row Level Security rules that check
+          your Clerk session before deciding what you may write. Anyone can read the wall. A
+          signed-in visitor can post a note and like each note once. Visitors cannot edit or
+          remove posted notes, and only I can pin or delete them.{' '}
+          <mark className="legal-mark">The site itself never handles or stores a
+          password</mark>.
         </p>
         <p className="legal-note">
           No site can promise complete security, and guestbook notes are public by design.
@@ -233,8 +262,9 @@ const SECTIONS = [
           <li>Confirm what personal information of yours is on the site.</li>
           <li>Correct it - usually by taking your note down so you can post a better one.</li>
           <li>
-            Delete it. Tell me which note and I'll remove it along with its like records,{' '}
-            <mark className="legal-mark">within 30 days</mark>.
+            Delete it. Tell me which notes and I'll remove them along with their like records,
+            and on request I'll also delete your Clerk account record (your name, email, and
+            picture), <mark className="legal-mark">within 30 days</mark>.
           </li>
           <li>
             Stop collecting anything further. Sign out, clear site data, or simply browse
@@ -310,8 +340,8 @@ export default function PrivacyPolicy() {
       intro={
         <p className="legal-para">
           harshx.in is one developer's portfolio. It makes nothing from your data and mostly
-          would rather not have it. The site reads fine without an account - Google only enters
-          the picture if you choose to leave a note on the guestbook wall.
+          would rather not have it. The site reads fine without an account - sign-in only
+          enters the picture if you choose to leave a note on the guestbook wall.
         </p>
       }
       closing={

@@ -11,7 +11,7 @@
 
 <br/>
 
-> **Personal portfolio of Harsh Raj** - a fast, fully-featured React SPA with dark/light theme, live GitHub data, DOM-based contribution heatmap, live Spotify now-playing widget, oneko.js cat companion, circular GitHub favicon, and a Gist-powered CMS for experiences, internships, and certificates.
+> **Personal portfolio of Harsh Raj** - a fast, fully-featured React SPA with dark/light theme, live GitHub data, DOM-based contribution heatmap, live Spotify now-playing widget, oneko.js cat companion, circular GitHub favicon, a Clerk + Supabase guestbook, and a Gist-powered CMS for experiences, internships, and certificates.
 
 </div>
 
@@ -30,7 +30,8 @@
 **GitHub Heatmap** - DOM-rendered contribution graph, monochrome style, contribution count + less/more legend\
 **Contact Form** - EmailJS + toast feedback\
 **Spotify Widget** - live now-playing / last-played mini player in the hero, polls every 30 seconds\
-**Firebase Guestbook** - Google sign-in and real-time visitor notes
+**Guestbook** - Clerk sign-in (Google), notes and likes in Supabase with realtime updates, pinned-first grid, loading skeletons, admin pin/delete\
+**Back-to-Top Button** - floating button with a ring that fills as you scroll
 
 </td>
 <td width="50%">
@@ -44,7 +45,9 @@
 **Experience Cards** - collapsible cards with tech stack icons\
 **Gist CMS** - manage content without redeployment\
 **Quote Strip** - rotating developer quotes above the footer\
-**Typing Effect** - animated typing in hero section
+**Typing Effect** - animated typing in hero section\
+**Animated Theme Icon** - moon/sun icon rotates and the sun rays stagger in on toggle\
+**Thin Scrollbar** - slim page scrollbar on desktop, hidden on mobile
 
 </td>
 </tr>
@@ -66,7 +69,8 @@
 | Data | **GitHub REST API** + **EmailJS** |
 | Spotify | **Custom `/api/now-playing`** serverless endpoint |
 | Visit Counter | **Upstash Redis** via Vercel serverless |
-| Guestbook | **Firebase Authentication** + **Cloud Firestore** |
+| Guestbook auth | **Clerk** (`@clerk/react`, Google sign-in) |
+| Guestbook data | **Supabase** Postgres + Row Level Security + Realtime (`@supabase/supabase-js`) |
 | Deployment | **Vercel** |
 
 </div>
@@ -84,7 +88,7 @@
 | `/projects/:id` | Project Detail - full overview, tech stack, features, highlights, challenges (Gist-powered) |
 | `/contact` | Contact - EmailJS form with toast feedback + social links |
 | `/about` | About - bio, education, collapsible experience cards with tech stack icons, certificates |
-| `/guestbook` | Guestbook - Google sign-in and real-time visitor notes |
+| `/guestbook` | Guestbook - Clerk sign-in, live visitor notes and likes, pinned notes first |
 | `/privacy` | Privacy Policy |
 | `/terms` | Terms of Service |
 | `*` | 404 - Page not found |
@@ -99,11 +103,13 @@
 Portfolio/
 |-- index.html                  # SPA shell - single HTML entry point
 |-- vite.config.js
-|-- vercel.json                 # SPA rewrites + /api route
+|-- vercel.json                 # SPA rewrites + /api route + security headers (CSP)
 |-- package.json
 |
 |-- public/
 |   |-- favicon.png             # Default favicon
+|   |-- apple-touch-icon.png    # iOS home-screen icon
+|   |-- og-image.jpg            # Open Graph / Twitter card image
 |   +-- Resume.pdf              # Served from /Resume.pdf
 |
 |-- api/                        # Vercel serverless functions
@@ -111,7 +117,7 @@ Portfolio/
 |   +-- visits.js               # Upstash Redis visit counter
 |
 +-- src/
-    |-- main.jsx                # BrowserRouter + HelmetProvider + ThemeProvider
+    |-- main.jsx                # BrowserRouter + HelmetProvider + ThemeProvider + ClerkThemeProvider
     |-- App.jsx                 # Route definitions + AppShell wrapper
     |-- index.css               # Full design system + all component styles
     |
@@ -138,17 +144,21 @@ Portfolio/
     |   +-- circularFavicon.js       # Fetches GitHub avatar, renders as circular favicon
     |
     |-- services/
-    |   |-- firebase.js                  # Firebase Auth + Firestore client
+    |   |-- supabase.js                  # Supabase client, sends the Clerk session token
+    |   |-- githubUser.js                # Shared GitHub user lookup (repo count, avatar) + cache
     |   |-- githubProjects.js            # Fetch + normalise portfolio repos
     |   |-- projectDetailsGist.js        # Fetch project details from Gist
     |   |-- githubContributions.js       # Fetch contribution heatmap data
     |   +-- gistContent.js               # Gist CMS - fetch + fallback
     |
     |-- components/
+    |   |-- ClerkThemeProvider.jsx  # ClerkProvider styled to follow the site's dark/light theme
+    |   |
     |   |-- layout/
-    |   |   |-- Navbar.jsx          # Pill nav - tabs, GitHub icon, theme toggle
+    |   |   |-- Navbar.jsx          # Pill nav - tabs, GitHub icon, animated theme toggle
     |   |   |-- Footer.jsx          # Footer + legal links
-    |   |   +-- ScrollProgress.jsx  # Top gradient progress bar
+    |   |   |-- ScrollProgress.jsx  # Top gradient progress bar
+    |   |   +-- ScrollToTopButton.jsx # Back-to-top button with a scroll-progress ring
     |   |
     |   |-- home/
     |   |   |-- Hero.jsx            # Hero section - avatar, name, CTA, socials, Spotify mini player
@@ -175,7 +185,7 @@ Portfolio/
         |-- Projects.jsx           # Full grid - category filter pills, incremental mobile load
         |-- ProjectDetail.jsx      # Individual project page with Gist-powered details
         |-- Contact.jsx            # EmailJS form + toast
-        |-- Guestbook.jsx          # Google sign-in + Firestore notes
+        |-- Guestbook.jsx          # Clerk sign-in + Supabase notes, likes, realtime
         |-- PrivacyPolicy.jsx      # /privacy
         |-- TermsOfService.jsx     # /terms
         +-- NotFound.jsx           # 404
@@ -213,15 +223,24 @@ SPOTIFY_CLIENT_ID=your_spotify_client_id
 SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
 SPOTIFY_REFRESH_TOKEN=your_spotify_refresh_token
 
-# Firebase (client-side, VITE_ prefix required)
-VITE_FIREBASE_API_KEY=your_firebase_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your-project-id
-VITE_FIREBASE_STORAGE_BUCKET=your-project.firebasestorage.app
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-VITE_FIREBASE_APP_ID=your_app_id
-VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
+# Visit counter (serverless API) - Upstash Redis REST credentials
+# The Vercel KV / Upstash integration sets KV_REST_API_*; UPSTASH_REDIS_REST_* also works
+KV_REST_API_URL=https://your-db.upstash.io
+KV_REST_API_TOKEN=your_upstash_token
+
+# Clerk (client-side, VITE_ prefix required)
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_or_pk_live_key
+
+# Supabase (client-side, VITE_ prefix required)
+VITE_SUPABASE_URL=https://your-project-ref.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_key
+# Legacy fallback, used only when VITE_SUPABASE_PUBLISHABLE_KEY is not set
+# VITE_SUPABASE_ANON_KEY=your_legacy_anon_key
 ```
+
+- `VITE_*` values are bundled into the browser code, so only use public keys there. The Supabase publishable key is safe in the browser because Row Level Security decides what each request may do.
+- `CLERK_SECRET_KEY` is not needed. The site only uses Clerk in the browser and has no server code that calls Clerk.
+- Without the Supabase values the guestbook shows "temporarily unavailable"; the rest of the site still works.
 
 ---
 
@@ -238,9 +257,10 @@ VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
 
 ### Content Security Policy
 
-`vercel.json` sends a full CSP as `Content-Security-Policy-Report-Only` on every path except the Firebase auth proxy (`/__/auth/*`). Report-only means the browser blocks nothing. It only logs what it would block. There is no reporting endpoint, so violations appear in the DevTools Console as messages starting with `[Report Only] Refused to ...`. The separate enforced `Content-Security-Policy: frame-ancestors 'self'` header stays in place.
+`vercel.json` sends a full CSP as `Content-Security-Policy-Report-Only` on every path, alongside the other security headers (HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `X-Frame-Options`). Report-only means the browser blocks nothing. It only logs what it would block. There is no reporting endpoint, so violations appear in the DevTools Console as messages starting with `[Report Only] Refused to ...`. The separate enforced `Content-Security-Policy: frame-ancestors 'self'` header stays in place.
 
 - **Checking:** open each page (including Contact send and Guestbook sign-in, post, like) with DevTools Console open and look for `[Report Only]` messages. A new third-party origin (script, image, API) must be added to the matching directive.
+- **Guestbook origins:** Clerk loads from its Frontend API (`https://clerk.harshx.in` in production, `https://*.clerk.accounts.dev` in development) and uses `https://img.clerk.com` (avatars), `https://*.protect.clerk.com` and `https://challenges.cloudflare.com` (bot protection / Cloudflare Turnstile), and `https://clerk-telemetry.com`. Google profile images come from `https://lh3.googleusercontent.com`. Supabase needs `https://*.supabase.co` for the REST API and `wss://*.supabase.co` for Realtime in `connect-src`.
 - **Inline theme script:** `index.html` has one inline script, allowed by its `sha256-...` hash in `script-src`. Any edit to that script, even whitespace, changes the hash. Recompute it after `npm run build` with:
   ```bash
   node -e "const h=require('fs').readFileSync('dist/index.html','utf8');const s=h.match(/<script>([\s\S]*?)<\/script>/)[1];console.log('sha256-'+require('crypto').createHash('sha256').update(s).digest('base64'))"
@@ -251,34 +271,49 @@ VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
 
 ---
 
-## Firebase Guestbook Setup
+## Guestbook setup (Clerk + Supabase)
 
-The Guestbook uses **Google Authentication** for sign-in and **Cloud Firestore** for persistent notes. Firebase Storage is not required unless visitor file or image uploads are added later.
+**Clerk** handles sign-in (Google) and sessions. **Supabase** stores notes and likes in Postgres. The browser Supabase client (`src/services/supabase.js`) sends the current Clerk session token with every request through Supabase **Third-Party Auth**, and **Row Level Security** checks it. Signed-out visitors use the publishable key and can only read. New, updated and deleted notes arrive live through **Supabase Realtime**.
 
-### Firebase console setup
+### 1. Clerk
 
-1. Create or open the Firebase project.
-2. Enable **Authentication > Sign-in method > Google**.
-3. Add the deployed domains under **Authentication > Settings > Authorized domains**.
-4. Create a Cloud Firestore database.
-5. Create the `guestbook_entries` collection.
-6. Publish rules that allow public reads, authenticated creates for the signed-in user, and prevent untrusted updates.
+1. Create an application in the [Clerk Dashboard](https://dashboard.clerk.com) and enable **Google** under **SSO connections**.
+2. Copy the publishable key into `VITE_CLERK_PUBLISHABLE_KEY`.
+3. Activate the **Supabase integration** in Clerk (Integrations > Supabase). It adds the `role: "authenticated"` claim to session tokens and shows your **Clerk domain**.
 
-Expected note fields:
+### 2. Supabase
 
-| Field | Type | Purpose |
-|:------|:-----|:--------|
-| `userId` | string | Firebase Authentication user ID |
-| `displayName` | string | Google display name |
-| `photoURL` | string | Google profile image URL |
-| `authorRole` | string | `Admin` or `Visitor` |
-| `message` | string | Visitor note, up to 100 words / 500 characters |
-| `createdAt` | timestamp | Server-generated creation time |
-| `likes` | number | Like count |
-| `likedUserIds` | array | User IDs that liked the note |
-| `pinned` | boolean | Pinned by the admin, shown in the Pinned Notes marquee |
+1. Create a Supabase project. Copy the Project URL into `VITE_SUPABASE_URL` and the publishable key into `VITE_SUPABASE_PUBLISHABLE_KEY` (the legacy anon key also works through `VITE_SUPABASE_ANON_KEY`).
+2. In **Authentication > Sign In / Providers > Third-Party Auth**, add **Clerk** with the Clerk domain. Development and production Clerk instances have different domains (`*.clerk.accounts.dev` and `clerk.harshx.in`), so add both.
+3. Create the tables, policies and functions below in the SQL Editor (the SQL was run once there and is not kept in this repo), and enable Realtime for `guestbook_notes`.
 
-The Home page links to the guestbook. The `/guestbook` page subscribes to the latest notes in real time and provides Google sign-in, note submission, and toast feedback.
+**Schema summary**
+
+| Table / function | Contents |
+|:-----------------|:---------|
+| `guestbook_notes` | `id`, `user_id` (Clerk user ID), `display_name`, `photo_url`, `message` (max 500 characters / 100 words), `author_role` (`Admin` or `Visitor`), `pinned`, `pinned_at`, `likes_count`, `liked_by_admin`, `created_at`, `legacy_id` (notes migrated from Firestore) |
+| `guestbook_likes` | `note_id`, `user_id` - one like per user per note (unique), no unlike |
+| `guestbook_admins` | Clerk user IDs of admins |
+| `is_admin()` | Returns `true` when the caller's Clerk user ID is in `guestbook_admins`; the page calls it as an RPC |
+
+**RLS summary**
+
+- Anyone can read notes.
+- A signed-in user can insert a note. The database sets `user_id` from the Clerk token, plus `author_role`, likes, pin state and `created_at`. The client only sends `display_name`, `photo_url` and `message`; email addresses are not stored.
+- A signed-in user can like a note once. A database trigger updates the note's `likes_count`.
+- Only admins can pin, unpin and delete notes.
+
+### 3. Admin access
+
+Add your Clerk user ID (`user_...`, from **Clerk Dashboard > Users**) to `guestbook_admins`. Development and production Clerk instances give the same person different user IDs, so add the ID from each instance you use.
+
+### 4. Production
+
+- Create a **production instance** in Clerk for `harshx.in`, add the DNS records it lists, and set the production publishable key (`pk_live_...`) as `VITE_CLERK_PUBLISHABLE_KEY` in Vercel. Development keys (`pk_test_...`) show Clerk's **Development mode** banner in the sign-in modal; production keys remove it.
+- Production Google sign-in needs your own OAuth credentials. In Google Cloud Console, create an OAuth client ID (Web application), add the **Authorized redirect URI** shown in Clerk under **SSO connections > Google** with **Use custom credentials** on, then paste the client ID and secret back into Clerk. Publish the OAuth consent screen so any Google account can sign in.
+- Add the production Clerk domain to Supabase Third-Party Auth and the production admin user ID to `guestbook_admins` (steps 2 and 3).
+
+The Home page links to the guestbook. The `/guestbook` page shows pinned notes first (newest pin first), then the newest notes, and provides Clerk sign-in, note submission, likes, admin pin/delete, loading skeletons and toast feedback.
 
 ---
 
@@ -482,6 +517,9 @@ GET  /api/visits  >  Returns total count without incrementing
 ```
 
 Backed by **Upstash Redis** (Vercel KV). In local dev it reads from the live production endpoint so the counter is always visible.
+
+- The browser POSTs once per session (`pf_visit_counted` in `sessionStorage`), and only POSTs from the site's own origins are accepted.
+- Each visitor key is a SHA-256 hash of IP + user-agent + date (IST); a separate hash of the IP caps new visitors at 3 per IP per day. Both keys expire after 48 hours, and raw IPs are never stored.
 
 ---
 

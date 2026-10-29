@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import LegalPage from '../components/legal/LegalPage.jsx';
 
 const UPDATED      = 'October 2026';
-const UPDATED_ISO  = '2026-10-22';
+const UPDATED_ISO  = '2026-10-28';
 const EMAIL        = 'rajharsh.devx@gmail.com';
 
 const SEO = {
@@ -14,7 +14,7 @@ const SEO = {
     '@type': 'CreativeWork',
     name: 'Terms of Service',
     headline: 'Terms of Service for harshx.in',
-    description: 'The terms that apply when you browse harshx.in, sign in with Google, or post a note on the guestbook.',
+    description: 'The terms that apply when you browse harshx.in, sign in to the guestbook, or post a note on it.',
     url: 'https://harshx.in/terms',
     dateModified: UPDATED_ISO,
     inLanguage: 'en',
@@ -61,21 +61,21 @@ const SECTIONS = [
     ),
   },
   {
-    id: 'accounts-and-google-sign-in',
-    toc: 'Accounts & Google Sign-In',
-    heading: 'User Accounts & Google Sign-In',
+    id: 'accounts-and-sign-in',
+    toc: 'Accounts & Sign-In',
+    heading: 'User Accounts & Sign-In',
     body: (
       <>
         <p className="legal-para">
-          There's no password to make here. Sign in with Google and you have a guestbook
-          identity, handled by Firebase Authentication. I{' '}
+          There's no password to make here. Sign in with Google through Clerk, the sign-in
+          service the guestbook uses, and you have a guestbook identity. I{' '}
           <mark className="legal-mark">never receive your Google password</mark>. Google only
           shares the basic profile information you authorize during sign-in.
         </p>
         <p className="legal-para">
           You're responsible for anything posted from your account. Signing in is optional -
           the whole site reads fine without it - and signing out is one press away. Your Google
-          account itself stays under Google's terms.
+          account itself stays under Google's terms, and your sign-in account under Clerk's.
         </p>
       </>
     ),
@@ -166,8 +166,9 @@ const SECTIONS = [
     body: (
       <>
         <p className="legal-para">
-          The site leans on services I don't control: Google (Sign-In and Firebase), EmailJS,
-          GitHub, and Vercel. Each comes with its own terms and privacy policy.
+          The site leans on services I don't control: Clerk (sign-in), Google (as a sign-in
+          option), Supabase (the guestbook database), EmailJS, GitHub, Spotify, Upstash, and
+          Vercel. Each comes with its own terms and privacy policy.
         </p>
         <p className="legal-para">
           Links take you away from harshx.in, and once you're there the destination sets the
@@ -232,7 +233,8 @@ const SECTIONS = [
     body: (
       <>
         <p className="legal-para">
-          You can walk away at any time, and signing out ends your session. If these terms are
+          You can walk away at any time, and signing out ends your session. Email me if you
+          want your notes or your sign-in account removed as well. If these terms are
           broken, access to the guestbook features can be withdrawn and notes can be removed.
           If you've already asked me to delete your information, I'll still honour that, however
           your access ended.
