@@ -128,6 +128,29 @@ function GuestbookCard({ entry, user, isAdmin, hasLiked, onLike, onRequireLogin,
     </article>
   );
 }
+// Placeholder note cards shown while notes load (varied heights for the masonry grid).
+const NOTE_SKELETONS = [1, 3, 2, 2];
+
+function NoteSkeleton({ lines }) {
+  return (
+    <div className="guestbook-card gbn-card gbn-card-skeleton" aria-hidden="true">
+      {Array.from({ length: lines }, (_, index) => (
+        <span className={`gb-skel gbn-skel-line${index === lines - 1 ? ' is-last' : ''}`} key={index} />
+      ))}
+      <div className="gbn-footer">
+        <div className="gbn-author">
+          <span className="gb-skel gbn-skel-avatar" />
+          <span className="gbn-who">
+            <span className="gb-skel gbn-skel-name" />
+            <span className="gb-skel gbn-skel-role" />
+          </span>
+        </div>
+        <span className="gb-skel gbn-skel-meta" />
+      </div>
+    </div>
+  );
+}
+
 export default function Guestbook() {
   const initialEntries = readCachedEntries();
   // Clerk handles sign-in; Supabase receives the Clerk session token on every
@@ -143,7 +166,8 @@ export default function Guestbook() {
     displayName: clerkUser.fullName || clerkUser.username || 'Visitor',
     photoURL: clerkUser.imageUrl || '',
   } : null;
-  const authLoading = supabaseReady && (!clerkLoaded || (isSignedIn && (!clerkUser || isAdmin === null)));
+  // Only wait for Clerk itself; the admin check fills in afterwards without blocking the composer.
+  const authLoading = supabaseReady && (!clerkLoaded || (isSignedIn && !clerkUser));
   const [entries, setEntries] = useState(initialEntries);
   const [synced, setSynced] = useState(false);
   const [message, setMessage] = useState('');
@@ -363,21 +387,10 @@ export default function Guestbook() {
           {!supabaseReady ? (
             <p className="guestbook-muted">This section is temporarily unavailable. Please try again later.</p>
           ) : authLoading ? (
-            <div className="guestbook-auth-loading" role="status" aria-live="polite" aria-label="Checking your session">
-              <div className="guestbook-auth-skeleton">
-                <span className="guestbook-skel-line is-avatar" aria-hidden="true" />
-                <div className="guestbook-skel-stack">
-                  <span className="guestbook-skel-line is-title" aria-hidden="true" />
-                  <span className="guestbook-skel-line is-meta" aria-hidden="true" />
-                </div>
-                <span className="guestbook-skel-line is-button" aria-hidden="true" />
-              </div>
-              <span className="guestbook-skel-line is-block" aria-hidden="true" />
-              <span className="guestbook-skel-line is-input" aria-hidden="true" />
-              <div className="guestbook-auth-status">
-                <span className="guestbook-auth-loader" aria-hidden="true"><span /></span>
-                Checking your session…
-              </div>
+            <div className="gb-signin gb-signin-loading" role="status" aria-live="polite" aria-label="Loading sign-in">
+              <span className="gb-skel gb-skel-icon" aria-hidden="true" />
+              <span className="gb-skel gb-skel-text" aria-hidden="true" />
+              <span className="gb-skel gb-skel-btn" aria-hidden="true" />
             </div>
           ) : user ? (
             <form className="gb-composer" onSubmit={handleSubmit}>
@@ -418,7 +431,7 @@ export default function Guestbook() {
 
         <div className="guestbook-notes">
           <div className="guestbook-notes-heading"><div><p className="section-label">// recent messages</p><h2>Voices From Visitors</h2></div></div>
-          {loading ? <div className="guestbook-empty-state"><p className="guestbook-muted">Loading notes...</p></div> : entries.length === 0 ? <div className="guestbook-empty-state"><p>No notes yet.</p><small>Be the first to say hello.</small></div> : <>
+          {loading ? <div className="guestbook-grid gbn-skeleton-grid" role="status" aria-live="polite" aria-label="Loading notes">{NOTE_SKELETONS.map((lines, index) => <NoteSkeleton lines={lines} key={index} />)}</div> : entries.length === 0 ? <div className="guestbook-empty-state"><p>No notes yet.</p><small>Be the first to say hello.</small></div> : <>
             <div className="guestbook-grid">{sortedEntries.map(entry => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} hasLiked={Boolean(user && likedIds.has(entry.id))} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={entry.id} />)}</div>
           </>}
         </div>
