@@ -3,7 +3,7 @@ import Home from '../pages/Home.jsx';
 
 // Home stays in the entry chunk so the landing page renders without a fallback.
 // Every other page is split into its own chunk. Guestbook is the only page that
-// imports Firebase, so the Firebase SDK is downloaded only when it is visited.
+// imports Supabase, so the Supabase SDK is downloaded only when it is visited.
 const loaders = {
   Projects: () => import('../pages/Projects.jsx'),
   ProjectDetail: () => import('../pages/ProjectDetail.jsx'),
@@ -25,7 +25,7 @@ const TermsOfService = lazy(loaders.TermsOfService);
 const NotFound = lazy(loaders.NotFound);
 
 // Warm the light page chunks once the browser is idle. Guestbook is left out
-// so Firebase is not fetched until the guestbook is actually opened.
+// so Supabase is not fetched until the guestbook is actually opened.
 export function prefetchRoutes() {
   const run = () => Object.values(loaders).forEach((load) => load().catch(() => {}));
   if ('requestIdleCallback' in window) window.requestIdleCallback(run, { timeout: 3000 });

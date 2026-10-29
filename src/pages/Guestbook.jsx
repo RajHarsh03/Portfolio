@@ -1,29 +1,31 @@
 import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { addDoc, arrayUnion, collection, deleteDoc, doc, increment, limit, onSnapshot, orderBy, query, runTransaction, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { getRedirectResult, onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from 'firebase/auth';
-import { auth, authPersistenceReady, db, firebaseReady, googleProvider } from '../services/firebase.js';
+import { useAuth, useClerk, useUser } from '@clerk/react';
+import { supabase, supabaseReady } from '../services/supabase.js';
 import Toast from '../components/ui/Toast.jsx';
 import { useToast } from '../hooks/useToast.js';
 
-const NOTES_CACHE_KEY = 'guestbook_entries_cache_v1';
-const AUTH_CACHE_KEY = 'guestbook_auth_user_v1';
-const AUTH_REDIRECT_PENDING_KEY = 'guestbook_auth_redirect_pending_v1';
-const ADMIN_EMAIL = 'rajharsh.devx@gmail.com';
-const ADMIN_UID = 'VqE9wVvuIZXMoMjOlPtw8J3V6Go2';
+const NOTES_CACHE_KEY = 'guestbook_notes_cache_v2';
+const CLERK_SIGNIN_KEY = 'guestbook_clerk_signin_v1';
+const NOTE_COLUMNS = 'id, user_id, display_name, photo_url, message, author_role, pinned, pinned_at, likes_count, liked_by_admin, created_at';
+const NOTES_LIMIT = 100;
 
-const CANCELLED_CODES = new Set([
-  'auth/user-cancelled',
-  'auth/cancelled-popup-request',
-  'auth/popup-closed-by-user',
-  'auth/redirect-interrupted',
-]);
-const wasCancelled = (err) => CANCELLED_CODES.has(err?.code);
-
-// On local hosts the auth domain is a different origin (firebaseapp.com), and
-// browser storage partitioning breaks the redirect flow there, so use a popup.
-const isLocalHost = typeof window !== 'undefined'
-  && ['localhost', '127.0.0.1'].includes(window.location.hostname);
+// Database rows are snake_case; the cards and the cache use these camelCase fields.
+function toEntry(row) {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    displayName: row.display_name,
+    photoURL: row.photo_url,
+    message: row.message,
+    authorRole: row.author_role,
+    pinned: Boolean(row.pinned),
+    pinnedAt: row.pinned_at,
+    likes: row.likes_count || 0,
+    likedByAdmin: Boolean(row.liked_by_admin),
+    createdAt: row.created_at,
+  };
+}
 
 function readCachedEntries() {
   try {
@@ -36,55 +38,14 @@ function readCachedEntries() {
 
 function cacheEntries(entries) {
   try {
-    window.localStorage.setItem(NOTES_CACHE_KEY, JSON.stringify(entries.map(entry => ({
-      ...entry,
-      createdAt: entry.createdAt?.toMillis ? entry.createdAt.toMillis() : entry.createdAt,
-      pinnedAt: entry.pinnedAt?.toMillis ? entry.pinnedAt.toMillis() : entry.pinnedAt,
-    }))));
+    window.localStorage.setItem(NOTES_CACHE_KEY, JSON.stringify(entries));
   } catch {
   }
-}
-
-function readCachedUser() {
-  try {
-    return JSON.parse(window.sessionStorage.getItem(AUTH_CACHE_KEY) || 'null');
-  } catch {
-    return null;
-  }
-}
-
-function cacheUser(user) {
-  try {
-    window.sessionStorage.setItem(AUTH_CACHE_KEY, JSON.stringify({
-      uid: user.uid,
-      email: user.email || '',
-      displayName: user.displayName || 'Visitor',
-      photoURL: user.photoURL || '',
-    }));
-  } catch {
-    // Best-effort session hint only.
-  }
-}
-
-function clearCachedUser() {
-  try { window.sessionStorage.removeItem(AUTH_CACHE_KEY); } catch { /* no-op */ }
-}
-
-function hasPendingAuthRedirect() {
-  try {
-    return window.sessionStorage.getItem(AUTH_REDIRECT_PENDING_KEY) === '1';
-  } catch {
-    return false;
-  }
-}
-
-function clearPendingAuthRedirect() {
-  try { window.sessionStorage.removeItem(AUTH_REDIRECT_PENDING_KEY); } catch { /* no-op */ }
 }
 
 function formatDate(value) {
   if (!value) return 'Just now';
-  const date = value.toDate ? value.toDate() : new Date(value);
+  const date = new Date(value);
   const days = Math.floor((Date.now() - date.getTime()) / 86400000);
   if (days <= 0) return 'Today';
   if (days === 1) return 'Yesterday';
@@ -109,13 +70,10 @@ function hashString(value) {
   return hash;
 }
 
-function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, onDelete, showDelete = true }) {
+function GuestbookCard({ entry, user, isAdmin, hasLiked, onLike, onRequireLogin, onPin, onDelete, showDelete = true }) {
   const initial = (entry.displayName || 'V').charAt(0).toUpperCase();
   const entryIsAdmin = entry.authorRole === 'Admin'
-    || entry.authorEmail?.toLowerCase() === ADMIN_EMAIL
-    || entry.userId === ADMIN_UID
     || (entry.userId === user?.uid && isAdmin);
-  const hasLiked = Boolean(user?.uid && entry.likedUserIds?.includes(user.uid));
 
   async function handleLike() {
     if (!user) {
@@ -124,7 +82,7 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
     }
     try {
       if (!hasLiked) await onLike(entry);
-    } catch { /* The live listener will keep the displayed count unchanged. */ }
+    } catch { /* The displayed count stays as the server last reported it. */ }
   }
 
   const quoteColor = QUOTE_COLORS[hashString(entry.id || entry.message || '') % QUOTE_COLORS.length];
@@ -155,7 +113,7 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
             <span className="gbn-name">{entry.displayName || 'Visitor'}</span>
             <small className={`gbn-role`+(entryIsAdmin ? ' is-admin' : '')}>{entryIsAdmin ? 'Admin' : 'Visitor'}</small>
           </span>
-          {entry.likedBy?.includes('HR') && <span className="gbn-liked-by" title="Liked by Harsh Raj"><svg aria-hidden="true" viewBox="0 0 24 24" width="9" height="9" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>Liked by HR</span>}
+          {entry.likedByAdmin && <span className="gbn-liked-by" title="Liked by Harsh Raj"><svg aria-hidden="true" viewBox="0 0 24 24" width="9" height="9" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>Liked by HR</span>}
         </div>
         <div className="gbn-meta">
           <button type="button" className={`gbn-like${hasLiked ? ' is-liked' : ''}`} onClick={handleLike} disabled={hasLiked} aria-label={!user ? 'Sign in to like this note' : hasLiked ? 'You already liked this note' : 'Like this note'} title={!user ? 'Sign in to like this note' : hasLiked ? 'You already liked this note' : 'Like this note'}>
@@ -171,147 +129,151 @@ function GuestbookCard({ entry, user, isAdmin, onLike, onRequireLogin, onPin, on
   );
 }
 export default function Guestbook() {
-  const initialUser = auth?.currentUser || readCachedUser();
   const initialEntries = readCachedEntries();
-  const [user, setUser] = useState(initialUser);
-  const [authLoading, setAuthLoading] = useState(() => Boolean(auth && hasPendingAuthRedirect()));
+  // Clerk handles sign-in; Supabase receives the Clerk session token on every
+  // request (see services/supabase.js), and RLS checks it.
+  const { isLoaded: clerkLoaded, isSignedIn, userId } = useAuth();
+  const { user: clerkUser } = useUser();
+  const clerk = useClerk();
+  // null until the is_admin() check finishes for the signed-in user.
+  const [isAdmin, setIsAdmin] = useState(null);
+  const [likedIds, setLikedIds] = useState(() => new Set());
+  const user = isSignedIn && clerkUser ? {
+    uid: clerkUser.id,
+    displayName: clerkUser.fullName || clerkUser.username || 'Visitor',
+    photoURL: clerkUser.imageUrl || '',
+  } : null;
+  const authLoading = supabaseReady && (!clerkLoaded || (isSignedIn && (!clerkUser || isAdmin === null)));
   const [entries, setEntries] = useState(initialEntries);
+  const [synced, setSynced] = useState(false);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(initialEntries.length === 0);
   const [sending, setSending] = useState(false);
   const { toast, showToast, dismissToast } = useToast();
-  const redirectResultRead = useRef(false);
-  const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL;
+  const announceSignIn = useRef(false);
 
-  useEffect(() => {
-    if (!isAdmin || !db || !user?.uid || !entries.length) return;
-    entries
-      .filter(entry => (entry.userId === user.uid || entry.userId === ADMIN_UID) && !entry.authorRole)
-      .forEach(entry => {
-        setEntries(current => current.map(item => item.id === entry.id
-          ? { ...item, authorRole: 'Admin' }
-          : item));
-        updateDoc(doc(db, 'guestbook_entries', entry.id), {
-          authorRole: 'Admin',
-        }).catch(() => {});
-      });
-  }, [entries, isAdmin, user]);
-
-  useEffect(() => {
-    if (!auth) {
-      return undefined;
-    }
-    return onAuthStateChanged(auth, nextUser => {
-      setUser(nextUser);
-      if (nextUser) cacheUser(nextUser);
-      else clearCachedUser();
-    });
-  }, []);
-
-  useEffect(() => {
-    // StrictMode runs this effect twice in dev and getRedirectResult consumes the
-    // stored result, so guard it or the success toast can fire twice.
-    if (!auth || redirectResultRead.current) {
-      return undefined;
-    }
-    redirectResultRead.current = true;
-    const redirectWasPending = hasPendingAuthRedirect();
-    // getRedirectResult already waits for Firebase's own initialization. Waiting
-    // for authStateReady first made the redirect return do those two waits in
-    // sequence, leaving the composer unavailable for much longer than needed.
-    getRedirectResult(auth)
-      .then(result => {
-        const signedInUser = result?.user || auth.currentUser;
-        if (signedInUser) completeSignIn(signedInUser, redirectWasPending);
-        clearPendingAuthRedirect();
-        setAuthLoading(false);
-      })
-      .catch(err => {
-        if (wasCancelled(err)) {
-          showToast('Sign in cancelled', 'Google sign-in was cancelled.', 'error');
-        } else {
-          showToast('Sign in failed', 'Google sign-in could not be completed.', 'error');
-        }
-        clearPendingAuthRedirect();
-        setAuthLoading(false);
-      });
-    return undefined;
-  }, []);
-
-  useEffect(() => {
-    if (!db) {
-      setLoading(false);
-      return undefined;
-    }
-    const entriesQuery = query(
-      collection(db, 'guestbook_entries'),
-      orderBy('createdAt', 'desc'),
-      limit(30),
-    );
-    return onSnapshot(entriesQuery, snapshot => {
-      const nextEntries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setEntries(nextEntries);
-      cacheEntries(nextEntries);
-      setLoading(false);
-    }, () => {
-      showToast('Something went wrong', 'Please try again in a moment.', 'error');
-      setLoading(false);
-    });
-  }, []);
-
-  function completeSignIn(signedInUser, announce) {
-    setUser(signedInUser);
-    cacheUser(signedInUser);
-    if (announce) {
-      showToast('Sign in successful', "You're signed in. Leave a note whenever you're ready. 😊", 'success');
-    }
+  function upsertEntry(entry) {
+    setEntries(current => (current.some(item => item.id === entry.id)
+      ? current.map(item => (item.id === entry.id ? entry : item))
+      : [entry, ...current]));
   }
 
-  async function handleSignIn() {
-    if (isLocalHost) {
-      try {
-        await authPersistenceReady;
-        const result = await signInWithPopup(auth, googleProvider);
-        completeSignIn(result.user, true);
-      } catch (err) {
-        if (err?.code === 'auth/popup-blocked') {
-          showToast('Popup blocked', 'Allow popups for this site to sign in with Google.', 'error');
-        } else if (err?.code !== 'auth/popup-closed-by-user' && err?.code !== 'auth/cancelled-popup-request') {
-          showToast('Sign in failed', 'Google sign-in could not be completed.', 'error');
+  function removeEntry(id) {
+    setEntries(current => current.filter(item => item.id !== id));
+  }
+
+  async function refreshEntry(id) {
+    const { data, error } = await supabase.from('guestbook_notes').select(NOTE_COLUMNS).eq('id', id).maybeSingle();
+    if (error) return;
+    if (data) upsertEntry(toEntry(data));
+    else removeEntry(id);
+  }
+
+  // Keep the cache in step with what the server last returned.
+  useEffect(() => {
+    if (synced) cacheEntries(entries);
+  }, [entries, synced]);
+
+  // Load the newest notes, then apply inserts, updates and deletes live.
+  useEffect(() => {
+    if (!supabase) {
+      setLoading(false);
+      return undefined;
+    }
+    let cancelled = false;
+    supabase
+      .from('guestbook_notes')
+      .select(NOTE_COLUMNS)
+      .order('created_at', { ascending: false })
+      .limit(NOTES_LIMIT)
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          showToast('Something went wrong', 'Please try again in a moment.', 'error');
+        } else {
+          setEntries(data.map(toEntry));
+          setSynced(true);
         }
+        setLoading(false);
+      });
+    // A fresh topic per mount: channel() returns an existing channel with the same
+    // topic, and a channel still being removed (StrictMode remount) rejects new listeners.
+    const channel = supabase
+      .channel(`guestbook_notes_changes_${Date.now()}_${Math.random().toString(36).slice(2)}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'guestbook_notes' }, payload => {
+        if (payload.eventType === 'DELETE') {
+          if (payload.old?.id) removeEntry(payload.old.id);
+        } else if (payload.new?.id) {
+          upsertEntry(toEntry(payload.new));
+        }
+      })
+      .subscribe();
+    return () => {
+      cancelled = true;
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  // For the signed-in user: are they an admin, and which notes have they liked.
+  useEffect(() => {
+    if (!supabase || !clerkLoaded) return undefined;
+    if (!isSignedIn || !userId) {
+      setIsAdmin(null);
+      setLikedIds(new Set());
+      return undefined;
+    }
+    let cancelled = false;
+    (async () => {
+      const [adminResult, likesResult] = await Promise.all([
+        supabase.rpc('is_admin'),
+        supabase.from('guestbook_likes').select('note_id').eq('user_id', userId),
+      ]);
+      if (cancelled) return;
+      const failed = adminResult.error || likesResult.error;
+      if (failed) console.error('[guestbook] Could not load your guestbook session:', failed);
+      setIsAdmin(adminResult.data === true);
+      setLikedIds(new Set((likesResult.data || []).map(row => row.note_id)));
+      const announce = announceSignIn.current || window.sessionStorage.getItem(CLERK_SIGNIN_KEY) === '1';
+      if (failed) {
+        showToast('Sign in incomplete', 'Signed in, but the guestbook database could not be connected.', 'error');
+      } else if (announce) {
+        showToast('Sign in successful', "You're signed in. Leave a note whenever you're ready. 😊", 'success');
       }
-      return;
-    }
-    try {
-      window.sessionStorage.setItem(AUTH_REDIRECT_PENDING_KEY, '1');
-      // Navigates away to Google; this promise only settles if the redirect
-      // itself is blocked, so a rejection here is a genuine failure.
-      // Session persistence must be selected before redirecting, but waiting for
-      // the complete auth-state restore here only adds latency to a new sign-in.
-      await authPersistenceReady;
-      await signInWithRedirect(auth, googleProvider);
-    } catch {
-      showToast('Sign in failed', 'Google sign-in could not be completed.', 'error');
-    }
+      announceSignIn.current = false;
+      try { window.sessionStorage.removeItem(CLERK_SIGNIN_KEY); } catch { /* no-op */ }
+    })();
+    return () => { cancelled = true; };
+  }, [clerkLoaded, isSignedIn, userId]);
+
+  function handleSignIn() {
+    announceSignIn.current = true;
+    try { window.sessionStorage.setItem(CLERK_SIGNIN_KEY, '1'); } catch { /* no-op */ }
+    clerk.openSignIn({ forceRedirectUrl: window.location.href, signUpForceRedirectUrl: window.location.href });
+  }
+
+  async function handleSignOut() {
+    await clerk.signOut({ redirectUrl: window.location.pathname });
+    showToast('Signed out', 'You have been disconnected.', 'success');
   }
 
   async function handleSubmit(event) {
     event.preventDefault();
     const trimmedMessage = message.trim();
-    if (!user || !trimmedMessage || wordCount(trimmedMessage) > 100 || trimmedMessage.length > 500) return;
+    if (!user || !supabase || !trimmedMessage || wordCount(trimmedMessage) > 100 || trimmedMessage.length > 500) return;
     setSending(true);
     try {
-      await addDoc(collection(db, 'guestbook_entries'), {
-        userId: user.uid,
-        authorRole: isAdmin ? 'Admin' : 'Visitor',
-        displayName: user.displayName || 'Visitor',
-        photoURL: user.photoURL || '',
-        message: trimmedMessage,
-        createdAt: serverTimestamp(),
-        likes: 0,
-        likedUserIds: [],
-        pinned: false,
-      });
+      // user_id, author_role, likes, pin state and created_at are set by the database.
+      const { data, error } = await supabase
+        .from('guestbook_notes')
+        .insert({
+          display_name: user.displayName || 'Visitor',
+          photo_url: user.photoURL || null,
+          message: trimmedMessage,
+        })
+        .select(NOTE_COLUMNS)
+        .single();
+      if (error) throw error;
+      upsertEntry(toEntry(data));
       setMessage('');
       showToast('Note posted', 'Thanks for leaving a note! 😊', 'success');
     } catch {
@@ -322,32 +284,30 @@ export default function Guestbook() {
   }
 
   async function handleLike(entry) {
-    if (!user || !db) return;
-    if (entry.likedUserIds?.includes(user.uid)) return;
-    try {
-      await runTransaction(db, async transaction => {
-        const ref = doc(db, 'guestbook_entries', entry.id);
-        const snapshot = await transaction.get(ref);
-        if (!snapshot.exists()) return;
-        const data = snapshot.data();
-        const likedUserIds = Array.isArray(data.likedUserIds) ? data.likedUserIds : [];
-        if (likedUserIds.includes(user.uid)) return;
-        transaction.update(ref, {
-          likes: increment(1),
-          likedUserIds: arrayUnion(user.uid),
-          ...(isAdmin ? { likedBy: arrayUnion('HR') } : {}),
-        });
-      });
-    } catch (error) {
+    if (!user || !supabase) return;
+    if (likedIds.has(entry.id)) return;
+    // user_id defaults to the Clerk user ID; a trigger bumps the note's like count.
+    const { error } = await supabase.from('guestbook_likes').insert({ note_id: entry.id });
+    if (error && error.code !== '23505') {
       showToast('Something went wrong', 'Your like could not be saved. Please try again.', 'error');
       throw error;
     }
+    // 23505 = unique violation: this user already liked the note.
+    setLikedIds(current => new Set(current).add(entry.id));
+    await refreshEntry(entry.id);
   }
 
   async function handlePin(entry) {
-    if (!isAdmin || !db) return;
+    if (!isAdmin || !supabase) return;
     try {
-      await updateDoc(doc(db, 'guestbook_entries', entry.id), entry.pinned ? { pinned: false, pinnedAt: null } : { pinned: true, pinnedAt: serverTimestamp() });
+      const { data, error } = await supabase
+        .from('guestbook_notes')
+        .update(entry.pinned ? { pinned: false, pinned_at: null } : { pinned: true, pinned_at: new Date().toISOString() })
+        .eq('id', entry.id)
+        .select(NOTE_COLUMNS)
+        .single();
+      if (error) throw error;
+      upsertEntry(toEntry(data));
       showToast(entry.pinned ? 'Note unpinned' : 'Note pinned', 'The guestbook note was updated.', 'success');
     } catch {
       showToast('Something went wrong', 'That action could not be completed. Please try again.', 'error');
@@ -355,9 +315,12 @@ export default function Guestbook() {
   }
 
   async function handleDelete(entry) {
-    if (!isAdmin || !db || !window.confirm('Delete this guestbook note?')) return;
+    if (!isAdmin || !supabase || !window.confirm('Delete this guestbook note?')) return;
     try {
-      await deleteDoc(doc(db, 'guestbook_entries', entry.id));
+      // count: 'exact' tells an RLS-blocked delete (0 rows) apart from a real one.
+      const { error, count } = await supabase.from('guestbook_notes').delete({ count: 'exact' }).eq('id', entry.id);
+      if (error || count === 0) throw error || new Error('Note was not deleted');
+      removeEntry(entry.id);
       showToast('Note deleted', 'The guestbook note was removed.', 'success');
     } catch {
       showToast('Something went wrong', 'That action could not be completed. Please try again.', 'error');
@@ -371,13 +334,11 @@ export default function Guestbook() {
 
   // Pinned notes first (most recently pinned on top), then everything else newest first.
   const toMillis = value => {
-    if (value?.toMillis) return value.toMillis();
     if (typeof value === 'number') return value;
-    if (typeof value?.seconds === 'number') return value.seconds * 1000;
+    if (typeof value === 'string') return Date.parse(value) || 0;
     return 0;
   };
-  // A just-pinned note has pinnedAt === null until the server timestamp arrives: treat it as now.
-  const pinTime = entry => (entry.pinnedAt === null ? Date.now() : toMillis(entry.pinnedAt) || toMillis(entry.createdAt));
+  const pinTime = entry => toMillis(entry.pinnedAt) || toMillis(entry.createdAt);
   const sortedEntries = [...entries].sort((a, b) => {
     if (Boolean(a.pinned) !== Boolean(b.pinned)) return a.pinned ? -1 : 1;
     if (a.pinned) return pinTime(b) - pinTime(a);
@@ -399,7 +360,7 @@ export default function Guestbook() {
         </div>
 
         <div className="guestbook-compose">
-          {!firebaseReady ? (
+          {!supabaseReady ? (
             <p className="guestbook-muted">This section is temporarily unavailable. Please try again later.</p>
           ) : authLoading ? (
             <div className="guestbook-auth-loading" role="status" aria-live="polite" aria-label="Checking your session">
@@ -431,7 +392,7 @@ export default function Guestbook() {
                 <div className="gb-composer-user">
                   {user.photoURL ? <img src={user.photoURL} alt="" /> : <span className="gb-avatar-fallback" aria-hidden="true">{(user.displayName || 'V').charAt(0)}</span>}
                   <span className="gb-user-meta"><strong>{user.displayName || 'Visitor'}</strong><small className={`gb-role`+(isAdmin ? ' is-admin' : '')}>{isAdmin ? 'Admin' : 'Visitor'}</small></span>
-                  <button type="button" className="gb-signout" onClick={() => { signOut(auth); showToast('Signed out', 'You have been disconnected.', 'success'); }}>Sign out</button>
+                  <button type="button" className="gb-signout" onClick={handleSignOut}>Sign out</button>
                 </div>
                 <div className="gb-composer-actions">
                   <span className={`gb-count${remainingChars(message) <= 50 ? ' is-close' : ''}`} aria-label={`${remainingChars(message)} characters left`}>{remainingChars(message)}</span>
@@ -449,7 +410,7 @@ export default function Guestbook() {
               <svg className="gb-signin-icon" aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
               </svg>
-              <p>Sign in with Google to leave a note.</p>
+              <p>Sign in to leave a note.</p>
               <button type="button" className="gb-signin-btn" onClick={handleSignIn}>Sign in</button>
             </div>
           )}
@@ -458,7 +419,7 @@ export default function Guestbook() {
         <div className="guestbook-notes">
           <div className="guestbook-notes-heading"><div><p className="section-label">// recent messages</p><h2>Voices From Visitors</h2></div></div>
           {loading ? <div className="guestbook-empty-state"><p className="guestbook-muted">Loading notes...</p></div> : entries.length === 0 ? <div className="guestbook-empty-state"><p>No notes yet.</p><small>Be the first to say hello.</small></div> : <>
-            <div className="guestbook-grid">{sortedEntries.map(entry => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={entry.id} />)}</div>
+            <div className="guestbook-grid">{sortedEntries.map(entry => <GuestbookCard entry={entry} user={user} isAdmin={isAdmin} hasLiked={Boolean(user && likedIds.has(entry.id))} onLike={handleLike} onRequireLogin={handleRequireLogin} onPin={handlePin} onDelete={handleDelete} key={entry.id} />)}</div>
           </>}
         </div>
       </section>

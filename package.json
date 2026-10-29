@@ -9,7 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "firebase": "^12.19.0",
+    "@clerk/react": "^6.18.3",
+    "@supabase/supabase-js": "^2.118.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-helmet-async": "^2.0.5",
