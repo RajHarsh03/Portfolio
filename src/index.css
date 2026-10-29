@@ -8220,7 +8220,6 @@ footer,
 }
 
 @media (max-width: 360px) {
-    .pd-content-section .container,
     #home-contact .container { --rule-bleed: 12px; }
 }
 
