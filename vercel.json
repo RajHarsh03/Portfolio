@@ -3,10 +3,6 @@
   "outputDirectory": "dist",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
-    {
-      "source": "/__/auth/(.*)",
-      "destination": "https://harshx-guestbook.firebaseapp.com/__/auth/$1"
-    },
     { "source": "/((?!api/|Resume\\.pdf).+)", "destination": "/index.html" }
   ],
   "headers": [
@@ -20,11 +16,11 @@
       ]
     },
     {
-      "source": "/((?!__/auth/).*)",
+      "source": "/(.*)",
       "headers": [
         { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
         { "key": "Content-Security-Policy", "value": "frame-ancestors 'self'" },
-        { "key": "Content-Security-Policy-Report-Only", "value": "default-src 'self'; script-src 'self' 'sha256-cfr11FQgwfljqHuYGzQV1JrDt3yAcDILlqikd9vwhWI=' 'sha256-nMsY6GC981noTd/iRbtSwZtAN6ri2juuNk0jUc0t8rI=' https://apis.google.com https://cdn.jsdelivr.net https://louisabraham.github.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://github.com https://avatars.githubusercontent.com https://cdn.jsdelivr.net https://ik.imagekit.io https://opengraph.githubassets.com https://lh3.googleusercontent.com https://www.google.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.github.com https://gist.githubusercontent.com https://github-contributions-api.jogruber.de https://api.open-meteo.com https://api.emailjs.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; frame-src 'self' https://harshx-guestbook.firebaseapp.com; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'" }
+        { "key": "Content-Security-Policy-Report-Only", "value": "default-src 'self'; script-src 'self' 'sha256-cfr11FQgwfljqHuYGzQV1JrDt3yAcDILlqikd9vwhWI=' 'sha256-nMsY6GC981noTd/iRbtSwZtAN6ri2juuNk0jUc0t8rI=' https://cdn.jsdelivr.net https://louisabraham.github.io https://*.clerk.accounts.dev https://clerk.harshx.in https://challenges.cloudflare.com https://*.protect.clerk.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://github.com https://avatars.githubusercontent.com https://cdn.jsdelivr.net https://ik.imagekit.io https://opengraph.githubassets.com https://lh3.googleusercontent.com https://www.google.com https://img.clerk.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.github.com https://gist.githubusercontent.com https://github-contributions-api.jogruber.de https://api.open-meteo.com https://api.emailjs.com https://*.clerk.accounts.dev https://clerk.harshx.in https://*.protect.clerk.com:* https://clerk-telemetry.com https://*.supabase.co wss://*.supabase.co; frame-src 'self' https://challenges.cloudflare.com https://*.protect.clerk.com; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'" }
       ]
     },
     {
