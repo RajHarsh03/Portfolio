@@ -107,19 +107,6 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-/* SHARP CORNERS — every box is a sharp rectangle (beats inline styles and
-   the per-component radii below). Only true circles are listed after it.
-   Clerk's sign-in UI (cl-* classes) is left out so it keeps the rounded
-   card/pill look set in ClerkThemeProvider; :where() keeps specificity at 0. */
-:where(:not([class^="cl-"], [class*=" cl-"])),
-:where(:not([class^="cl-"], [class*=" cl-"]))::before,
-:where(:not([class^="cl-"], [class*=" cl-"]))::after,
-::-webkit-scrollbar,
-::-webkit-scrollbar-thumb,
-::-webkit-scrollbar-track {
-    border-radius: 0 !important;
-}
-
 /* True circles kept round: avatars, status dots, spinners, round icon buttons,
    bullets and the blurred background orbs */
 .hero-avatar-ring,
