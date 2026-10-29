@@ -58,8 +58,10 @@ const SECTIONS = [
 
         <h3 className="legal-subtitle">Contact form information</h3>
         <p className="legal-para">
-          Your name, your email, and your message. They reach my inbox so I can answer them.
-          Nothing else happens with them.
+          Your name, your email, and your message. The site's own server function passes them
+          to Resend, which delivers them to my inbox so I can answer them. Nothing else happens
+          with them. To stop spam, the server also keeps a short hash of your IP address that
+          limits how many messages one network can send, and it expires after about an hour.
         </p>
 
         <h3 className="legal-subtitle">Visitor counting</h3>
@@ -150,16 +152,15 @@ const SECTIONS = [
           <li><strong>Clerk</strong> - guestbook sign-in, account records, and sessions.</li>
           <li><strong>Google</strong> - the sign-in option offered in the Clerk window.</li>
           <li><strong>Supabase</strong> - the database that holds guestbook notes and likes.</li>
-          <li><strong>Vercel</strong> - hosting for the site, plus the small server functions behind the visitor total and the music widget.</li>
-          <li><strong>Upstash</strong> - stores the counter behind the visitor total.</li>
-          <li><strong>EmailJS</strong> - carries contact-form messages to my inbox.</li>
+          <li><strong>Vercel</strong> - hosting for the site, plus the small server functions behind the visitor total, the music widget, and the contact form.</li>
+          <li><strong>Upstash</strong> - stores the counter behind the visitor total and the contact form's hourly message limit.</li>
+          <li><strong>Resend</strong> - delivers contact-form messages to my inbox. The site's own server sends them, so your browser doesn't contact it.</li>
           <li><strong>GitHub</strong> - public information such as my repositories and profile picture, and the Gists that hold some page content.</li>
           <li><strong>Spotify</strong> - the song I'm listening to. The site's own server asks Spotify, so your browser doesn't contact it.</li>
           <li><strong>Open-Meteo</strong> - the current temperature in Kolkata on the home page.</li>
         </ul>
         <p className="legal-para">
-          Loading a page also pulls fonts from Google Fonts, icons and the contact-form script
-          from jsDelivr, project images from ImageKit, the cat animation script from GitHub
+          Loading a page also pulls fonts from Google Fonts, icons from jsDelivr, project images from ImageKit, the cat animation script from GitHub
           Pages, and contribution data from a public GitHub contributions API. Each of them
           keeps its own technical logs under its own privacy policy. Outside these, your
           information doesn't go anywhere.

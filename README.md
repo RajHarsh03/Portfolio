@@ -28,7 +28,7 @@
 **Live GitHub Projects** - fetched, filtered & sorted by topics\
 **Project Detail Pages** - route-based with Gist-powered content\
 **GitHub Heatmap** - DOM-rendered contribution graph, monochrome style, contribution count + less/more legend\
-**Contact Form** - EmailJS + toast feedback\
+**Contact Form** - Resend via Vercel serverless, honeypot + rate limit, toast feedback\
 **Spotify Widget** - live now-playing / last-played mini player in the hero, polls every 30 seconds\
 **Guestbook** - Clerk sign-in (Google), notes and likes in Supabase with realtime updates, pinned-first grid, loading skeletons, admin pin/delete\
 **Back-to-Top Button** - floating button with a ring that fills as you scroll
@@ -66,7 +66,8 @@
 | Routing | **React Router v7** |
 | Meta / SEO | **react-helmet-async** |
 | Styling | Single global CSS (`src/index.css`) |
-| Data | **GitHub REST API** + **EmailJS** |
+| Data | **GitHub REST API** |
+| Contact email | **Resend** via **`/api/contact`** serverless endpoint |
 | Spotify | **Custom `/api/now-playing`** serverless endpoint |
 | Visit Counter | **Upstash Redis** via Vercel serverless |
 | Guestbook auth | **Clerk** (`@clerk/react`, Google sign-in) |
@@ -86,7 +87,7 @@
 | `/` | Home - hero with Spotify mini player, skills ticker, education + certificates, featured projects, heatmap, guestbook invitation |
 | `/projects` | All Projects - category filter pills (Web Apps / AI & ML / Data Science), incremental mobile load |
 | `/projects/:id` | Project Detail - full overview, tech stack, features, highlights, challenges (Gist-powered) |
-| `/contact` | Contact - EmailJS form with toast feedback + social links |
+| `/contact` | Contact - Resend-backed form with toast feedback + social links |
 | `/about` | About - bio, education, collapsible experience cards with tech stack icons, certificates |
 | `/guestbook` | Guestbook - Clerk sign-in, live visitor notes and likes, pinned notes first |
 | `/privacy` | Privacy Policy |
@@ -113,6 +114,7 @@ Portfolio/
 |   +-- Resume.pdf              # Served from /Resume.pdf
 |
 |-- api/                        # Vercel serverless functions
+|   |-- contact.js              # Contact form -> Resend email (validation, honeypot, rate limit)
 |   |-- now-playing.js          # Spotify currently playing / last played
 |   +-- visits.js               # Upstash Redis visit counter
 |
@@ -184,7 +186,7 @@ Portfolio/
         |-- About.jsx              # Education + collapsible ExpCard with stacks
         |-- Projects.jsx           # Full grid - category filter pills, incremental mobile load
         |-- ProjectDetail.jsx      # Individual project page with Gist-powered details
-        |-- Contact.jsx            # EmailJS form + toast
+        |-- Contact.jsx            # Contact form (POST /api/contact) + toast
         |-- Guestbook.jsx          # Clerk sign-in + Supabase notes, likes, realtime
         |-- PrivacyPolicy.jsx      # /privacy
         |-- TermsOfService.jsx     # /terms
@@ -228,6 +230,12 @@ SPOTIFY_REFRESH_TOKEN=your_spotify_refresh_token
 KV_REST_API_URL=https://your-db.upstash.io
 KV_REST_API_TOKEN=your_upstash_token
 
+# Contact form (serverless API) - Resend
+RESEND_API_KEY=re_your_resend_api_key
+# Optional, these are the defaults
+CONTACT_TO_EMAIL=rajharsh.devx@gmail.com
+CONTACT_FROM_EMAIL="Portfolio <contact@harshx.in>"
+
 # Clerk (client-side, VITE_ prefix required)
 VITE_CLERK_PUBLISHABLE_KEY=pk_test_or_pk_live_key
 
@@ -239,6 +247,7 @@ VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_key
 ```
 
 - `VITE_*` values are bundled into the browser code, so only use public keys there. The Supabase publishable key is safe in the browser because Row Level Security decides what each request may do.
+- `RESEND_API_KEY`, `CONTACT_TO_EMAIL` and `CONTACT_FROM_EMAIL` have no `VITE_` prefix, so they stay on the server. Without `RESEND_API_KEY` the contact form shows an error toast.
 - `CLERK_SECRET_KEY` is not needed. The site only uses Clerk in the browser and has no server code that calls Clerk.
 - Without the Supabase values the guestbook shows "temporarily unavailable"; the rest of the site still works.
 
@@ -520,6 +529,30 @@ Backed by **Upstash Redis** (Vercel KV). In local dev it reads from the live pro
 
 - The browser POSTs once per session (`pf_visit_counted` in `sessionStorage`), and only POSTs from the site's own origins are accepted.
 - Each visitor key is a SHA-256 hash of IP + user-agent + date (IST); a separate hash of the IP caps new visitors at 3 per IP per day. Both keys expire after 48 hours, and raw IPs are never stored.
+
+---
+
+## Contact Form (Resend)
+
+The form on `/contact` POSTs JSON to a Vercel serverless function, which sends the email through the [Resend](https://resend.com) REST API:
+
+```
+POST /api/contact  { name, email, message, website }  >  { ok: true }
+```
+
+- Only POSTs from the site's own origins are accepted (localhost too, outside production). Other origins get `403`.
+- Validation: name 1-100 characters, a valid email up to 254 characters, message 1-2000 characters. Invalid input gets `400`.
+- `website` is a hidden honeypot field. If a bot fills it, the API answers `200` without sending anything.
+- Rate limit: 3 messages per IP per hour, keyed by a SHA-256 hash of the IP in Upstash Redis (`contact_rl:*`, expires after 1 hour). Over the limit gets `429`. Without Redis credentials the limit is skipped.
+- The email goes to `CONTACT_TO_EMAIL` from `CONTACT_FROM_EMAIL`, with `reply_to` set to the visitor, so replying in Gmail answers them directly. All user input is HTML-escaped.
+- In local dev, `vite.config.js` serves the same `/api/contact` route from `.env.local`.
+
+### Resend setup
+
+1. In the [Resend dashboard](https://resend.com/domains), add and verify the sending domain (`harshx.in`) by adding the DNS records it lists.
+2. Create an API key with **Sending access** (optionally limited to that domain).
+3. Add `RESEND_API_KEY` (plus `CONTACT_TO_EMAIL` / `CONTACT_FROM_EMAIL` if you want to override the defaults) to `.env.local` and to the Vercel environment variables. `CONTACT_FROM_EMAIL` must use the verified domain.
+4. Restart `npm run dev`, send a test message from `/contact`, and check the inbox (and spam folder).
 
 ---
 

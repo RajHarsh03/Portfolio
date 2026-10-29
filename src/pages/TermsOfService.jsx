@@ -167,7 +167,7 @@ const SECTIONS = [
       <>
         <p className="legal-para">
           The site leans on services I don't control: Clerk (sign-in), Google (as a sign-in
-          option), Supabase (the guestbook database), EmailJS, GitHub, Spotify, Upstash, and
+          option), Supabase (the guestbook database), Resend (contact-form email), GitHub, Spotify, Upstash, and
           Vercel. Each comes with its own terms and privacy policy.
         </p>
         <p className="legal-para">
