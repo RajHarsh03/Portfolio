@@ -1,4 +1,5 @@
 import { ClerkProvider } from '@clerk/react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext.jsx';
 
 // Clerk's own dark theme only swaps colour variables, and every colour is set
@@ -41,6 +42,9 @@ function buildAppearance(colors) {
       borderRadius: '0.75rem',
     },
     elements: {
+      // Centre the modal vertically (Clerk anchors it near the top by default)
+      modalBackdrop: { alignItems: 'center', padding: '1rem' },
+      modalContent: { margin: 'auto' },
       cardBox: {
         borderRadius: '20px',
         border: `1px solid ${colors.colorBorder}`,
@@ -70,8 +74,15 @@ const appearance = {
 
 export default function ClerkThemeProvider({ children, ...props }) {
   const { theme } = useTheme();
+  const navigate = useNavigate();
   return (
-    <ClerkProvider {...props} appearance={appearance[theme] || appearance.light}>
+    <ClerkProvider
+      {...props}
+      appearance={appearance[theme] || appearance.light}
+      // In-app navigation for Clerk redirects (sign-out, after sign-in) instead of a full page reload
+      routerPush={to => navigate(to)}
+      routerReplace={to => navigate(to, { replace: true })}
+    >
       {children}
     </ClerkProvider>
   );

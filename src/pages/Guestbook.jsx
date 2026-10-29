@@ -276,7 +276,8 @@ export default function Guestbook() {
   }
 
   async function handleSignOut() {
-    await clerk.signOut({ redirectUrl: window.location.pathname });
+    // Stay on the page: the callback replaces Clerk's redirect, so nothing reloads.
+    await clerk.signOut(() => {});
     showToast('Signed out', 'You have been disconnected.', 'success');
   }
 
