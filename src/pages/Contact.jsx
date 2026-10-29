@@ -1,80 +1,51 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useReveal } from '../hooks/useReveal.js';
 import { useToast } from '../hooks/useToast.js';
 import Toast from '../components/ui/Toast.jsx';
-const EMAILJS_SERVICE_ID  = 'service_gb3gqr6';
-const EMAILJS_TEMPLATE_ID = 'template_ngboxe4';
-const EMAILJS_PUBLIC_KEY  = 'f-P9D7rMpesYc3TAk';
-const EMAILJS_SDK_URL     = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
-const EMAILJS_TIMEOUT_MS  = 8000;
+const CONTACT_TIMEOUT_MS = 15000;
 
-// Shared across mounts so the SDK script is only injected once at a time.
-let ejsPromise = null;
-let ejsInitialized = false;
-function loadEmailJS() {
-  if (window.emailjs) {
-    if (!ejsInitialized) { window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); ejsInitialized = true; }
-    return Promise.resolve(window.emailjs);
-  }
-  if (ejsPromise) return ejsPromise;
-  ejsPromise = new Promise((resolve, reject) => {
-    const s = document.createElement('script');
-    s.src = EMAILJS_SDK_URL;
-    const fail = err => {
-      clearTimeout(timer);
-      s.remove();
-      ejsPromise = null; // allow a retry on the next submit
-      reject(err);
-    };
-    const timer = setTimeout(() => fail(new Error('EmailJS SDK load timed out')), EMAILJS_TIMEOUT_MS);
-    s.onload = () => {
-      clearTimeout(timer);
-      if (!window.emailjs) { fail(new Error('EmailJS SDK loaded but window.emailjs is missing')); return; }
-      if (!ejsInitialized) { window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); ejsInitialized = true; }
-      resolve(window.emailjs);
-    };
-    s.onerror = () => fail(new Error('EmailJS SDK failed to load'));
-    document.head.appendChild(s);
-  });
-  return ejsPromise;
-}
+// Honeypot: off-screen field that people never see but bots tend to fill.
+const HONEYPOT_STYLE = { position: 'absolute', left: '-10000px', width: '1px', height: '1px', overflow: 'hidden' };
 
 export default function Contact() {
   const ref = useReveal();
-  const [form, setForm]       = useState({ name: '', email: '', message: '' });
+  const [form, setForm]       = useState({ name: '', email: '', message: '', website: '' });
   const [sending, setSending] = useState(false);
   const { toast, showToast, dismissToast } = useToast();
-  useEffect(() => {
-    loadEmailJS().catch(err => console.error('[contact] EmailJS preload failed:', err));
-  }, []);
   function set(f) { return e => setForm(p => ({ ...p, [f]: e.target.value })); }
   async function submit(e) {
     e.preventDefault();
     if (sending) return;
     if (!form.name.trim() || !form.email.trim() || !form.message.trim()) return;
     setSending(true);
-    let emailjs;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), CONTACT_TIMEOUT_MS);
     try {
-      emailjs = await loadEmailJS();
-    } catch (err) {
-      console.error('[contact] EmailJS SDK unavailable:', err);
-      showToast('Could not load email service', 'An ad blocker may be blocking it. Please try again or email me directly.', 'error');
-      setSending(false);
-      return;
-    }
-    try {
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        from_name: form.name, from_email: form.email,
-        reply_to: form.email, subject: 'Message from portfolio',
-        message: form.message, to_name: 'Harsh Raj',
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+        signal: controller.signal,
       });
-      setForm({ name: '', email: '', message: '' });
+      if (res.status === 429) {
+        console.error('[contact] Send rate limited');
+        showToast('Too many messages', 'Please wait a bit and try again.', 'error');
+        return;
+      }
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(`Contact API ${res.status}${data.error ? ` (${data.error})` : ''}`);
+      }
+      setForm({ name: '', email: '', message: '', website: '' });
       showToast('Message sent', "Thanks for reaching out! I'll get back to you soon. 😊", 'success');
     } catch (err) {
-      console.error('[contact] EmailJS send failed:', err);
+      console.error('[contact] Send failed:', err);
       showToast('Could not send message', 'Please try again or email me directly.', 'error');
-    } finally { setSending(false); }
+    } finally {
+      clearTimeout(timer);
+      setSending(false);
+    }
   }
   return (
     <>
@@ -185,6 +156,9 @@ export default function Contact() {
                 </div>
                 <div className="hc-fg">
                   <textarea placeholder="Message" aria-label="Message" rows="4" value={form.message} onChange={set('message')} required />
+                </div>
+                <div style={HONEYPOT_STYLE} aria-hidden="true">
+                  <input type="text" name="website" tabIndex={-1} autoComplete="off" value={form.website} onChange={set('website')} />
                 </div>
                 <button type="submit" className="hc-submit" disabled={sending}>
                   {sending ? 'Sending…' : (

@@ -111,6 +111,27 @@ function nowPlayingDevPlugin() {
           return;
         }
 
+        if (url.pathname === '/api/contact' && req.method === 'POST') {
+          res.setHeader('Content-Type', 'application/json');
+          res.setHeader('Cache-Control', 'no-store');
+          try {
+            const chunks = [];
+            for await (const chunk of req) chunks.push(chunk);
+            const { sendContactMessage } = await import('./api/contact.js');
+            const result = await sendContactMessage(Buffer.concat(chunks).toString('utf8'), {
+              headers: req.headers,
+              ip: req.socket?.remoteAddress || 'unknown',
+            });
+            res.statusCode = result.status;
+            res.end(JSON.stringify(result.body));
+          } catch (error) {
+            console.error('[contact-dev]', error.message);
+            res.statusCode = 500;
+            res.end(JSON.stringify({ error: 'send_failed' }));
+          }
+          return;
+        }
+
         next();
       });
     },
