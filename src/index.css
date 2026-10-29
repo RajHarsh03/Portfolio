@@ -9285,3 +9285,10 @@ footer {
 .gbn-skeleton-grid .gbn-card-skeleton:nth-child(2) .gb-skel { animation-delay: .15s; }
 .gbn-skeleton-grid .gbn-card-skeleton:nth-child(3) .gb-skel { animation-delay: .3s; }
 .gbn-skeleton-grid .gbn-card-skeleton:nth-child(4) .gb-skel { animation-delay: .45s; }
+
+/* Toasts are desktop-only: hidden on phones */
+@media (max-width: 640px) {
+    .guestbook-toast {
+        display: none !important;
+    }
+}
