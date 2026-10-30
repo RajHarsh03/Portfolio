@@ -9386,3 +9386,29 @@ footer {
     .gbn-date { font-size: .6rem; letter-spacing: 0; }
 }
 
+/* Phones: "Sign it" becomes an icon-only round button so the name has room */
+@media (max-width: 480px) {
+    .gb-submit {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        padding: 0;
+        gap: 0;
+        border-radius: 50% !important;
+    }
+
+    .gb-submit .gb-submit-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
+    .gb-submit svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
