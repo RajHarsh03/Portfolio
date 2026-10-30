@@ -9412,3 +9412,12 @@ footer {
     }
 }
 
+/* Role label placeholder while the admin check runs (no Visitor flash) */
+.gb-role-pending {
+    display: block;
+    width: 38px;
+    height: 7px;
+    margin-top: .35rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text) 10%, transparent);
+}

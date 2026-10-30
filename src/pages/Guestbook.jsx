@@ -151,6 +151,22 @@ function NoteSkeleton({ lines }) {
   );
 }
 
+// Last known admin result per Clerk user, so the role label doesn't flash
+// "Visitor" while the is_admin() check runs.
+const ADMIN_CACHE_KEY = 'guestbook_admin_v1';
+
+function readCachedAdmin(userId) {
+  if (!userId) return null;
+  try {
+    const cached = JSON.parse(window.localStorage.getItem(ADMIN_CACHE_KEY) || 'null');
+    return cached?.userId === userId && typeof cached.isAdmin === 'boolean' ? cached.isAdmin : null;
+  } catch { return null; }
+}
+
+function cacheAdmin(userId, isAdmin) {
+  try { window.localStorage.setItem(ADMIN_CACHE_KEY, JSON.stringify({ userId, isAdmin })); } catch { /* no-op */ }
+}
+
 export default function Guestbook() {
   const initialEntries = readCachedEntries();
   // Clerk handles sign-in; Supabase receives the Clerk session token on every
@@ -246,6 +262,7 @@ export default function Guestbook() {
       setLikedIds(new Set());
       return undefined;
     }
+    setIsAdmin(readCachedAdmin(userId));
     let cancelled = false;
     (async () => {
       const [adminResult, likesResult] = await Promise.all([
@@ -255,7 +272,12 @@ export default function Guestbook() {
       if (cancelled) return;
       const failed = adminResult.error || likesResult.error;
       if (failed) console.error('[guestbook] Could not load your guestbook session:', failed);
-      setIsAdmin(adminResult.data === true);
+      if (!adminResult.error) {
+        setIsAdmin(adminResult.data === true);
+        cacheAdmin(userId, adminResult.data === true);
+      } else {
+        setIsAdmin(current => current ?? false);
+      }
       setLikedIds(new Set((likesResult.data || []).map(row => row.note_id)));
       const announce = announceSignIn.current || window.sessionStorage.getItem(CLERK_SIGNIN_KEY) === '1';
       if (failed) {
@@ -273,6 +295,29 @@ export default function Guestbook() {
     announceSignIn.current = true;
     try { window.sessionStorage.setItem(CLERK_SIGNIN_KEY, '1'); } catch { /* no-op */ }
     clerk.openSignIn({ forceRedirectUrl: window.location.href, signUpForceRedirectUrl: window.location.href });
+    watchSignInModal();
+  }
+
+  // Clerk's modal has no close callback, so watch for its backdrop leaving the
+  // page. Closed while still signed out = cancelled. A Google redirect unloads
+  // the page first, so it never counts as a cancel.
+  function watchSignInModal() {
+    let opened = false;
+    const observer = new MutationObserver(() => {
+      const open = Boolean(document.querySelector('.cl-modalBackdrop'));
+      if (open) { opened = true; return; }
+      if (!opened) return;
+      observer.disconnect();
+      // Give a just-completed sign-in a moment to register before deciding.
+      setTimeout(() => {
+        if (clerk.user) return;
+        announceSignIn.current = false;
+        try { window.sessionStorage.removeItem(CLERK_SIGNIN_KEY); } catch { /* no-op */ }
+        showToast('Sign in cancelled', 'You closed the sign-in window before signing in.', 'error');
+      }, 500);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    setTimeout(() => observer.disconnect(), 10 * 60 * 1000);
   }
 
   async function handleSignOut() {
@@ -405,7 +450,7 @@ export default function Guestbook() {
               <div className="gb-composer-footer">
                 <div className="gb-composer-user">
                   {user.photoURL ? <img src={user.photoURL} alt="" /> : <span className="gb-avatar-fallback" aria-hidden="true">{(user.displayName || 'V').charAt(0)}</span>}
-                  <span className="gb-user-meta"><strong>{user.displayName || 'Visitor'}</strong><small className={`gb-role`+(isAdmin ? ' is-admin' : '')}>{isAdmin ? 'Admin' : 'Visitor'}</small></span>
+                  <span className="gb-user-meta"><strong>{user.displayName || 'Visitor'}</strong>{isAdmin === null ? <small className="gb-role gb-role-pending" aria-hidden="true" /> : <small className={`gb-role`+(isAdmin ? ' is-admin' : '')}>{isAdmin ? 'Admin' : 'Visitor'}</small>}</span>
                   <button type="button" className="gb-signout" onClick={handleSignOut}>Sign out</button>
                 </div>
                 <div className="gb-composer-actions">
