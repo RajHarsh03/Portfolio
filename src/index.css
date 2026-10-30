@@ -8206,10 +8206,6 @@ footer,
     padding-right: var(--rule-bleed);
 }
 
-@media (max-width: 360px) {
-    #home-contact .container { --rule-bleed: 12px; }
-}
-
 /* Spacing: gaps that were margins become padding so each line sits mid-gap */
 .quote-strip {
     padding-top: calc(var(--rule-h) + 1.5rem);
@@ -9228,3 +9224,69 @@ footer {
         display: none !important;
     }
 }
+
+/* Mobile hero: the page already clears the navbar (#main-content first-child
+   padding), so the hero's own 3.2rem top padding doubled the gap. */
+@media (max-width: 430px) {
+    .hero-mobile-top {
+        padding-top: 0;
+    }
+}
+
+/* Phones: every inner page leaves the same gap above the quote card as About
+   (80px); Home keeps its own 40px. The page's last block provides the gap,
+   so trailing paddings inside it and the quote strip's top padding are zeroed. */
+@media (max-width: 640px) {
+    .quote-strip {
+        padding-top: 0 !important;
+    }
+
+    #main-content > :last-child {
+        padding-bottom: 80px !important;
+        margin-bottom: 0 !important;
+    }
+
+    #main-content > .guestbook-home-cta:last-child {
+        padding-bottom: 40px !important;
+    }
+
+    .about-certs-section:last-child,
+    #allProjects,
+    .pd-content-section,
+    .legal-body,
+    .guestbook-page > .guestbook-notes {
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .guestbook-notes .guestbook-grid > :last-child {
+        margin-bottom: 0 !important;
+    }
+}
+
+/* Legal pages: every gap between sections, and the gap before the closing
+   paragraph, equals the normal section spacing (no extra list margin, no
+   enlarged last section, no stacked closing margin). */
+.legal-section > :last-child {
+    margin-bottom: 0 !important;
+}
+
+.legal-body .legal-section:last-of-type {
+    padding-bottom: 1.9rem !important;
+}
+
+.legal-closing {
+    margin-top: 0 !important;
+    padding-top: 1.9rem !important;
+}
+
+@media (max-width: 768px) {
+    .legal-body .legal-section:last-of-type {
+        padding-bottom: 1.5rem !important;
+    }
+
+    .legal-closing {
+        padding-top: 1.5rem !important;
+    }
+}
+
