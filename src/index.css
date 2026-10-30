@@ -9233,6 +9233,27 @@ footer {
     }
 }
 
+/* Note footer: the "Liked by HR" chip sits beside the author on wide cards
+   and moves to the bottom line (left of likes/date) on phones. */
+.gbn-footer > .gbn-liked-by {
+    align-self: center;
+}
+
+@media (max-width: 640px) {
+    .gbn-footer > .gbn-author {
+        flex: 1 1 100%;
+    }
+
+    .gbn-footer > .gbn-liked-by {
+        order: 2;
+    }
+
+    .gbn-footer > .gbn-meta {
+        order: 3;
+        margin-left: auto;
+    }
+}
+
 /* Phones: every inner page leaves the same gap above the quote card as About
    (80px); Home keeps its own 40px. The page's last block provides the gap,
    so trailing paddings inside it and the quote strip's top padding are zeroed. */
@@ -9288,5 +9309,80 @@ footer {
     .legal-closing {
         padding-top: 1.5rem !important;
     }
+}
+
+/* Note cards: the opening quote mark hangs in the left margin, so wrapped
+   lines start under the text, not under the quote mark. Sizes unchanged. */
+.guestbook-card.gbn-card p.gbn-message {
+    position: relative;
+    padding-left: 0.85rem;
+}
+
+.guestbook-card.gbn-card .gbn-quote {
+    position: absolute;
+    left: 0;
+    top: 0.1em;
+    margin: 0;
+    line-height: 1;
+}
+/* Desktop only: note cards a little roomier (fonts and phone layout unchanged) */
+@media (min-width: 641px) {
+    .guestbook-card.gbn-card {
+        padding: 1.3rem 1.45rem 1.1rem;
+    }
+
+    .guestbook-card.gbn-card .gbn-footer {
+        margin-top: .95rem;
+    }
+}
+
+/* Visitor label gets its own colour (admin stays gold) */
+[data-theme="dark"] { --visitor-label: #7dd3fc; }
+[data-theme="light"] { --visitor-label: #0369a1; }
+
+.gb-role:not(.is-admin),
+.gbn-role:not(.is-admin) {
+    color: var(--visitor-label);
+    opacity: 1;
+}
+
+/* Phones: smaller "Liked by HR" chip, like count and date */
+@media (max-width: 640px) {
+    .gbn-footer > .gbn-liked-by {
+        gap: .25rem;
+        padding: .16rem .42rem .16rem .36rem;
+        font-size: .46rem;
+    }
+
+    .gbn-footer > .gbn-liked-by svg {
+        width: 8px;
+        height: 8px;
+    }
+
+    .gbn-meta {
+        gap: .55rem;
+    }
+
+    .gbn-like {
+        gap: .25rem;
+        font-size: .72rem;
+    }
+
+    .gbn-like svg {
+        width: 13px;
+        height: 13px;
+    }
+
+    .gbn-date {
+        font-size: .66rem;
+    }
+}
+
+/* Phones: like count and date a step smaller again */
+@media (max-width: 640px) {
+    .gbn-meta { gap: .5rem; }
+    .gbn-like { font-size: .66rem; gap: .22rem; }
+    .gbn-like svg { width: 12px; height: 12px; }
+    .gbn-date { font-size: .6rem; letter-spacing: 0; }
 }
 
