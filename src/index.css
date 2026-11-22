@@ -8762,18 +8762,19 @@ footer {
 }
 
 /* ================================
-   GUESTBOOK NOTES — two-column masonry of compact rounded cards
+   GUESTBOOK NOTES — two-column grid of compact rounded cards
    ================================ */
 .guestbook-notes .guestbook-grid {
-    display: block;
-    columns: 2;
-    column-gap: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .75rem;
+    align-items: start;
 }
 
 .guestbook-card.gbn-card {
     display: block;
     width: 100%;
-    margin: 0 0 1rem;
+    margin: 0;
     padding: 1.15rem 1.3rem 1rem;
     break-inside: avoid;
     border: 1px solid color-mix(in srgb, var(--text) 15%, transparent);
@@ -8910,7 +8911,7 @@ footer {
 }
 
 @media (max-width: 640px) {
-    .guestbook-notes .guestbook-grid { columns: 1; }
+    .guestbook-notes .guestbook-grid { grid-template-columns: 1fr; }
 
     .guestbook-card.gbn-card {
         padding: 1rem 1.1rem .9rem;
@@ -8953,11 +8954,11 @@ footer {
 
 /* Note cards, refined to the reference: borderless, quieter footer */
 .guestbook-notes .guestbook-grid {
-    column-gap: .75rem;
+    gap: .75rem;
 }
 
 .guestbook-card.gbn-card {
-    margin-bottom: .75rem;
+    margin-bottom: 0;
     padding: 1.1rem 1.25rem .95rem;
     border: 0;
     border-radius: 18px !important;
